@@ -70,6 +70,18 @@ router.post("/request", async (req, res) => {
   try {
     const { userId, projectId } = req.body;
 
+    // if user has request don't send request
+    const hasRequest = await pool.query(
+      "SELECT * FROM request WHERE user_id = $1 AND project_id = $2",
+      [userId, projectId]
+    );
+
+    if (hasRequest.rows.length !== 0) {
+      return res
+        .status(401)
+        .json("Can't send a request. User already has a request.");
+    }
+
     const isMember = await pool.query(
       "SELECT * FROM member WHERE user_id = $1 AND project_id = $2",
       [userId, projectId]
@@ -96,6 +108,18 @@ router.post("/request", async (req, res) => {
 router.post("/invite", async (req, res) => {
   try {
     const { userId, projectId } = req.body;
+
+    // if user has invite don't send invite
+    const hasInvite = await pool.query(
+      "SELECT * FROM invite WHERE user_id = $1 AND project_id = $2",
+      [userId, projectId]
+    );
+
+    if (hasInvite.rows.length !== 0) {
+      return res
+        .status(401)
+        .json("Can't send an invite. User is already invited.");
+    }
 
     const isMember = await pool.query(
       "SELECT * FROM member WHERE user_id = $1 AND project_id = $2",
