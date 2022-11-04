@@ -66,7 +66,9 @@ export default function Navbar() {
               fontFamily={'heading'}
               fontSize={'2xl'}
               fontWeight={'700'}
-              color={useColorModeValue('blue.600', 'blue.300')}
+              //   color={useColorModeValue('blue.600', 'blue.300')}
+              bgGradient="linear(to-r, blue.300, blue.600)"
+              bgClip="text"
             >
               TaskForce
             </Text>

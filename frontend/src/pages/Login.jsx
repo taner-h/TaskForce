@@ -53,7 +53,6 @@ export default function Login() {
           isClosable: true,
         });
       }
-      // console.log(parseRes);
     } catch (err) {
       console.error(err.message);
     }
