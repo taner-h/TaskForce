@@ -69,8 +69,8 @@ router.post("/login", validInfo, async (req, res) => {
     }
 
     const token = generateJWT(user.rows[0].user_id);
-    const userID = user.rows[0].user_id;
-    res.json({ token, userID });
+    const userId = user.rows[0].user_id;
+    res.json({ token, userId });
   } catch (err) {
     console.error(err.message);
   }
