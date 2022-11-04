@@ -7,7 +7,6 @@ const auth = require("../middleware/auth");
 const constants = require("../data/constants");
 
 //register
-
 router.post("/register", validInfo, async (req, res) => {
   try {
     //destruct the req.body
