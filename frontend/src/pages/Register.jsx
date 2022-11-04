@@ -81,11 +81,10 @@ export default function Register() {
               <Button
                 loadingText="Submitting"
                 size="lg"
-                bg={'blue.400'}
                 color={'white'}
-                _hover={{
-                  bg: 'blue.500',
-                }}
+                colorScheme="blue"
+                bgGradient="linear(to-r, blue.300, blue.600)"
+                _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
               >
                 Register
               </Button>

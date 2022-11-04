@@ -109,11 +109,9 @@ export default function Navbar() {
               fontSize={'sm'}
               fontWeight={600}
               color={'white'}
-              bg={useColorModeValue('gray.700', 'gray.700')}
-              href={'#'}
-              _hover={{
-                bg: useColorModeValue('gray.600', 'gray.600'),
-              }}
+              colorScheme="blue"
+              bgGradient="linear(to-r, blue.300, blue.600)"
+              _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
             >
               Log in
             </Button>
@@ -126,14 +124,22 @@ export default function Navbar() {
               cursor={'pointer'}
               minW={0}
             >
-              <Avatar name={'Taner Hacioglu'} sx={avatarStyle} />
+              <Avatar
+                name={'Taner Hacioglu'}
+                color={'white'}
+                colorScheme="blue"
+                bgGradient="linear(to-r, blue.300, blue.600)"
+                _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
+              />
             </MenuButton>
             <MenuList alignItems={'center'}>
               <br />
               <Center>
                 <Avatar
-                  bg={useColorModeValue('gray.700', 'white')}
-                  color={useColorModeValue('white', 'gray.700')}
+                  color={'white'}
+                  colorScheme="blue"
+                  bgGradient="linear(to-r, blue.300, blue.600)"
+                  _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
                   name={'Taner Hacioglu'}
                   size={'xl'}
                 />
