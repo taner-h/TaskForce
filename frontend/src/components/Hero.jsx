@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { HOME_TEXTS } from '../data/options';
 
-import Collab from '../asset/undraw_collaborators_re_hont.svg';
+import Collab from '../asset/collaborators.svg';
 
 export default function Hero() {
   function random(max) {

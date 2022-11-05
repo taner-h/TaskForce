@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './components/NotFound';
 import Pricing from './pages/Pricing';
-import Home from './components/Hero';
+import Home from './pages/Home';
 function App() {
   return (
     <ChakraProvider theme={theme}>

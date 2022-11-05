@@ -1,15 +1,17 @@
-import { Flex, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Box, useColorModeValue, Stack } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
-export default function Register() {
+import Footer from '../components/Footer';
+export default function Home() {
   return (
-    <Flex
+    <Box
       minH={' calc(100vh - 64px)'}
       align={'center'}
       justify={'center'}
       bg={useColorModeValue('gray.50', 'gray.800')}
     >
       <Hero />
-    </Flex>
+      <Footer />
+    </Box>
   );
 }

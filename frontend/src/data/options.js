@@ -1,37 +1,48 @@
 export const NAV_ITEMS = [
   {
-    label: 'Inspiration',
+    label: 'Projects',
     children: [
       {
-        label: 'Explore Design Work',
-        subLabel: 'Trending Design to inspire you',
-        href: '#',
+        label: 'Search',
+        subLabel: 'Find new projects to contribute',
+        href: '/projects',
       },
       {
-        label: 'New & Noteworthy',
-        subLabel: 'Up-and-coming Designers',
-        href: '#',
+        label: 'Reccomended',
+        subLabel: 'Take a look at our reccommendations for you',
+        href: '/projects/reccomended',
+      },
+      {
+        label: 'Open Source',
+        subLabel:
+          'Explore open source projects to contribute to a free and open internet',
+        href: '/projects/opensource',
+      },
+      {
+        label: 'Create',
+        subLabel: 'Create your own project and add other people to your team',
+        href: '/projects/create',
       },
     ],
   },
   {
-    label: 'Find Work',
+    label: 'Tasks',
     children: [
       {
-        label: 'Job Board',
-        subLabel: 'Find your dream design job',
-        href: '#',
+        label: 'Explore',
+        subLabel: 'Look at all available tasks',
+        href: '/tasks',
       },
       {
-        label: 'Freelance Projects',
-        subLabel: 'An exclusive list for contract work',
-        href: '#',
+        label: 'Open Task',
+        subLabel: 'Open your own task to get help from people',
+        href: '/tasks/create',
       },
     ],
   },
   {
-    label: 'Learn Design',
-    href: '#',
+    label: 'Match',
+    href: '/match',
   },
   {
     label: 'Pricing',
