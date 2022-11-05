@@ -14,19 +14,18 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-import Collab1 from '../asset/team_collaboration.svg';
-import Collab2 from '../asset/community.svg';
-import Collab3 from '../asset/engineering_team.svg';
-import Collab4 from '../asset/co-working.svg';
-import Collab5 from '../asset/collaborators.svg';
+import collab from '../asset/team_collaboration.svg';
+import coworking from '../asset/co-working.svg';
+import { Link } from 'react-router-dom';
 
-export default function Features() {
+export default function Features({ referance }) {
   return (
-    <Container maxW={'7xl'}>
+    <Container ref={referance} maxW={'7xl'}>
       <Stack
         align={'center'}
         spacing={{ base: 8, md: 10 }}
-        py={{ base: 20, md: 28 }}
+        pt={{ base: 30, md: 40 }}
+        pb={{ base: 20, md: 28 }}
         direction={{ base: 'column', md: 'row' }}
       >
         <Stack flex={1} spacing={{ base: 5, md: 10 }}>
@@ -35,6 +34,15 @@ export default function Features() {
             fontWeight={600}
             fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}
           >
+            <Text
+              as={'span'}
+              bgGradient="linear(to-r, blue.300, blue.600)"
+              bgClip="text"
+            >
+              Find others
+            </Text>
+            <br />
+
             <Text
               as={'span'}
               position={'relative'}
@@ -50,7 +58,7 @@ export default function Features() {
                 zIndex: -1,
               }}
             >
-              Write once,
+              with the same idea
             </Text>
             <br />
             <Text
@@ -58,13 +66,13 @@ export default function Features() {
               bgGradient="linear(to-r, blue.300, blue.600)"
               bgClip="text"
             >
-              use everywhere!
+              and join them!
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            Snippy is a rich coding snippets app that lets you create your own
-            code snippets, categorize them, and even sync them in the cloud so
-            you can use them anywhere. All that is free!
+            With TaskForce you can find the perfect collaborators for any
+            software project you like. Want to build an app? Need someone to
+            co-found a business? Find them using our recommendation system!
           </Text>
           <Stack
             align={'center'}
@@ -72,20 +80,24 @@ export default function Features() {
             spacing={{ base: 4, sm: 6 }}
             direction={{ base: 'column', sm: 'row' }}
           >
-            <Button
-              rounded={'full'}
-              size={'lg'}
-              fontWeight={'normal'}
-              px={6}
-              colorScheme="blue"
-              bgGradient="linear(to-r, blue.300, blue.600)"
-              _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-            >
-              Get started
-            </Button>
-            <Button rounded={'full'} size={'lg'} fontWeight={'normal'} px={6}>
-              How It Works
-            </Button>
+            <Link to={'/projects'}>
+              <Button
+                rounded={'full'}
+                size={'lg'}
+                fontWeight={'normal'}
+                px={6}
+                colorScheme="blue"
+                bgGradient="linear(to-r, blue.300, blue.600)"
+                _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
+              >
+                Search for projects
+              </Button>
+            </Link>
+            <Link to={'/projects/create'}>
+              <Button rounded={'full'} size={'lg'} fontWeight={'normal'} px={6}>
+                Create your own
+              </Button>
+            </Link>
           </Stack>
         </Stack>
         <Flex
@@ -102,24 +114,21 @@ export default function Features() {
             top={'-20%'}
             left={0}
             zIndex={0}
-            // bgGradient={'linear(to-r, blue.300, blue.600)'}
             color={useColorModeValue('blue.200', 'blue.300')}
           />
           <Box
             position={'relative'}
             height={'300px'}
             rounded={'2xl'}
-            // boxShadow={'2xl'}
             width={'full'}
             overflow={'hidden'}
           >
             <Image
               alt={'Hero Image'}
-              //   fit={'cover'}
               align={'center'}
               w={'100%'}
               h={'100%'}
-              src={Collab1}
+              src={collab}
             />
           </Box>
         </Flex>
@@ -138,15 +147,6 @@ export default function Features() {
           position={'relative'}
           w={'full'}
         >
-          {/* <Blob
-            w={'150%'}
-            h={'150%'}
-            position={'absolute'}
-            top={'-20%'}
-            left={0}
-            zIndex={0}
-            color={useColorModeValue('red.50', 'red.400')}
-          /> */}
           <Box
             position={'relative'}
             height={'350px'}
@@ -161,7 +161,7 @@ export default function Features() {
               align={'center'}
               w={'100%'}
               h={'100%'}
-              src={Collab4}
+              src={coworking}
             />
           </Box>
         </Flex>
@@ -172,6 +172,15 @@ export default function Features() {
             fontWeight={600}
             fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}
           >
+            <Text
+              as={'span'}
+              bgGradient="linear(to-r, blue.300, blue.600)"
+              bgClip={'text'}
+            >
+              Seek help
+            </Text>
+            <br />
+
             <Text
               as={'span'}
               position={'relative'}
@@ -187,7 +196,7 @@ export default function Features() {
                 zIndex: -1,
               }}
             >
-              Write once,
+              for specific tasks
             </Text>
             <br />
             <Text
@@ -195,13 +204,14 @@ export default function Features() {
               bgGradient="linear(to-r, blue.300, blue.600)"
               bgClip={'text'}
             >
-              use everywhere!
+              & help others!
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            Snippy is a rich coding snippets app that lets you create your own
-            code snippets, categorize them, and even sync them in the cloud so
-            you can use them anywhere. All that is free!
+            TaskForce also provides you a platform for solving your more
+            specific problems by encouraging people to help others to get help!
+            You can submit any software development related issue you have and
+            get an answer that solves it for you!
           </Text>
           <Stack
             align={'center'}
@@ -209,20 +219,24 @@ export default function Features() {
             spacing={{ base: 4, sm: 6 }}
             direction={{ base: 'column', sm: 'row' }}
           >
-            <Button
-              rounded={'full'}
-              size={'lg'}
-              fontWeight={'normal'}
-              px={6}
-              colorScheme="blue"
-              bgGradient="linear(to-r, blue.300, blue.600)"
-              _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-            >
-              Get started
-            </Button>
-            <Button rounded={'full'} size={'lg'} fontWeight={'normal'} px={6}>
-              How It Works
-            </Button>
+            <Link to={'/tasks/create'}>
+              <Button
+                rounded={'full'}
+                size={'lg'}
+                fontWeight={'normal'}
+                px={6}
+                colorScheme="blue"
+                bgGradient="linear(to-r, blue.300, blue.600)"
+                _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
+              >
+                Open a new task
+              </Button>
+            </Link>
+            <Link to={'/tasks'}>
+              <Button rounded={'full'} size={'lg'} fontWeight={'normal'} px={6}>
+                Help others
+              </Button>
+            </Link>
           </Stack>
         </Stack>
       </Stack>
