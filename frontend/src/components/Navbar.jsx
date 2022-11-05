@@ -22,10 +22,16 @@ import { ColorModeSwitcher } from './ColorModeSwitcher';
 import DesktopNavbar from './DesktopNavbar';
 import MobileNavbar from './MobileNavbar';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getIsLogged, logOut, getUser } from '../reducers/authSlice';
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
+  const isLogged = useSelector(getIsLogged);
+  const dispatch = useDispatch();
+  const registerButtonColor = useColorModeValue('gray.700', 'white');
 
+  const user = useSelector(getUser);
   const avatarStyle = {
     size: 'sm',
     bg: useColorModeValue('gray.700', 'gray.300'),
@@ -68,6 +74,7 @@ export default function Navbar() {
               fontWeight={'700'}
               bgGradient="linear(to-r, blue.300, blue.600)"
               bgClip="text"
+              ml={'5'}
             >
               TaskForce
             </Text>
@@ -89,71 +96,84 @@ export default function Navbar() {
           spacing={5}
         >
           <ColorModeSwitcher />
-          <Link to="/register">
-            <Button
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={useColorModeValue('gray.700', 'white')}
-              variant="link"
-              // bg={useColorModeValue('gray.700', 'gray.700')}
-              href={'#'}
-            >
-              Register
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              colorScheme="blue"
-              bgGradient="linear(to-r, blue.300, blue.600)"
-              _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-            >
-              Log in
-            </Button>
-          </Link>
-          <Menu>
-            <MenuButton
-              as={Button}
-              rounded={'full'}
-              variant={'link'}
-              cursor={'pointer'}
-              minW={0}
-            >
-              <Avatar
-                name={'Taner Hacioglu'}
-                color={'white'}
-                colorScheme="blue"
-                bgGradient="linear(to-r, blue.300, blue.600)"
-                _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-              />
-            </MenuButton>
-            <MenuList alignItems={'center'}>
-              <br />
-              <Center>
-                <Avatar
+
+          {!isLogged && (
+            <>
+              <Link to="/register">
+                <Button
+                  display={{ base: 'none', md: 'inline-flex' }}
+                  fontSize={'sm'}
+                  fontWeight={600}
+                  color={registerButtonColor}
+                  variant="link"
+                  // bg={useColorModeValue('gray.700', 'gray.700')}
+                  href={'#'}
+                >
+                  Register
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button
+                  display={{ base: 'none', md: 'inline-flex' }}
+                  fontSize={'sm'}
+                  mr="5"
+                  fontWeight={600}
                   color={'white'}
                   colorScheme="blue"
                   bgGradient="linear(to-r, blue.300, blue.600)"
                   _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-                  name={'Taner Hacioglu'}
-                  size={'xl'}
+                >
+                  Log in
+                </Button>
+              </Link>
+            </>
+          )}
+          {isLogged && (
+            <Menu>
+              <MenuButton
+                as={Button}
+                rounded={'full'}
+                variant={'link'}
+                mr="5"
+                cursor={'pointer'}
+                minW={0}
+              >
+                <Avatar
+                  name={user ? `${user.name} ${user.surname}` : null}
+                  color={'white'}
+                  colorScheme="blue"
+                  bgGradient="linear(to-r, blue.300, blue.600)"
+                  _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
                 />
-              </Center>
-              <br />
-              <Center>
-                <p>Username</p>
-              </Center>
-              <br />
-              <MenuDivider />
-              <MenuItem>Your Servers</MenuItem>
-              <MenuItem>Account Settings</MenuItem>
-              <MenuItem>Logout</MenuItem>
-            </MenuList>
-          </Menu>
+              </MenuButton>
+              <MenuList alignItems={'center'}>
+                <br />
+                <Center>
+                  <Avatar
+                    color={'white'}
+                    colorScheme="blue"
+                    bgGradient="linear(to-r, blue.300, blue.600)"
+                    _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
+                    name={user ? `${user.name} ${user.surname}` : null}
+                    size={'xl'}
+                  />
+                </Center>
+                <br />
+                <Center>
+                  <p>{user ? `${user.name} ${user.surname}` : ''}</p>
+                </Center>
+                <br />
+                <MenuDivider />
+                <MenuItem icon={<ColorModeSwitcher />}>Toggle Theme </MenuItem>
+                <MenuDivider />
+                <MenuItem>Your Projects</MenuItem>
+                <MenuItem>Your Tasks</MenuItem>
+                <MenuItem>Notifications</MenuItem>
+                <MenuItem>Settings</MenuItem>
+                <MenuItem onClick={() => dispatch(logOut())}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+          )}
         </Stack>
       </Flex>
 

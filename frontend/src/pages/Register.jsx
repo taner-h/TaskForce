@@ -7,6 +7,7 @@ import {
   InputGroup,
   HStack,
   InputRightElement,
+  useToast,
   Stack,
   Button,
   Heading,
@@ -16,9 +17,60 @@ import {
 import { useState } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
+import { setAuth } from '../reducers/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const toast = useToast();
+  const dispatch = useDispatch();
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const body = { email, password, name, surname };
+    try {
+      const response = await fetch('http://localhost:5000/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const parseRes = await response.json();
+
+      if (parseRes.token) {
+        localStorage.setItem('token', parseRes.token);
+        localStorage.setItem('user', parseRes.userId);
+
+        toast({
+          title: 'Register successful.',
+          description: 'Welcome to TaskForce!',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+        dispatch(
+          setAuth({
+            token: parseRes.token,
+            userId: parseRes.userId,
+            isLogged: true,
+          })
+        );
+      } else {
+        toast({
+          title: 'Register failed.',
+          description: 'Make sure that email is valid.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   return (
     <Flex
@@ -51,24 +103,40 @@ export default function Register() {
               <Box>
                 <FormControl id="firstName" isRequired>
                   <FormLabel>First Name</FormLabel>
-                  <Input type="text" />
+                  <Input
+                    type="text"
+                    value={name}
+                    onChange={event => setName(event.target.value)}
+                  />
                 </FormControl>
               </Box>
               <Box>
                 <FormControl id="lastName">
                   <FormLabel>Last Name</FormLabel>
-                  <Input type="text" />
+                  <Input
+                    type="text"
+                    value={surname}
+                    onChange={event => setSurname(event.target.value)}
+                  />
                 </FormControl>
               </Box>
             </HStack>
             <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                value={email}
+                onChange={event => setEmail(event.target.value)}
+              />
             </FormControl>
             <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
               <InputGroup>
-                <Input type={showPassword ? 'text' : 'password'} />
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={event => setPassword(event.target.value)}
+                />
                 <InputRightElement h={'full'}>
                   <Button
                     variant={'ghost'}
@@ -84,6 +152,7 @@ export default function Register() {
             <Stack spacing={10} pt={2}>
               <Button
                 loadingText="Submitting"
+                onClick={handleSubmit}
                 size="lg"
                 color={'white'}
                 colorScheme="blue"

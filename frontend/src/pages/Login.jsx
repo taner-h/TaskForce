@@ -14,12 +14,16 @@ import {
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
+import { setAuth, fetchUser } from '../reducers/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { Link } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const toast = useToast();
+  const dispatch = useDispatch();
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -37,9 +41,19 @@ export default function Login() {
         localStorage.setItem('token', parseRes.token);
         localStorage.setItem('user', parseRes.userId);
 
+        const user = await dispatch(fetchUser(parseRes.userId));
+
+        dispatch(
+          setAuth({
+            token: parseRes.token,
+            user: user.payload,
+            isLogged: true,
+          })
+        );
+
         toast({
-          title: 'Log in succesful.',
-          description: 'Welcome back!',
+          title: 'Log in successful.',
+          description: `Welcome back ${user.payload.name}!`,
           status: 'success',
           duration: 2000,
           isClosable: true,
