@@ -13,7 +13,12 @@ import {
 } from '@chakra-ui/react';
 import { HOME_TEXTS } from '../data/options';
 
-import Collab from '../asset/collaborators.svg';
+import Collab1 from '../asset/team_collaboration.svg';
+import Collab2 from '../asset/community.svg';
+import Collab3 from '../asset/engineering_team.svg';
+import Collab4 from '../asset/co-working.svg';
+import Collab5 from '../asset/collaborators.svg';
+import Collab6 from '../asset/scrum.svg';
 
 export default function Hero() {
   function random(max) {
@@ -26,7 +31,8 @@ export default function Hero() {
         textAlign={'center'}
         align={'center'}
         spacing={{ base: 8, md: 10 }}
-        py={{ base: 20, md: 28 }}
+        pt={{ base: 20, md: 28 }}
+        pb={{ base: 10, md: 14 }}
       >
         <Heading
           fontWeight={600}
@@ -62,8 +68,8 @@ export default function Hero() {
             Learn more
           </Button>
         </Stack>
-        <Flex maxWidth={'600px'} p={'20px'} justify="center" align="center">
-          <img src={Collab} alt="collaboration"></img>
+        <Flex maxWidth={'550px'} pt={'50px'} justify="center" align="center">
+          <img src={Collab6} alt="collaboration"></img>
         </Flex>
       </Stack>
     </Container>

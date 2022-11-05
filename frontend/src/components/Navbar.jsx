@@ -33,7 +33,7 @@ export default function Navbar() {
   };
 
   return (
-    <Box position="sticky" top="0">
+    <Box position="sticky" top="0" zIndex={'5'}>
       <Flex
         bg={useColorModeValue('white', 'gray.900')}
         color={useColorModeValue('gray.700', 'white')}
