@@ -1,7 +1,7 @@
 import {
   Box,
   Stack,
-  Link,
+  Button,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -10,6 +10,7 @@ import {
 import {} from '@chakra-ui/icons';
 import DesktopSubNavbar from './DesktopSubNavbar';
 import { NAV_ITEMS } from '../data/options';
+import { Link } from 'react-router-dom';
 
 const DesktopNavbar = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
@@ -22,18 +23,20 @@ const DesktopNavbar = () => {
         <Box key={navItem.label}>
           <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
-              <Link
-                p={2}
-                href={navItem.href ?? '#'}
-                fontSize={'md'}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: 'none',
-                  color: linkHoverColor,
-                }}
-              >
-                {navItem.label}
+              <Link to={navItem.href ?? '#'}>
+                <Button
+                  p={2}
+                  fontSize={'md'}
+                  variant="ghost"
+                  fontWeight={500}
+                  color={linkColor}
+                  _hover={{
+                    textDecoration: 'none',
+                    color: linkHoverColor,
+                  }}
+                >
+                  {navItem.label}
+                </Button>
               </Link>
             </PopoverTrigger>
 

@@ -30,10 +30,14 @@ export default function Register() {
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'} textAlign={'center'}>
-            Register
+            Register for free
           </Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool features ✌️
+            or{' '}
+            <Link to="/pricing" style={{ color: '#4299E1' }}>
+              see
+            </Link>{' '}
+            our other offers!
           </Text>
         </Stack>
         <Box

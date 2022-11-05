@@ -34,7 +34,7 @@ export const NAV_ITEMS = [
     href: '#',
   },
   {
-    label: 'Hire Designers',
-    href: '#',
+    label: 'Pricing',
+    href: '/pricing',
   },
 ];

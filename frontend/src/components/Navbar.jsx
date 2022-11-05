@@ -33,7 +33,7 @@ export default function Navbar() {
   };
 
   return (
-    <Box>
+    <Box position="sticky" top="0">
       <Flex
         bg={useColorModeValue('white', 'gray.900')}
         color={useColorModeValue('gray.700', 'white')}
@@ -66,7 +66,6 @@ export default function Navbar() {
               fontFamily={'heading'}
               fontSize={'2xl'}
               fontWeight={'700'}
-              //   color={useColorModeValue('blue.600', 'blue.300')}
               bgGradient="linear(to-r, blue.300, blue.600)"
               bgClip="text"
             >

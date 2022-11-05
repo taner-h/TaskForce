@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './components/NotFound';
+import Pricing from './pages/Pricing';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           {/* <Route path="/" element={} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/pricing" element={<Pricing />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
