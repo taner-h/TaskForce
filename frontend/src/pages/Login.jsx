@@ -57,9 +57,10 @@ export default function Login() {
       console.error(err.message);
     }
   };
+
   return (
     <Flex
-      minH={' calc(100vh - 65px)'}
+      minH={' calc(100vh - 64px)'}
       align={'center'}
       justify={'center'}
       bg={useColorModeValue('gray.50', 'gray.800')}

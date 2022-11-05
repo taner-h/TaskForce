@@ -38,3 +38,12 @@ export const NAV_ITEMS = [
     href: '/pricing',
   },
 ];
+
+export const HOME_TEXTS = [
+  'achieve your dreams?',
+  'build your project?',
+  'make the next big thing?',
+  'solve your issues?',
+  'co-found your business?',
+  'create your app?',
+];
