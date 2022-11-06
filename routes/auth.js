@@ -10,7 +10,8 @@ const constants = require("../data/constants");
 router.post("/register", validInfo, async (req, res) => {
   try {
     //destruct the req.body
-    const { email, password, name, surname } = req.body;
+    const { email, password, name, surname, portfolio, linkedin, github, bio } =
+      req.body;
 
     // make sure the email is not in use
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [
@@ -34,15 +35,28 @@ router.post("/register", validInfo, async (req, res) => {
     // insert user into database
     const newUser = await pool.query(
       `INSERT INTO users (email, password, name, surname, credit_count,
-      create_time, sub_tier_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [email, hashedPassword, name, surname, creditCount, createTime, subTierId]
+      create_time, sub_tier_id, portfolio, linkedin, github, bio ) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING *`,
+      [
+        email,
+        hashedPassword,
+        name,
+        surname,
+        creditCount,
+        createTime,
+        subTierId,
+        portfolio,
+        linkedin,
+        github,
+        bio,
+      ]
     );
 
     // generating web token
     const token = generateJWT(newUser.rows[0].user_id);
-    const userID = newUser.rows[0].user_id;
+    const userId = newUser.rows[0].user_id;
 
-    res.json({ token, userID });
+    res.json({ token, userId });
   } catch (err) {
     console.error(err.message);
   }
@@ -78,7 +92,12 @@ router.post("/login", validInfo, async (req, res) => {
 
 router.get("/verify", auth, async (req, res) => {
   try {
-    res.json(true);
+    const response = {
+      isAuth: true,
+      userId: req.userId,
+    };
+
+    res.json(response);
   } catch (err) {
     console.error(err.message);
   }

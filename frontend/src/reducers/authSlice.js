@@ -8,7 +8,9 @@ const initialState = {
 
 export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
   try {
-    const response = await fetch('/auth/verify', {
+    console.log('2');
+
+    const response = await fetch('http://localhost:5000/auth/verify', {
       method: 'GET',
       headers: { token: localStorage.token },
     });
@@ -45,6 +47,7 @@ export const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isLogged = false;
+      localStorage.removeItem('token');
     },
   },
 });

@@ -6,13 +6,16 @@ import {
   Input,
   Checkbox,
   Stack,
+  InputRightElement,
   Link as ChakraLink,
+  InputGroup,
   Button,
   Heading,
   Text,
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { setAuth, fetchUser } from '../reducers/authSlice';
 import { useDispatch } from 'react-redux';
@@ -20,6 +23,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const toast = useToast();
   const dispatch = useDispatch();
@@ -39,7 +43,7 @@ export default function Login() {
 
       if (parseRes.token) {
         localStorage.setItem('token', parseRes.token);
-        localStorage.setItem('user', parseRes.userId);
+        // localStorage.setItem('user', parseRes.userId);
         navigate('/');
 
         toast({
@@ -102,13 +106,26 @@ export default function Login() {
                 onChange={event => setEmail(event.target.value)}
               />
             </FormControl>
+
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                value={password}
-                onChange={event => setPassword(event.target.value)}
-              />
+              <InputGroup>
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={event => setPassword(event.target.value)}
+                />
+                <InputRightElement h={'full'}>
+                  <Button
+                    variant={'ghost'}
+                    onClick={() =>
+                      setShowPassword(showPassword => !showPassword)
+                    }
+                  >
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
             </FormControl>
             <Stack spacing={10}>
               <Stack

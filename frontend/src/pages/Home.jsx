@@ -20,7 +20,7 @@ export default function Home() {
       bg={useColorModeValue('gray.50', 'gray.800')}
     >
       <Hero scrollToLearn={scrollToLearn} />
-      <Features referance={ref} />
+      <Features reference={ref} />
       <Footer />
     </Box>
   );

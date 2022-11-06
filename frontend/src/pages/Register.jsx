@@ -6,7 +6,9 @@ import {
   Input,
   InputGroup,
   HStack,
+  Textarea,
   InputRightElement,
+  InputLeftAddon,
   useToast,
   Stack,
   Button,
@@ -26,13 +28,26 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
+  const [portfolio, setPortfolio] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+  const [github, setGithub] = useState('');
+  const [bio, setBio] = useState('');
   const toast = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async event => {
     event.preventDefault();
-    const body = { email, password, name, surname };
+    const body = {
+      email,
+      password,
+      name,
+      surname,
+      portfolio,
+      linkedin,
+      github,
+      bio,
+    };
     try {
       const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
@@ -43,7 +58,7 @@ export default function Register() {
 
       if (parseRes.token) {
         localStorage.setItem('token', parseRes.token);
-        localStorage.setItem('user', parseRes.userId);
+        // localStorage.setItem('userId', parseRes.userId);
         navigate('/');
 
         toast({
@@ -116,7 +131,7 @@ export default function Register() {
                 </FormControl>
               </Box>
               <Box>
-                <FormControl id="lastName">
+                <FormControl id="lastName" isRequired>
                   <FormLabel>Last Name</FormLabel>
                   <Input
                     type="text"
@@ -153,6 +168,90 @@ export default function Register() {
                   </Button>
                 </InputRightElement>
               </InputGroup>
+            </FormControl>
+            <FormControl id="website">
+              <FormLabel optionalIndicator={true}>Personal Website</FormLabel>
+              <InputGroup size="sm">
+                <InputLeftAddon
+                  bg="gray.50"
+                  _dark={{
+                    bg: 'gray.800',
+                  }}
+                  color="gray.500"
+                  rounded="md"
+                >
+                  https://
+                </InputLeftAddon>
+                <Input
+                  type="tel"
+                  value={portfolio}
+                  placeholder="www.example.com"
+                  focusBorderColor="brand.400"
+                  rounded="md"
+                  onChange={event => setPortfolio(event.target.value)}
+                />
+              </InputGroup>
+            </FormControl>
+            <FormControl>
+              <FormLabel>LinkedIn</FormLabel>
+              <InputGroup size="sm">
+                <InputLeftAddon
+                  bg="gray.50"
+                  _dark={{
+                    bg: 'gray.800',
+                  }}
+                  color="gray.500"
+                  rounded="md"
+                >
+                  linkedin.com/in/
+                </InputLeftAddon>
+                <Input
+                  type="tel"
+                  placeholder="accountUrl"
+                  value={linkedin}
+                  onChange={event => setLinkedin(event.target.value)}
+                  focusBorderColor="brand.400"
+                  rounded="md"
+                />
+              </InputGroup>
+            </FormControl>
+            <FormControl>
+              <FormLabel>GitHub</FormLabel>
+              <InputGroup size="sm">
+                <InputLeftAddon
+                  bg="gray.50"
+                  _dark={{
+                    bg: 'gray.800',
+                  }}
+                  color="gray.500"
+                  rounded="md"
+                >
+                  github.com/
+                </InputLeftAddon>
+                <Input
+                  type="tel"
+                  value={github}
+                  onChange={event => setGithub(event.target.value)}
+                  placeholder="accountUrl"
+                  focusBorderColor="brand.400"
+                  rounded="md"
+                />
+              </InputGroup>
+            </FormControl>
+
+            <FormControl id="email" mt={1}>
+              <FormLabel>About</FormLabel>
+              <Textarea
+                placeholder="Tell us about yourself. Other people will be able to see this."
+                rows={4}
+                value={bio}
+                onChange={event => setBio(event.target.value)}
+                shadow="sm"
+                focusBorderColor="brand.400"
+                fontSize={{
+                  sm: 'sm',
+                }}
+              />
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button

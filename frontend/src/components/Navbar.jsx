@@ -135,8 +135,7 @@ export default function Navbar() {
               >
                 <Avatar
                   // name={user ? `${user.name} ${user.surname}` : null}
-                  // color={avatarColor}
-                  colorScheme="blue"
+                  p={'1'}
                   bgGradient="linear(to-r, blue.300, blue.600)"
                   _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
                 />

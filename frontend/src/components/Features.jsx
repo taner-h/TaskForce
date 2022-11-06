@@ -18,9 +18,9 @@ import collab from '../asset/team_collaboration.svg';
 import coworking from '../asset/co-working.svg';
 import { Link } from 'react-router-dom';
 
-export default function Features({ referance }) {
+export default function Features({ reference }) {
   return (
-    <Container ref={referance} maxW={'7xl'}>
+    <Container ref={reference} maxW={'7xl'}>
       <Stack
         align={'center'}
         spacing={{ base: 8, md: 10 }}

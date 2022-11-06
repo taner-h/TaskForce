@@ -18,7 +18,7 @@ function App() {
     // check if token in localstorage is valid
     const isTokenValid = await dispatch(verifyToken());
     // if token is valid get user info and set state
-    if (isTokenValid) {
+    if (isTokenValid.payload.isAuth) {
       dispatch(
         setAuth({
           token: localStorage.token,
@@ -26,7 +26,7 @@ function App() {
           isLogged: true,
         })
       );
-      const user = await dispatch(fetchUser(localStorage.user));
+      const user = await dispatch(fetchUser(isTokenValid.payload.userId));
       dispatch(
         setAuth({
           token: localStorage.token,
