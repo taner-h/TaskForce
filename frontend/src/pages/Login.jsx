@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Flex,
   Box,
@@ -14,16 +13,17 @@ import {
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { setAuth, fetchUser } from '../reducers/authSlice';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const toast = useToast();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -40,6 +40,15 @@ export default function Login() {
       if (parseRes.token) {
         localStorage.setItem('token', parseRes.token);
         localStorage.setItem('user', parseRes.userId);
+        navigate('/');
+
+        toast({
+          title: 'Log in successful.',
+          description: `Welcome back!`,
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
 
         const user = await dispatch(fetchUser(parseRes.userId));
 
@@ -50,14 +59,6 @@ export default function Login() {
             isLogged: true,
           })
         );
-
-        toast({
-          title: 'Log in successful.',
-          description: `Welcome back ${user.payload.name}!`,
-          status: 'success',
-          duration: 2000,
-          isClosable: true,
-        });
       } else {
         toast({
           title: 'Log in failed.',

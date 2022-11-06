@@ -6,7 +6,7 @@ const initialState = {
   user: null,
 };
 
-export const incrementAsync = createAsyncThunk('auth/isAuth', async () => {
+export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
   try {
     const response = await fetch('/auth/verify', {
       method: 'GET',

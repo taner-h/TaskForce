@@ -21,7 +21,7 @@ import {
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import DesktopNavbar from './DesktopNavbar';
 import MobileNavbar from './MobileNavbar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getIsLogged, logOut, getUser } from '../reducers/authSlice';
 
@@ -30,13 +30,9 @@ export default function Navbar() {
   const isLogged = useSelector(getIsLogged);
   const dispatch = useDispatch();
   const registerButtonColor = useColorModeValue('gray.700', 'white');
-
+  const avatarColor = useColorModeValue('white', 'gray.800');
+  const navigate = useNavigate();
   const user = useSelector(getUser);
-  const avatarStyle = {
-    size: 'sm',
-    bg: useColorModeValue('gray.700', 'gray.300'),
-    color: useColorModeValue('white', 'gray.700'),
-  };
 
   return (
     <Box position="sticky" top="0" zIndex={'5'}>
@@ -106,7 +102,6 @@ export default function Navbar() {
                   fontWeight={600}
                   color={registerButtonColor}
                   variant="link"
-                  // bg={useColorModeValue('gray.700', 'gray.700')}
                   href={'#'}
                 >
                   Register
@@ -139,8 +134,8 @@ export default function Navbar() {
                 minW={0}
               >
                 <Avatar
-                  name={user ? `${user.name} ${user.surname}` : null}
-                  color={'white'}
+                  // name={user ? `${user.name} ${user.surname}` : null}
+                  // color={avatarColor}
                   colorScheme="blue"
                   bgGradient="linear(to-r, blue.300, blue.600)"
                   _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
@@ -170,7 +165,14 @@ export default function Navbar() {
                 <MenuItem>Your Tasks</MenuItem>
                 <MenuItem>Notifications</MenuItem>
                 <MenuItem>Settings</MenuItem>
-                <MenuItem onClick={() => dispatch(logOut())}>Logout</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    dispatch(logOut());
+                    navigate('/');
+                  }}
+                >
+                  Logout
+                </MenuItem>
               </MenuList>
             </Menu>
           )}

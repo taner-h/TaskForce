@@ -16,9 +16,9 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { Link } from 'react-router-dom';
-import { setAuth } from '../reducers/authSlice';
-import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { setAuth, fetchUser } from '../reducers/authSlice';
+import { useDispatch } from 'react-redux';
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +28,7 @@ export default function Register() {
   const [surname, setSurname] = useState('');
   const toast = useToast();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -43,6 +44,7 @@ export default function Register() {
       if (parseRes.token) {
         localStorage.setItem('token', parseRes.token);
         localStorage.setItem('user', parseRes.userId);
+        navigate('/');
 
         toast({
           title: 'Register successful.',
@@ -51,10 +53,13 @@ export default function Register() {
           duration: 2000,
           isClosable: true,
         });
+
+        const user = await dispatch(fetchUser(parseRes.userId));
+
         dispatch(
           setAuth({
             token: parseRes.token,
-            userId: parseRes.userId,
+            user: user.payload,
             isLogged: true,
           })
         );
