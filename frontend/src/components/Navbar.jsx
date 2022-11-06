@@ -90,7 +90,7 @@ export default function Navbar() {
           direction={'row'}
           spacing={5}
         >
-          <ColorModeSwitcher />
+          {/* <ColorModeSwitcher /> */}
 
           {!isLogged && (
             <>
@@ -157,7 +157,10 @@ export default function Navbar() {
                 </Center>
                 <br />
                 <MenuDivider />
-                <MenuItem icon={<ColorModeSwitcher />}>Toggle Theme </MenuItem>
+                <Center>
+                  Toggle Theme <ColorModeSwitcher />
+                </Center>
+                {/* <MenuItem icon={<ColorModeSwitcher />}>Toggle Theme </MenuItem> */}
                 <MenuDivider />
                 <MenuItem>Your Projects</MenuItem>
                 <MenuItem>Your Tasks</MenuItem>
