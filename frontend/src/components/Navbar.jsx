@@ -90,7 +90,7 @@ export default function Navbar() {
           direction={'row'}
           spacing={5}
         >
-          {/* <ColorModeSwitcher /> */}
+          {!isLogged && <ColorModeSwitcher />}
 
           {!isLogged && (
             <>
