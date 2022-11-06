@@ -30,7 +30,6 @@ export default function Navbar() {
   const isLogged = useSelector(getIsLogged);
   const dispatch = useDispatch();
   const registerButtonColor = useColorModeValue('gray.700', 'white');
-  const avatarColor = useColorModeValue('white', 'gray.800');
   const navigate = useNavigate();
   const user = useSelector(getUser);
 

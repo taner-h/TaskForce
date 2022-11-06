@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import NotFound from './components/NotFound';
 import Pricing from './pages/Pricing';
 import Home from './pages/Home';
+import CreateProject from './pages/CreateProject';
 import { setAuth, fetchUser, verifyToken } from './reducers/authSlice';
 import { useDispatch } from 'react-redux';
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/projects/create" element={<CreateProject />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
