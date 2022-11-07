@@ -14,3 +14,6 @@ app.listen(PORT, () => {
 app.use("/auth", require("./routes/auth"));
 app.use("/project", require("./routes/project"));
 app.use("/user", require("./routes/user"));
+app.use("/field", require("./routes/field"));
+app.use("/skill", require("./routes/skill"));
+app.use("/tag", require("./routes/tag"));

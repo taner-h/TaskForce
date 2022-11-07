@@ -198,4 +198,15 @@ router.post("/member", async (req, res) => {
   }
 });
 
+// get all projects
+router.get("/all", async (req, res) => {
+  try {
+    const projects = await pool.query("SELECT * FROM project");
+
+    res.json(projects.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;

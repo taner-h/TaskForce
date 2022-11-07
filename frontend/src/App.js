@@ -9,11 +9,17 @@ import NotFound from './components/NotFound';
 import Pricing from './pages/Pricing';
 import Home from './pages/Home';
 import CreateProject from './pages/CreateProject';
-import { setAuth, fetchUser, verifyToken } from './reducers/authSlice';
-import { useDispatch } from 'react-redux';
+import {
+  setAuth,
+  fetchUser,
+  verifyToken,
+  getIsLogged,
+} from './reducers/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 function App() {
   const dispatch = useDispatch();
+  const isLogged = useSelector(getIsLogged);
 
   const auth = async () => {
     // check if token in localstorage is valid
@@ -40,6 +46,7 @@ function App() {
 
   useEffect(() => {
     auth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -51,7 +58,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/projects/create" element={<CreateProject />} />
+          <Route
+            path="/projects/create"
+            element={isLogged ? <CreateProject /> : <Register />}
+          />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
