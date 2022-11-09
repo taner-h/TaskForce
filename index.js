@@ -17,3 +17,6 @@ app.use("/user", require("./routes/user"));
 app.use("/field", require("./routes/field"));
 app.use("/skill", require("./routes/skill"));
 app.use("/tag", require("./routes/tag"));
+app.use("/application", require("./routes/application"));
+app.use("/member", require("./routes/member"));
+app.use("/invite", require("./routes/invite"));

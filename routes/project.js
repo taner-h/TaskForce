@@ -65,145 +65,82 @@ router.post("/", async (req, res) => {
   }
 });
 
-// send request to project
-router.post("/request", async (req, res) => {
-  try {
-    const { userId, projectId } = req.body;
-
-    // if user has request don't send request
-    const hasRequest = await pool.query(
-      "SELECT * FROM request WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
-
-    if (hasRequest.rows.length !== 0) {
-      return res
-        .status(401)
-        .json("Can't send a request. User already has a request.");
-    }
-
-    const isMember = await pool.query(
-      "SELECT * FROM member WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
-
-    if (isMember.rows.length !== 0) {
-      return res
-        .status(401)
-        .json("Can't send a request. User is already a member.");
-    }
-
-    const newRequest = await pool.query(
-      "INSERT INTO request (user_id, project_id) VALUES ($1, $2) RETURNING *",
-      [userId, projectId]
-    );
-
-    res.json(newRequest.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-// send invite to user
-router.post("/invite", async (req, res) => {
-  try {
-    const { userId, projectId } = req.body;
-
-    // if user has invite don't send invite
-    const hasInvite = await pool.query(
-      "SELECT * FROM invite WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
-
-    if (hasInvite.rows.length !== 0) {
-      return res
-        .status(401)
-        .json("Can't send an invite. User is already invited.");
-    }
-
-    const isMember = await pool.query(
-      "SELECT * FROM member WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
-
-    if (isMember.rows.length !== 0) {
-      return res
-        .status(401)
-        .json("Can't send an invite. User is already a member.");
-    }
-
-    const invite = await pool.query(
-      "INSERT INTO invite (user_id, project_id) VALUES ($1, $2) RETURNING *",
-      [userId, projectId]
-    );
-
-    res.json(invite.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-// add user to project
-router.post("/member", async (req, res) => {
-  try {
-    const { userId, projectId } = req.body;
-
-    // check if user is already member
-    const isMember = await pool.query(
-      "SELECT * FROM member WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
-
-    if (isMember.rows.length !== 0) {
-      return res
-        .status(401)
-        .json("Can't send an invite. User is already a member.");
-    }
-
-    // add user to project
-    const member = await pool.query(
-      "INSERT INTO member (user_id, project_id) VALUES ($1, $2) RETURNING *",
-      [userId, projectId]
-    );
-
-    // if user has invite delete invite
-    const hasInvite = await pool.query(
-      "SELECT * FROM invite WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
-
-    if (hasInvite.rows.length !== 0) {
-      await pool.query(
-        "DELETE FROM invite WHERE user_id = $1 AND project_id = $2",
-        [userId, projectId]
-      );
-    }
-
-    // if user has request delete request
-    const hasRequest = await pool.query(
-      "SELECT * FROM request WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
-
-    if (hasRequest.rows.length !== 0) {
-      await pool.query(
-        "DELETE FROM request WHERE user_id = $1 AND project_id = $2",
-        [userId, projectId]
-      );
-    }
-
-    res.json(member.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
 // get all projects
 router.get("/all", async (req, res) => {
   try {
     const projects = await pool.query("SELECT * FROM project");
 
     res.json(projects.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const project = await pool.query(
+      `SELECT * FROM project INNER JOIN project_type
+      ON project.project_type_id = project_type.project_type_id 
+      WHERE project_id = $1`,
+      [id]
+    );
+
+    const response = project.rows[0];
+
+    const creator = await pool.query(
+      `SELECT *, users.name as name, sub_tier.name as sub_tier FROM users 
+      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+      WHERE user_id = $1`,
+      [id]
+    );
+
+    response.creator = creator.rows[0];
+
+    const members = await pool.query(
+      `SELECT *, users.name as name, sub_tier.name as sub_tier 
+      FROM member INNER JOIN users ON users.user_id = member.user_id
+      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+      WHERE project_id = $1`,
+      [id]
+    );
+
+    response.members = members.rows;
+
+    const fields = await pool.query(
+      `SELECT field.field_id, name FROM project_field INNER JOIN field 
+      ON project_field.field_id = field.field_id
+      WHERE project_id = $1`,
+      [id]
+    );
+
+    response.fields = fields.rows;
+
+    const tags = await pool.query(
+      `SELECT tag.tag_id, name FROM project_tag INNER JOIN tag 
+      ON project_tag.tag_id = tag.tag_id
+      WHERE project_id = $1`,
+      [id]
+    );
+    response.tags = tags.rows;
+
+    const skills = await pool.query(
+      `SELECT skill.skill_id, name FROM project_skill INNER JOIN skill 
+      ON project_skill.skill_id = skill.skill_id
+      WHERE project_id = $1`,
+      [id]
+    );
+
+    response.skills = skills.rows;
+
+    const resources = await pool.query(
+      `SELECT resource_id, title, link FROM resource WHERE project_id = $1`,
+      [id]
+    );
+
+    response.resources = resources.rows;
+
+    res.json(response);
   } catch (err) {
     console.error(err.message);
   }
