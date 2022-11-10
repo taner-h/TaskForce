@@ -16,6 +16,9 @@ router.post("/", async (req, res) => {
       projectTypeId,
       fields,
       skills,
+      tags,
+      newTags,
+      resources,
     } = req.body;
 
     const createTime = new Date(Date.now()).toISOString();
@@ -56,6 +59,34 @@ router.post("/", async (req, res) => {
       await pool.query(
         "INSERT INTO project_skill (project_id, skill_id) VALUES ($1, $2)",
         [project.rows[0].project_id, skill]
+      );
+    }
+
+    // add the already existing project tags
+    for (const tag of tags) {
+      await pool.query(
+        "INSERT INTO project_tag (project_id, tag_id) VALUES ($1, $2)",
+        [project.rows[0].project_id, tag]
+      );
+    }
+
+    for (const newTag of newTags) {
+      const addedTag = await pool.query(
+        "INSERT INTO tag (name) VALUES ($1) RETURNING *",
+        [newTag]
+      );
+
+      await pool.query(
+        "INSERT INTO project_tag (project_id, tag_id) VALUES ($1, $2)",
+        [project.rows[0].project_id, addedTag.rows[0].tag_id]
+      );
+    }
+
+    // add the project resources
+    for (const resource of resources) {
+      await pool.query(
+        "INSERT INTO resource (project_id, title, link) VALUES ($1, $2, $3)",
+        [project.rows[0].project_id, resource.title, resource.link]
       );
     }
 
