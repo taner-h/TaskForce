@@ -153,9 +153,15 @@ export default function Navbar() {
                 </Center>
                 <br />
                 <Center>
-                  <p>{user ? `${user.name} ${user.surname}` : ''}</p>
+                  <Text fontWeight={'600'}>
+                    {user && `${user.name} ${user.surname}`}
+                  </Text>
                 </Center>
                 <br />
+                <MenuDivider />
+                <Center>
+                  <Text>{user && `You have ${user.credit_count} credits`}</Text>
+                </Center>
                 <MenuDivider />
                 <Center>
                   Toggle Theme <ColorModeSwitcher />

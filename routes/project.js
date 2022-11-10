@@ -128,16 +128,6 @@ router.get("/:id", async (req, res) => {
 
     response.creator = creator.rows[0];
 
-    const members = await pool.query(
-      `SELECT *, users.name as name, sub_tier.name as sub_tier 
-      FROM member INNER JOIN users ON users.user_id = member.user_id
-      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
-      WHERE project_id = $1`,
-      [id]
-    );
-
-    response.members = members.rows;
-
     const fields = await pool.query(
       `SELECT field.field_id, name FROM project_field INNER JOIN field 
       ON project_field.field_id = field.field_id

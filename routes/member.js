@@ -58,4 +58,23 @@ router.post("/", async (req, res) => {
   }
 });
 
+// get all members of project
+router.get("/project/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const members = await pool.query(
+      `SELECT *, users.name as name, sub_tier.name as sub_tier
+      FROM member INNER JOIN users ON users.user_id = member.user_id
+      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id
+      WHERE project_id = $1`,
+      [id]
+    );
+
+    res.json(members.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;

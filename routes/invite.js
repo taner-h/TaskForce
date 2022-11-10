@@ -42,4 +42,42 @@ router.post("/", async (req, res) => {
   }
 });
 
+// get all invites of project
+router.get("/project/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const invites = await pool.query(
+      `SELECT *, users.name as name, sub_tier.name as sub_tier
+      FROM invite INNER JOIN users ON users.user_id = invite.user_id
+      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id
+      WHERE project_id = $1`,
+      [id]
+    );
+
+    res.json(invites.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get all invites of user
+router.get("/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const invites = await pool.query(
+      `SELECT * FROM invite 
+      INNER JOIN project ON invite.project_id = project.project_id
+      INNER JOIN project_type ON project.project_type_id = project_type.project_type_id
+      WHERE invite.user_id = $1`,
+      [id]
+    );
+
+    res.json(invites.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;
