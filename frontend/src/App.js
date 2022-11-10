@@ -9,6 +9,7 @@ import NotFound from './components/NotFound';
 import Pricing from './pages/Pricing';
 import Home from './pages/Home';
 import CreateProject from './pages/CreateProject';
+import SearchProject from './pages/SearchProject';
 import {
   setAuth,
   fetchUser,
@@ -58,6 +59,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/projects" element={<SearchProject />} />
           <Route
             path="/projects/create"
             element={isLogged ? <CreateProject /> : <Register />}

@@ -128,6 +128,13 @@ router.get("/:id", async (req, res) => {
 
     response.creator = creator.rows[0];
 
+    const member_count = await pool.query(
+      `SELECT count(*) FROM member WHERE project_id = $1;`,
+      [id]
+    );
+
+    response.member_count = member_count.rows[0].count;
+
     const fields = await pool.query(
       `SELECT field.field_id, name FROM project_field INNER JOIN field 
       ON project_field.field_id = field.field_id

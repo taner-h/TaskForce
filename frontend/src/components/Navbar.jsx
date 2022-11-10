@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Collapse,
+  Badge,
   Flex,
   IconButton,
   Stack,
@@ -24,7 +25,7 @@ import MobileNavbar from './MobileNavbar';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getIsLogged, logOut, getUser } from '../reducers/authSlice';
-
+import { USER_BADGE_COLORS } from '../data/options';
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const isLogged = useSelector(getIsLogged);
@@ -157,7 +158,12 @@ export default function Navbar() {
                     {user && `${user.name} ${user.surname}`}
                   </Text>
                 </Center>
-                <br />
+                <Center>
+                  <Badge colorScheme={USER_BADGE_COLORS[user?.sub_tier]} m="1">
+                    {user?.sub_tier}
+                  </Badge>
+                </Center>
+                {/* <br /> */}
                 <MenuDivider />
                 <Center>
                   <Text>{user && `You have ${user.credit_count} credits`}</Text>
