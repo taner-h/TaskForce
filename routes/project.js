@@ -2,7 +2,8 @@ const router = require("express").Router();
 const pool = require("../database");
 const auth = require("../middleware/auth");
 const constants = require("../data/constants");
-
+const generateFilterQueryString = require("../utils/generateFilterQueryString");
+const format = require("pg-format");
 // Add a project
 router.post("/", async (req, res) => {
   try {
@@ -26,8 +27,8 @@ router.post("/", async (req, res) => {
     // add the project
     const project = await pool.query(
       `INSERT INTO project (creator_id, name, description, summary, repo, 
-        credit_count, create_time, project_type_id) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+        credit_count, create_time, project_type_id, member_count) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 0) RETURNING *`,
       [
         creatorId,
         name,
@@ -47,47 +48,61 @@ router.post("/", async (req, res) => {
     );
 
     // add the project fields
-    for (const field of fields) {
-      await pool.query(
-        "INSERT INTO project_field (project_id, field_id) VALUES ($1, $2)",
-        [project.rows[0].project_id, field]
+
+    if (fields !== undefined && fields.length != 0) {
+      const fieldQuery = format(
+        "INSERT INTO project_field (project_id, field_id) VALUES %L",
+        fields.map((field) => [project.rows[0].project_id, field])
       );
+
+      await pool.query(fieldQuery);
     }
 
     // add the project skills
-    for (const skill of skills) {
-      await pool.query(
-        "INSERT INTO project_skill (project_id, skill_id) VALUES ($1, $2)",
-        [project.rows[0].project_id, skill]
+    if (skills !== undefined && skills.length != 0) {
+      const skillQuery = format(
+        "INSERT INTO project_skill (project_id, skill_id) VALUES %L",
+        skills.map((skill) => [project.rows[0].project_id, skill])
       );
+
+      await pool.query(skillQuery);
+    }
+
+    if (newTags !== undefined && newTags.length != 0) {
+      const newTagQuery = format(
+        "INSERT INTO tag (name) VALUES %L RETURNING *",
+        newTags.map((newTag) => [newTag])
+      );
+
+      const newInsertedTags = await pool.query(newTagQuery);
+
+      const newTagIds = newInsertedTags.rows.map((tag) => tag.tag_id);
+      if (tags !== undefined && tags.length != 0) {
+        tags.push(...newTagIds);
+      }
     }
 
     // add the already existing project tags
-    for (const tag of tags) {
-      await pool.query(
-        "INSERT INTO project_tag (project_id, tag_id) VALUES ($1, $2)",
-        [project.rows[0].project_id, tag]
-      );
-    }
-
-    for (const newTag of newTags) {
-      const addedTag = await pool.query(
-        "INSERT INTO tag (name) VALUES ($1) RETURNING *",
-        [newTag]
+    if (tags !== undefined && tags.length != 0) {
+      const tagQuery = format(
+        "INSERT INTO project_tag (project_id, tag_id) VALUES %L",
+        tags.map((tag) => [project.rows[0].project_id, tag])
       );
 
-      await pool.query(
-        "INSERT INTO project_tag (project_id, tag_id) VALUES ($1, $2)",
-        [project.rows[0].project_id, addedTag.rows[0].tag_id]
-      );
+      await pool.query(tagQuery);
     }
 
     // add the project resources
-    for (const resource of resources) {
-      await pool.query(
-        "INSERT INTO resource (project_id, title, link) VALUES ($1, $2, $3)",
-        [project.rows[0].project_id, resource.title, resource.link]
+    if (resources !== undefined && resources.length != 0) {
+      const resourceQuery = format(
+        "INSERT INTO resource (project_id, title, link) VALUES %L",
+        resources.map((resource) => [
+          project.rows[0].project_id,
+          resource.title,
+          resource.link,
+        ])
       );
+      await pool.query(resourceQuery);
     }
 
     res.json(project.rows[0]);
@@ -102,6 +117,96 @@ router.get("/all", async (req, res) => {
     const projects = await pool.query("SELECT * FROM project");
 
     res.json(projects.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// filter projects
+router.post("/search", async (req, res) => {
+  try {
+    const { fields, tags, skills } = req.body;
+
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 9;
+    const sortBy = req.query.sortBy || "create_time";
+    const order = req.query.order || "ASC";
+
+    const filterQuery = generateFilterQueryString(fields, tags, skills);
+    const { query, params } = filterQuery;
+
+    const filteredProjects = await pool.query(query, params);
+    const filtered = filteredProjects.rows.map((item) => item.project_id);
+
+    const response = {};
+
+    response.totalItems = filtered.length;
+    response.totalPageCount = Math.ceil(response.totalItems / limit);
+    response.currentPageItems;
+    response.currentPage = parseInt(page);
+    response.pageSize = limit;
+    response.content = {};
+
+    if (filtered.length === 0) {
+      response.currentPageItems = 0;
+      response.message = "No projects found with the selected filters.";
+      res.json(response);
+    }
+
+    const projectQuery = format(
+      `SELECT project_id, creator_id, project.name as project_name, description, 
+    summary, repo, project.credit_count as credit_count, member_count,
+    project.create_time as create_time, type as project_type, users.name as 
+    creator_name, surname as creator_surname, sub_tier.name as sub_tier
+    FROM project
+    INNER JOIN project_type ON project.project_type_id = project_type.project_type_id
+    INNER JOIN users ON project.creator_id = users.user_id
+    INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+    WHERE project_id IN (%L) ORDER BY %I %s LIMIT %s OFFSET %s `,
+      filtered,
+      sortBy,
+      order,
+      limit,
+      limit * (page - 1)
+    );
+
+    const projects = await pool.query(projectQuery);
+    response.currentPageItems = projects.rows.length;
+    response.content.projects = projects.rows;
+
+    const projectIds = projects.rows.map((project) => project.project_id);
+
+    const fieldQuery = format(
+      `SELECT * FROM project_field 
+        INNER JOIN field ON project_field.field_id = field.field_id
+        WHERE project_id IN (%L)`,
+      projectIds
+    );
+
+    const allFields = await pool.query(fieldQuery);
+    response.content.fields = allFields.rows;
+
+    const skillQuery = format(
+      `SELECT * FROM project_skill 
+        INNER JOIN skill ON project_skill.skill_id = skill.skill_id
+        WHERE project_id IN (%L)`,
+      projectIds
+    );
+
+    const allSkills = await pool.query(skillQuery);
+    response.content.skills = allSkills.rows;
+
+    const tagQuery = format(
+      `SELECT * FROM project_tag 
+        INNER JOIN tag ON project_tag.tag_id = tag.tag_id
+        WHERE project_id IN (%L)`,
+      projectIds
+    );
+
+    const allTags = await pool.query(tagQuery);
+    response.content.tags = allTags.rows;
+
+    res.json(response);
   } catch (err) {
     console.error(err.message);
   }
