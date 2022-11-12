@@ -3,6 +3,7 @@ const pool = require("../database");
 const auth = require("../middleware/auth");
 const constants = require("../data/constants");
 const generateFilterQueryString = require("../utils/generateFilterQueryString");
+const formatProjectsResponse = require("../utils/formatProjectsResponse");
 const format = require("pg-format");
 // Add a project
 router.post("/", async (req, res) => {
@@ -142,10 +143,9 @@ router.post("/search", async (req, res) => {
 
     response.totalItems = filtered.length;
     response.totalPageCount = Math.ceil(response.totalItems / limit);
-    response.currentPageItems;
     response.currentPage = parseInt(page);
     response.pageSize = limit;
-    response.content = {};
+    response.projects = [];
 
     if (filtered.length === 0) {
       response.currentPageItems = 0;
@@ -172,7 +172,7 @@ router.post("/search", async (req, res) => {
 
     const projects = await pool.query(projectQuery);
     response.currentPageItems = projects.rows.length;
-    response.content.projects = projects.rows;
+    // response.content.projects = projects.rows;
 
     const projectIds = projects.rows.map((project) => project.project_id);
 
@@ -184,7 +184,6 @@ router.post("/search", async (req, res) => {
     );
 
     const allFields = await pool.query(fieldQuery);
-    response.content.fields = allFields.rows;
 
     const skillQuery = format(
       `SELECT * FROM project_skill 
@@ -194,7 +193,6 @@ router.post("/search", async (req, res) => {
     );
 
     const allSkills = await pool.query(skillQuery);
-    response.content.skills = allSkills.rows;
 
     const tagQuery = format(
       `SELECT * FROM project_tag 
@@ -204,7 +202,14 @@ router.post("/search", async (req, res) => {
     );
 
     const allTags = await pool.query(tagQuery);
-    response.content.tags = allTags.rows;
+
+    response.projects = formatProjectsResponse(
+      projectIds,
+      projects.rows,
+      allFields.rows,
+      allSkills.rows,
+      allTags.rows
+    );
 
     res.json(response);
   } catch (err) {
