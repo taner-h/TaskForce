@@ -34,33 +34,19 @@ import world from '../asset/world.svg';
 import startup from '../asset/startup.svg';
 import community from '../asset/community.svg';
 import Footer from '../components/FooterSmall';
+import AddFieldModal from '../components/AddFieldModal';
+import AddTagModal from '../components/AddTagModal';
+import AddSkillModal from '../components/AddSkillModal';
 
 import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 
 export default function CreateProject() {
   const user = useSelector(getUser);
 
-  const fields = [
-    'Mobile App Development',
-    'Web Development',
-    'Game Development',
-  ];
-  const skills = [
-    'Mobile App Development',
-    'Web Development',
-    'Web Development',
-    'Web Development',
-    'Web Development',
-    'Game Development',
-  ];
-  const tags = [
-    'React.js',
-    'JavaScript',
-    'node.js',
-    'Redux',
-    'PostgreSQL',
-    'ChakraUI',
-  ];
+  const [fields, setFields] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [tags, setTags] = useState([]);
 
   return (
     <>
@@ -261,10 +247,16 @@ export default function CreateProject() {
                         variant="solid"
                         colorScheme="gray"
                       >
-                        <TagLabel>{field}</TagLabel>
-                        <TagCloseButton />
+                        <TagLabel>{field.label}</TagLabel>
+                        <TagCloseButton
+                          onClick={() => {
+                            const temp_fields = fields.filter(i => i !== field);
+                            setFields(temp_fields);
+                          }}
+                        />
                       </Tag>
                     ))}
+                    <AddFieldModal setSelectedFields={setFields} />
                   </Box>
                   <Box align="left">
                     <FormLabel>Skills</FormLabel>
@@ -277,10 +269,16 @@ export default function CreateProject() {
                         variant="solid"
                         colorScheme="gray"
                       >
-                        <TagLabel>{skill}</TagLabel>
-                        <TagCloseButton />
+                        <TagLabel>{skill.label}</TagLabel>
+                        <TagCloseButton
+                          onClick={() => {
+                            const temp_skills = skills.filter(i => i !== skill);
+                            setSkills(temp_skills);
+                          }}
+                        />
                       </Tag>
                     ))}
+                    <AddSkillModal setSelectedSkills={setSkills} />
                   </Box>
                   <Box align="left">
                     <FormLabel>Tags</FormLabel>
@@ -293,10 +291,16 @@ export default function CreateProject() {
                         variant="solid"
                         colorScheme="gray"
                       >
-                        <TagLabel>{tag}</TagLabel>
-                        <TagCloseButton />
+                        <TagLabel>{tag.label}</TagLabel>
+                        <TagCloseButton
+                          onClick={() => {
+                            const temp_tags = tags.filter(i => i !== tag);
+                            setTags(temp_tags);
+                          }}
+                        />
                       </Tag>
                     ))}
+                    <AddTagModal setSelectedTags={setTags} />
                   </Box>
                   <Box align="center">
                     <FormLabel>Resources</FormLabel>
