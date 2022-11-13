@@ -18,7 +18,6 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.20",
-    "pg": "^8.8.0",
-    "react-hook-form": "^7.39.2"
+    "pg": "^8.8.0"
   }
 }

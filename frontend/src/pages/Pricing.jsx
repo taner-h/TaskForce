@@ -185,6 +185,7 @@ export default function Pricing() {
                       w="full"
                       bgGradient="linear(to-r, blue.300, blue.600)"
                       colorScheme="blue"
+                      boxShadow={'0 5px 20px 0px rgb(98 178 236/ 60%)'}
                     >
                       Start trial
                     </Button>

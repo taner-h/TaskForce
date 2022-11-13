@@ -1,6 +1,17 @@
 const router = require("express").Router();
 const pool = require("../database");
 
+// get all users
+router.get("/", async (req, res) => {
+  try {
+    const users = await pool.query("SELECT * FROM users");
+
+    res.json(users.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
