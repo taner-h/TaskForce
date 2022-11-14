@@ -48,6 +48,8 @@ export default function SearchProject() {
   const [allFields, setAllFields] = useState([]);
   const [allSkills, setAllSkills] = useState([]);
   const [allTags, setAllTags] = useState([]);
+  const [filters, setFilters] = useState({ fields: [], skills: [], tags: [] });
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -55,13 +57,23 @@ export default function SearchProject() {
     if (allFields.length === 0) getFilterOptions();
   }, [page]);
 
-  const getPageContent = async () => {
+  useEffect(() => {
+    if (!isPending) {
+      if (page === 1) getPageContent();
+      else setPage(1);
+    }
+  }, [filters]);
+
+  const getFilters = () => {
     const body = {
       fields: selectedFields.map(field => field.value),
       skills: selectedSkills.map(skill => skill.value),
       tags: selectedTags.map(tag => tag.value),
     };
+    return body;
+  };
 
+  const getPageContent = async () => {
     setIsPending(true);
     try {
       const response = await fetch(
@@ -69,7 +81,7 @@ export default function SearchProject() {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
+          body: JSON.stringify(filters),
         }
       );
 
@@ -121,10 +133,6 @@ export default function SearchProject() {
     setSelectedFields([]);
     setSelectedSkills([]);
     setSelectedTags([]);
-  };
-
-  const formatRequestBody = () => {
-    const fields = selectedFields.map(field => field.value);
   };
 
   return (
@@ -241,6 +249,7 @@ export default function SearchProject() {
                     onChange={setSelectedTags}
                     variant="flushed"
                     placeholder="Select tags to filter..."
+                    menuShouldBlockScroll={true}
                     closeMenuOnSelect={false}
                     selectedOptionStyle="check"
                     tagVariant="subtle"
@@ -268,7 +277,9 @@ export default function SearchProject() {
             bgGradient="linear(to-r, blue.300, blue.600)"
             _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
             leftIcon={<SearchIcon />}
-            onClick={getPageContent}
+            onClick={() => {
+              setFilters(getFilters());
+            }}
           >
             Search
           </Button>

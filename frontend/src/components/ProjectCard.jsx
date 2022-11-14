@@ -16,7 +16,6 @@ import {
   Avatar,
   useColorModeValue,
 } from '@chakra-ui/react';
-// import { project } from '../data/options';
 import { USER_BADGE_COLORS } from '../data/options';
 
 export default function ProjectCard({ project }) {
