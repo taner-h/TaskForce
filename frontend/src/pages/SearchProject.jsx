@@ -35,10 +35,8 @@ import search from '../asset/web_search.svg';
 import Footer from '../components/FooterSmall';
 import ProjectCard from '../components/ProjectCard';
 import { Select } from 'chakra-react-select';
-import convertSortName from '../utils/convertSortName';
 
 export default function SearchProject() {
-  const [values, setValues] = useState([]);
   const [page, setPage] = useState(1);
   const [content, setContent] = useState({});
   const [order, setOrder] = useState('DESC');
@@ -52,7 +50,18 @@ export default function SearchProject() {
   const [allTags, setAllTags] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  useEffect(() => {
+    getPageContent();
+    if (allFields.length === 0) getFilterOptions();
+  }, [page]);
+
   const getPageContent = async () => {
+    const body = {
+      fields: selectedFields.map(field => field.value),
+      skills: selectedSkills.map(skill => skill.value),
+      tags: selectedTags.map(tag => tag.value),
+    };
+
     setIsPending(true);
     try {
       const response = await fetch(
@@ -60,7 +69,7 @@ export default function SearchProject() {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({}),
+          body: JSON.stringify(body),
         }
       );
 
@@ -108,19 +117,14 @@ export default function SearchProject() {
     }
   };
 
-  useEffect(() => {
-    getPageContent();
-    if (allFields.length === 0) getFilterOptions();
-  }, [page]);
-
-  const onPageChange = page => {
-    setPage(page);
-  };
-
   const clearFilters = () => {
     setSelectedFields([]);
     setSelectedSkills([]);
     setSelectedTags([]);
+  };
+
+  const formatRequestBody = () => {
+    const fields = selectedFields.map(field => field.value);
   };
 
   return (
@@ -333,7 +337,7 @@ export default function SearchProject() {
               },
             }}
             defaultCurrent={1}
-            onChange={onPageChange}
+            onChange={page => setPage(page)}
             pageSize={9}
             current={page}
             total={content?.totalItems}

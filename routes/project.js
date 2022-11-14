@@ -133,12 +133,11 @@ router.post("/search", async (req, res) => {
     const sortBy = req.query.sortBy || "create_time";
     const order = req.query.order || "ASC";
 
-    const filterQuery = generateFilterQueryString(fields, tags, skills);
+    const filterQuery = generateFilterQueryString(fields, skills, tags);
     const { query, params } = filterQuery;
 
     const filteredProjects = await pool.query(query, params);
     const filtered = filteredProjects.rows.map((item) => item.project_id);
-
     const response = {};
 
     response.totalItems = filtered.length;
@@ -147,14 +146,13 @@ router.post("/search", async (req, res) => {
     response.pageSize = limit;
     response.projects = [];
 
-    if (filtered.length === 0) {
+    if (filteredProjects.rowCount === 0) {
       response.currentPageItems = 0;
       response.message = "No projects found with the selected filters.";
       res.json(response);
-    }
-
-    const projectQuery = format(
-      `SELECT project_id, creator_id, project.name as project_name, description, 
+    } else {
+      const projectQuery = format(
+        `SELECT project_id, creator_id, project.name as project_name, description, 
     summary, repo, project.credit_count as credit_count, member_count,
     project.create_time as create_time, type as project_type, users.name as 
     creator_name, surname as creator_surname, sub_tier.name as sub_tier
@@ -163,54 +161,55 @@ router.post("/search", async (req, res) => {
     INNER JOIN users ON project.creator_id = users.user_id
     INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
     WHERE project_id IN (%L) ORDER BY %I %s LIMIT %s OFFSET %s `,
-      filtered,
-      sortBy,
-      order,
-      limit,
-      limit * (page - 1)
-    );
+        filtered,
+        sortBy,
+        order,
+        limit,
+        limit * (page - 1)
+      );
 
-    const projects = await pool.query(projectQuery);
-    response.currentPageItems = projects.rows.length;
+      const projects = await pool.query(projectQuery);
+      response.currentPageItems = projects.rows.length;
 
-    const projectIds = projects.rows.map((project) => project.project_id);
+      const projectIds = projects.rows.map((project) => project.project_id);
 
-    const fieldQuery = format(
-      `SELECT * FROM project_field 
+      const fieldQuery = format(
+        `SELECT * FROM project_field 
         INNER JOIN field ON project_field.field_id = field.field_id
         WHERE project_id IN (%L)`,
-      projectIds
-    );
+        projectIds
+      );
 
-    const allFields = await pool.query(fieldQuery);
+      const allFields = await pool.query(fieldQuery);
 
-    const skillQuery = format(
-      `SELECT * FROM project_skill 
+      const skillQuery = format(
+        `SELECT * FROM project_skill 
         INNER JOIN skill ON project_skill.skill_id = skill.skill_id
         WHERE project_id IN (%L)`,
-      projectIds
-    );
+        projectIds
+      );
 
-    const allSkills = await pool.query(skillQuery);
+      const allSkills = await pool.query(skillQuery);
 
-    const tagQuery = format(
-      `SELECT * FROM project_tag 
+      const tagQuery = format(
+        `SELECT * FROM project_tag 
         INNER JOIN tag ON project_tag.tag_id = tag.tag_id
         WHERE project_id IN (%L)`,
-      projectIds
-    );
+        projectIds
+      );
 
-    const allTags = await pool.query(tagQuery);
+      const allTags = await pool.query(tagQuery);
 
-    response.projects = formatProjectsResponse(
-      projectIds,
-      projects.rows,
-      allFields.rows,
-      allSkills.rows,
-      allTags.rows
-    );
+      response.projects = formatProjectsResponse(
+        projectIds,
+        projects.rows,
+        allFields.rows,
+        allSkills.rows,
+        allTags.rows
+      );
 
-    res.json(response);
+      res.json(response);
+    }
   } catch (err) {
     console.error(err.message);
   }
