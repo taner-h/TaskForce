@@ -65,7 +65,7 @@ export default function AddTagModal({ setSelectedTags }) {
     setLoading.off();
   };
 
-  useEffect(async () => {
+  const getTags = async () => {
     try {
       await fetch('http://localhost:5000/tag', {
         method: 'GET',
@@ -80,11 +80,14 @@ export default function AddTagModal({ setSelectedTags }) {
             };
             tags.push(tag);
           }
-          console.log(tags);
         });
     } catch (err) {
       console.error(err.message);
     }
+  };
+
+  useEffect(() => {
+    getTags();
   }, []);
 
   return (

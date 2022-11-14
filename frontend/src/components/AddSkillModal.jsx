@@ -64,7 +64,7 @@ export default function AddSkillModal({ setSelectedSkills }) {
     setLoading.off();
   };
 
-  useEffect(async () => {
+  const getSkills = async () => {
     try {
       await fetch('http://localhost:5000/skill', {
         method: 'GET',
@@ -79,11 +79,14 @@ export default function AddSkillModal({ setSelectedSkills }) {
             };
             skills.push(skill);
           }
-          console.log(skills);
         });
     } catch (err) {
       console.error(err.message);
     }
+  };
+
+  useEffect(() => {
+    getSkills();
   }, []);
 
   return (

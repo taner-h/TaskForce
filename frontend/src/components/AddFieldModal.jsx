@@ -64,7 +64,7 @@ export default function AddFieldModal({ setSelectedFields }) {
     setLoading.off();
   };
 
-  useEffect(async () => {
+  const getFields = async () => {
     try {
       await fetch('http://localhost:5000/field', {
         method: 'GET',
@@ -83,6 +83,10 @@ export default function AddFieldModal({ setSelectedFields }) {
     } catch (err) {
       console.error(err.message);
     }
+  };
+
+  useEffect(() => {
+    getFields();
   }, []);
 
   return (
