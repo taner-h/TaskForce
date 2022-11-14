@@ -60,16 +60,18 @@ export default function ProjectCard({ project }) {
             letterSpacing={1.1}
           >
             {/* {project.fields.map(field => field.name).join(', ')} */}
-            {project.fields[0].name}
+            {project.fields[0]?.name}
           </Text>
           <Heading
             color={useColorModeValue('gray.700', 'white')}
             fontSize={'2xl'}
             fontFamily={'body'}
           >
-            {project.name}
+            {project.project_name}
           </Heading>
-          <Text color={'gray.500'}>{project.summary}</Text>
+          <Text color={'gray.500'}>
+            {project.summary || project.description}
+          </Text>
           <Box align="left">
             {project.skills?.map(skill => (
               <Tag
@@ -105,17 +107,17 @@ export default function ProjectCard({ project }) {
               colorScheme="blue"
               bgGradient="linear(to-r, blue.300, blue.600)"
               _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-              name={`${project.creator?.name} ${project.creator?.surname}`}
+              name={`${project.creator_name} ${project.creator_surname}`}
               size={'md'}
             />
             <Stack direction={'column'} spacing={0} fontSize={'sm'}>
               <Text fontWeight={600}>
-                {`${project.creator?.name} ${project.creator?.surname}`}
+                {`${project.creator_name} ${project.creator_surname}`}
                 <Badge
-                  colorScheme={USER_BADGE_COLORS[project.creator?.sub_tier]}
+                  colorScheme={USER_BADGE_COLORS[project.creator_sub_tier]}
                   m="1"
                 >
-                  {project.creator?.sub_tier}
+                  {project.creator_sub_tier}
                 </Badge>
               </Text>
 

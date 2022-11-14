@@ -128,8 +128,8 @@ router.post("/search", async (req, res) => {
   try {
     const { fields, tags, skills } = req.body;
 
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 9;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9;
     const sortBy = req.query.sortBy || "create_time";
     const order = req.query.order || "ASC";
 
@@ -143,7 +143,7 @@ router.post("/search", async (req, res) => {
 
     response.totalItems = filtered.length;
     response.totalPageCount = Math.ceil(response.totalItems / limit);
-    response.currentPage = parseInt(page);
+    response.currentPage = page;
     response.pageSize = limit;
     response.projects = [];
 
@@ -172,7 +172,6 @@ router.post("/search", async (req, res) => {
 
     const projects = await pool.query(projectQuery);
     response.currentPageItems = projects.rows.length;
-    // response.content.projects = projects.rows;
 
     const projectIds = projects.rows.map((project) => project.project_id);
 

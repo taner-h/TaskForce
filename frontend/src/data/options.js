@@ -217,3 +217,749 @@ export const project2 = {
     },
   ],
 };
+
+export const example = {
+  totalItems: 24,
+  totalPageCount: 2,
+  currentPage: 1,
+  pageSize: 12,
+  projects: [
+    {
+      project_id: 39,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T09:35:37.275Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 39,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 39,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 39,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 39,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 39,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 39,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 39,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+        {
+          project_id: 39,
+          tag_id: 60,
+          name: 'NewTag',
+        },
+        {
+          project_id: 39,
+          tag_id: 61,
+          name: 'NewTag2',
+        },
+      ],
+    },
+    {
+      project_id: 38,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T09:30:58.607Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 38,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 38,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 38,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 38,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 38,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 38,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 38,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+        {
+          project_id: 38,
+          tag_id: 58,
+          name: 'NewTag',
+        },
+        {
+          project_id: 38,
+          tag_id: 59,
+          name: 'NewTag2',
+        },
+      ],
+    },
+    {
+      project_id: 37,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T09:30:40.691Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 37,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 37,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 37,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 37,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 37,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 37,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 37,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+        {
+          project_id: 37,
+          tag_id: 56,
+          name: 'NewTag',
+        },
+        {
+          project_id: 37,
+          tag_id: 57,
+          name: 'NewTag2',
+        },
+      ],
+    },
+    {
+      project_id: 36,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T09:26:48.318Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 36,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 36,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 36,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 36,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 36,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 36,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 36,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+        {
+          project_id: 36,
+          tag_id: 54,
+          name: 'NewTag',
+        },
+        {
+          project_id: 36,
+          tag_id: 55,
+          name: 'NewTag2',
+        },
+      ],
+    },
+    {
+      project_id: 35,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T09:22:35.243Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 35,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 35,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 35,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 35,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 35,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 35,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 35,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+    {
+      project_id: 34,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T09:21:13.945Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 34,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 34,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 34,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 34,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 34,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 34,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 34,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+    {
+      project_id: 32,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T09:09:04.060Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 32,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 32,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 32,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 32,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 32,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 32,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 32,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+    {
+      project_id: 31,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T08:57:56.479Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 31,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 31,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 31,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 31,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 31,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 31,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 31,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+    {
+      project_id: 30,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T08:56:56.930Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 30,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 30,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 30,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 30,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 30,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 30,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 30,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+    {
+      project_id: 29,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T08:55:54.835Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 29,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 29,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 29,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 29,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 29,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 29,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 29,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+    {
+      project_id: 28,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T08:51:01.798Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 28,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 28,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 28,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 28,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 28,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 28,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 28,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+    {
+      project_id: 26,
+      creator_id: 1,
+      project_name: 'TaskForce',
+      description:
+        'TaskForce is an online collaboration platform for software development.',
+      summary:
+        'TaskForce is an online collaboration platform for software development.',
+      repo: 'https://github.com/taner-h/TaskForce',
+      credit_count: 3,
+      member_count: 0,
+      create_time: '2022-11-12T08:49:48.103Z',
+      project_type: 'private',
+      creator_name: 'Admin',
+      creator_surname: 'Admin',
+      sub_tier: 'ultimate',
+      fields: [
+        {
+          project_id: 26,
+          field_id: 1,
+          name: 'Web Development',
+        },
+        {
+          project_id: 26,
+          field_id: 2,
+          name: 'Mobile Application',
+        },
+      ],
+      skills: [
+        {
+          project_id: 26,
+          skill_id: 3,
+          name: 'Artificial Intelligence',
+        },
+        {
+          project_id: 26,
+          skill_id: 4,
+          name: 'Mobile Application Developer',
+        },
+        {
+          project_id: 26,
+          skill_id: 1,
+          name: 'Front-End Developer',
+        },
+      ],
+      tags: [
+        {
+          project_id: 26,
+          tag_id: 1,
+          name: 'React.js',
+        },
+        {
+          project_id: 26,
+          tag_id: 3,
+          name: 'JavaScript',
+        },
+      ],
+    },
+  ],
+  currentPageItems: 12,
+};
