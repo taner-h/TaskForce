@@ -20,23 +20,6 @@ import {
 import { USER_BADGE_COLORS } from '../data/options';
 
 export default function ProjectCard({ project }) {
-  const skills = [
-    'Mobile App Development',
-    'Web Development',
-    'Web Development',
-    'Web Development',
-    'Web Development',
-    'Game Development',
-  ];
-
-  const tags = [
-    'React.js',
-    'JavaScript',
-    'node.js',
-    'Redux',
-    'PostgreSQL',
-    'ChakraUI',
-  ];
   return (
     <Flex>
       <Box

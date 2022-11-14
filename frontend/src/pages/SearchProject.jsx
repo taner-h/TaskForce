@@ -4,6 +4,15 @@ import {
   Button,
   Center,
   Flex,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
   Heading,
   Image,
   Menu,
@@ -14,6 +23,7 @@ import {
   MenuOptionGroup,
   SimpleGrid,
   Spinner,
+  useDisclosure,
   Stack,
   Text,
   useColorModeValue,
@@ -24,6 +34,7 @@ import '../asset/pagination.css';
 import search from '../asset/web_search.svg';
 import Footer from '../components/FooterSmall';
 import ProjectCard from '../components/ProjectCard';
+import { Select } from 'chakra-react-select';
 import convertSortName from '../utils/convertSortName';
 
 export default function SearchProject() {
@@ -33,10 +44,16 @@ export default function SearchProject() {
   const [order, setOrder] = useState('DESC');
   const [sortBy, setSortBy] = useState('create_time');
   const [isPending, setIsPending] = useState(true);
+  const [selectedFields, setSelectedFields] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [allFields, setAllFields] = useState([]);
+  const [allSkills, setAllSkills] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getPageContent = async () => {
     setIsPending(true);
-
     try {
       const response = await fetch(
         `http://localhost:5000/project/search?page=${page}&sortBy=${sortBy}&order=${order}`,
@@ -55,12 +72,55 @@ export default function SearchProject() {
     }
   };
 
+  const getFilterOptions = async () => {
+    try {
+      const responseFields = await fetch('http://localhost:5000/field');
+      const fields = await responseFields.json();
+
+      setAllFields(
+        fields.map(field => ({
+          value: field.field_id,
+          label: field.name,
+        }))
+      );
+
+      const responseSkills = await fetch('http://localhost:5000/skill');
+      const skills = await responseSkills.json();
+
+      setAllSkills(
+        skills.map(skill => ({
+          value: skill.skill_id,
+          label: skill.name,
+        }))
+      );
+
+      const responseTags = await fetch('http://localhost:5000/tag');
+      const tags = await responseTags.json();
+
+      setAllTags(
+        tags.map(tag => ({
+          value: tag.tag_id,
+          label: tag.name,
+        }))
+      );
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
     getPageContent();
+    if (allFields.length === 0) getFilterOptions();
   }, [page]);
 
   const onPageChange = page => {
     setPage(page);
+  };
+
+  const clearFilters = () => {
+    setSelectedFields([]);
+    setSelectedSkills([]);
+    setSelectedTags([]);
   };
 
   return (
@@ -123,76 +183,95 @@ export default function SearchProject() {
           </Stack>
         </Center>
         <Center>
-          <Text
-            color={useColorModeValue('gray.600', 'gray.500')}
-            fontSize={'lg'}
-            fontWeight={'600'}
-            align="center"
-            justifyContent="center"
-          >
+          <Button mx="3" width="100px" colorScheme="gray" onClick={onOpen}>
             Filter by
-          </Text>
-          <Menu closeOnSelect={false}>
-            <MenuButton as={Button} mx="3" colorScheme="gray">
-              Fields
-            </MenuButton>
-            <MenuList minWidth="240px">
-              <MenuOptionGroup
-                // title="Fields"
-                type="checkbox"
-                value={values}
-                onChange={setValues}
-              >
-                <MenuItemOption value="email">Email</MenuItemOption>
-                <MenuItemOption value="phone">Phone</MenuItemOption>
-                <MenuItemOption value="country">Country</MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu closeOnSelect={false}>
-            <MenuButton as={Button} mx="3" colorScheme="gray">
-              Skills
-            </MenuButton>
-            <MenuList minWidth="240px">
-              <MenuOptionGroup
-                // title="Fields"
-                type="checkbox"
-              >
-                <MenuItemOption value="email">Email</MenuItemOption>
-                <MenuItemOption value="phone">Phone</MenuItemOption>
-                <MenuItemOption value="country">Country</MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu closeOnSelect={false}>
-            <MenuButton as={Button} mx="3" colorScheme="gray">
-              Tags
-            </MenuButton>
-            <MenuList minWidth="240px">
-              <MenuOptionGroup
-                // title="Fields"
-                type="checkbox"
-              >
-                <MenuItemOption value="email">Email</MenuItemOption>
-                <MenuItemOption value="phone">Phone</MenuItemOption>
-                <MenuItemOption value="country">Country</MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-
-          <Text
-            color={useColorModeValue('gray.600', 'gray.500')}
-            fontSize={'lg'}
-            fontWeight={'600'}
-            align="center"
-            justifyContent="center"
-            ml="5"
+          </Button>
+          <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size={'xl'}
+            closeOnOverlayClick={false}
+            isCentered
           >
-            Sort by
-          </Text>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Filter Projects</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <FormControl p={4}>
+                  <FormLabel>Fields</FormLabel>
+                  <Select
+                    isMulti
+                    options={allFields}
+                    value={selectedFields}
+                    onChange={setSelectedFields}
+                    variant="flushed"
+                    placeholder="Select fields to filter..."
+                    closeMenuOnSelect={false}
+                    selectedOptionStyle="check"
+                    tagVariant="subtle"
+                    hideSelectedOptions={false}
+                  />
+                </FormControl>
+                <FormControl p={4}>
+                  <FormLabel>Skills</FormLabel>
+                  <Select
+                    isMulti
+                    options={allSkills}
+                    value={selectedSkills}
+                    onChange={setSelectedSkills}
+                    variant="flushed"
+                    placeholder="Select skills to filter..."
+                    closeMenuOnSelect={false}
+                    selectedOptionStyle="check"
+                    tagVariant="subtle"
+                    hideSelectedOptions={false}
+                  />
+                </FormControl>
+                <FormControl p={4}>
+                  <FormLabel>Tags</FormLabel>
+                  <Select
+                    isMulti
+                    options={allTags}
+                    value={selectedTags}
+                    onChange={setSelectedTags}
+                    variant="flushed"
+                    placeholder="Select tags to filter..."
+                    closeMenuOnSelect={false}
+                    selectedOptionStyle="check"
+                    tagVariant="subtle"
+                    hideSelectedOptions={false}
+                  />
+                </FormControl>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button variant="outline" onClick={clearFilters} mx={'5'}>
+                  Clear All
+                </Button>
+                <Button colorScheme="blue" mr={3} onClick={onClose}>
+                  Save
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          <Button
+            mx="4"
+            color={'white'}
+            width="120px"
+            colorScheme="blue"
+            bgGradient="linear(to-r, blue.300, blue.600)"
+            _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
+            leftIcon={<SearchIcon />}
+            onClick={getPageContent}
+          >
+            Search
+          </Button>
+
           <Menu closeOnSelect={false}>
-            <MenuButton as={Button} mx="3" colorScheme="gray">
-              {convertSortName(sortBy)}
+            <MenuButton as={Button} mx="3" width="100px" colorScheme="gray">
+              Sort by
             </MenuButton>
             <MenuList minWidth="240px">
               <MenuOptionGroup
@@ -223,20 +302,6 @@ export default function SearchProject() {
               </MenuOptionGroup>
             </MenuList>
           </Menu>
-        </Center>
-
-        <Center>
-          <Button
-            mt={'10'}
-            color={'white'}
-            colorScheme="blue"
-            bgGradient="linear(to-r, blue.300, blue.600)"
-            _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-            leftIcon={<SearchIcon />}
-            onClick={getPageContent}
-          >
-            Search
-          </Button>
         </Center>
 
         <Center>
