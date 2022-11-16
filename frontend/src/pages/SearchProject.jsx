@@ -35,6 +35,8 @@ import search from '../asset/web_search.svg';
 import Footer from '../components/FooterSmall';
 import ProjectCard from '../components/ProjectCard';
 import { Select } from 'chakra-react-select';
+import { useSelector } from 'react-redux';
+import { getIsLogged, getUser } from '../reducers/authSlice';
 
 export default function SearchProject() {
   const [page, setPage] = useState(1);
@@ -49,8 +51,10 @@ export default function SearchProject() {
   const [allSkills, setAllSkills] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const [filters, setFilters] = useState({ fields: [], skills: [], tags: [] });
-
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const isLogged = useSelector(getIsLogged);
+  const user = useSelector(getUser);
 
   useEffect(() => {
     getPageContent();
@@ -334,7 +338,11 @@ export default function SearchProject() {
           {Object.keys(content).length !== 0 && (
             <SimpleGrid columns={{ base: 1, lg: 2, '2xl': 3 }}>
               {content.projects?.map(project => (
-                <ProjectCard project={project} />
+                <ProjectCard
+                  project={project}
+                  isLogged={isLogged}
+                  user={user}
+                />
               ))}
             </SimpleGrid>
           )}

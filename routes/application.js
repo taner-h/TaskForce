@@ -37,6 +37,11 @@ router.post("/", async (req, res) => {
       [userId, projectId, creditCount, createTime]
     );
 
+    await pool.query(
+      `UPDATE users SET credit_count = credit_count - $1 where user_id = $2`,
+      [creditCount, userId]
+    );
+
     res.json(newApplication.rows[0]);
   } catch (err) {
     console.error(err.message);

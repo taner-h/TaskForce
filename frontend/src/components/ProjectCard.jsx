@@ -3,6 +3,9 @@ import {
   Box,
   Center,
   Heading,
+  SimpleGrid,
+  Grid,
+  GridItem,
   Image,
   Badge,
   Flex,
@@ -10,15 +13,68 @@ import {
   Button,
   Tag,
   TagLabel,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   TagCloseButton,
   Container,
+  FormControl,
+  FormLabel,
   Stack,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Avatar,
   useColorModeValue,
+  useToast,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { USER_BADGE_COLORS } from '../data/options';
+import React, { useState } from 'react';
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, isLogged, user }) {
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [credit, setCredit] = useState(1);
+  const handleApply = async () => {
+    const body = {
+      userId: user.user_id,
+      projectId: project.project_id,
+      creditCount: credit,
+    };
+
+    try {
+      await fetch('http://localhost:5000/application', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      toast({
+        title: `Application succesful.`,
+        description: 'You have succesfully applied to project.',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+      onClose();
+    } catch (err) {
+      toast({
+        title: `Application failed.`,
+        description: 'You cannot apply to this project.',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
+      console.error(err.message);
+    }
+  };
+
   return (
     <Flex>
       <Box
@@ -29,28 +85,56 @@ export default function ProjectCard({ project }) {
         bg={useColorModeValue('white', 'gray.900')}
         boxShadow={'2xl'}
         rounded={'md'}
-        // position="relative"
+        position="relative"
         p={6}
         justify="center"
       >
-        <Stack>
-          <Text
-            color={'blue.500'}
-            textTransform={'uppercase'}
-            fontWeight={800}
-            fontSize={'sm'}
-            letterSpacing={1.1}
-          >
-            {/* {project.fields.map(field => field.name).join(', ')} */}
-            {project.fields[0]?.name}
-          </Text>
-          <Heading
-            color={useColorModeValue('gray.700', 'white')}
-            fontSize={'2xl'}
-            fontFamily={'body'}
-          >
-            {project.project_name}
-          </Heading>
+        <Stack pb="64px">
+          <Grid templateColumns="repeat(6, 1fr)">
+            <GridItem colSpan={5}>
+              <Text
+                color={'blue.500'}
+                textTransform={'uppercase'}
+                fontWeight={800}
+                fontSize={'sm'}
+                letterSpacing={1.1}
+                mb="2"
+              >
+                {/* {project.fields.map(field => field.name).join(', ')} */}
+                {project.fields[0]?.name}
+              </Text>
+              <Heading
+                color={useColorModeValue('gray.700', 'white')}
+                fontSize={'2xl'}
+                fontFamily={'body'}
+              >
+                {project.project_name}
+              </Heading>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Button
+                variant={'solid'}
+                colorScheme="blue"
+                bgGradient="linear(to-r, blue.300, blue.600)"
+                onClick={() => {
+                  if (!isLogged) {
+                    toast({
+                      title: `You're not logged in.`,
+                      description: 'Please log in or register first.',
+                      status: 'error',
+                      duration: 2000,
+                      isClosable: true,
+                    });
+                  } else {
+                    onOpen();
+                  }
+                }}
+              >
+                Apply
+              </Button>
+            </GridItem>
+          </Grid>
+
           <Text color={'gray.500'}>
             {project.summary || project.description}
           </Text>
@@ -82,47 +166,88 @@ export default function ProjectCard({ project }) {
             ))}
           </Box>
         </Stack>
-        <Box>
-          <Stack mt={6} direction={'row'} spacing={4}>
-            <Avatar
-              color={'white'}
-              colorScheme="blue"
-              bgGradient="linear(to-r, blue.300, blue.600)"
-              _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-              name={`${project.creator_name} ${project.creator_surname}`}
-              size={'md'}
-            />
-            <Stack direction={'column'} spacing={0} fontSize={'sm'}>
-              <Text fontWeight={600}>
-                {`${project.creator_name} ${project.creator_surname}`}
-                <Badge
-                  colorScheme={USER_BADGE_COLORS[project.creator_sub_tier]}
-                  m="1"
-                >
-                  {project.creator_sub_tier}
-                </Badge>
-              </Text>
+        <Box position={'absolute'} bottom="0" mb="5">
+          <Grid
+            templateColumns="repeat(6, 1fr)"
+            mt={6}
+            direction={'row'}
+            spacing={4}
+            gap={5}
+            w="full"
+          >
+            <GridItem colSpan={1}>
+              <Avatar
+                color={'white'}
+                colorScheme="blue"
+                bgGradient="linear(to-r, blue.300, blue.600)"
+                _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
+                name={`${project.creator_name} ${project.creator_surname}`}
+                size={'md'}
+              />
+            </GridItem>
+            <GridItem colSpan={4}>
+              <Stack direction={'column'} spacing={0} fontSize={'sm'}>
+                <Text fontWeight={600}>
+                  {`${project.creator_name} ${project.creator_surname}`}
+                  <Badge
+                    colorScheme={USER_BADGE_COLORS[project.creator_sub_tier]}
+                    m="1"
+                  >
+                    {project.creator_sub_tier}
+                  </Badge>
+                </Text>
 
-              <Text color={'gray.500'}>
-                {new Date(project.create_time).toDateString()} ·{' '}
-                {project.member_count} members
-              </Text>
-            </Stack>
-          </Stack>
-          <Stack mt={3} direction={'row'} justify={'center'}>
-            <Button variant={'outline'} colorScheme="blue">
-              See more
-            </Button>
-            <Button
-              variant={'solid'}
-              colorScheme="blue"
-              bgGradient="linear(to-r, blue.300, blue.600)"
-            >
-              Apply
-            </Button>
-          </Stack>
+                <Text color={'gray.500'}>
+                  {new Date(project.create_time).toLocaleDateString('en-uk', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}{' '}
+                  · {project.member_count} members
+                </Text>
+              </Stack>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Button variant={'outline'} mr="5" colorScheme="blue">
+                See more
+              </Button>
+            </GridItem>
+          </Grid>
         </Box>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Apply to {project.project_name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Center>
+              <FormControl w={'50%'} id="credits">
+                <FormLabel>Credit to pay</FormLabel>
+                <NumberInput
+                  defaultValue={1}
+                  min={1}
+                  value={credit}
+                  onChange={setCredit}
+                  max={user?.credit_count}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+            </Center>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleApply}>
+              Apply
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 }
