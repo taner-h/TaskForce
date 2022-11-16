@@ -66,78 +66,79 @@ export const USER_BADGE_COLORS = {
 };
 
 export const project = {
-  project_id: 1,
+  project_id: 15,
   creator_id: 1,
-  name: 'TaskForce',
+  project_name: 'TaskForce',
   description:
-    'TaskForce is an online collaboration platform for software development. Made for developers, by developers. ',
-  summary:
-    'TaskForce is an online collaboration platform for software development. Made for developers, by developers. ',
+    'TaskForce is an online collaboration platform for software development.',
+  summary: null,
   repo: 'https://github.com/taner-h/TaskForce',
   credit_count: 3,
-  create_time: '2022-11-04T11:19:11.342Z',
-  project_type_id: 1,
-  type: 'private',
-  creator: {
-    user_id: 1,
-    email: 'admin@mail.com',
-    password: '$2b$10$ZfSoN/Xwk2aQyoJk4qJ5iuCWmmZrSsWJQT2bRwrVk4apcecY6b.nC',
-    name: 'Admin',
-    surname: 'Admin',
-    linkedin: null,
-    github: null,
-    bio: null,
-    portfolio: null,
-    credit_count: -2,
-    create_time: '2022-11-04T08:18:47.605Z',
-    sub_tier_id: 1,
-    sub_tier: 'premium',
-  },
-  member_count: '4',
+  member_count: 0,
+  create_time: '2022-11-12T08:38:01.653Z',
+  project_type: 'private',
+  creator_name: 'Admin',
+  creator_surname: 'Admin',
+  sub_tier: 'ultimate',
   fields: [
     {
-      field_id: 1,
-      name: 'Web Development',
-    },
-    {
+      project_id: 15,
       field_id: 2,
-      name: 'Mobile Application',
-    },
-  ],
-  tags: [
-    {
-      tag_id: 2,
-      name: 'Java',
+      name: 'Mobile Application Development',
     },
     {
-      tag_id: 3,
-      name: 'JavaScript',
+      project_id: 15,
+      field_id: 19,
+      name: 'Database Development',
     },
     {
-      tag_id: 5,
-      name: 'node.js',
+      project_id: 15,
+      field_id: 21,
+      name: 'Cross-platform Development',
     },
   ],
   skills: [
     {
+      project_id: 15,
       skill_id: 3,
       name: 'Artificial Intelligence',
     },
     {
+      project_id: 15,
       skill_id: 4,
       name: 'Mobile Application Developer',
     },
-  ],
-  resources: [
     {
-      resource_id: 1,
-      title: 'Example Resource',
-      link: 'www.example.com',
+      project_id: 15,
+      skill_id: 1,
+      name: 'Front-End Developer',
+    },
+  ],
+  tags: [
+    {
+      project_id: 15,
+      tag_id: 2,
+      name: 'Java',
     },
     {
-      resource_id: 2,
-      title: 'Another Example Resource ',
-      link: 'www.example2.com',
+      project_id: 15,
+      tag_id: 12,
+      name: 'Redis',
+    },
+    {
+      project_id: 15,
+      tag_id: 17,
+      name: 'E-commerce',
+    },
+    {
+      project_id: 15,
+      tag_id: 23,
+      name: 'PHP',
+    },
+    {
+      project_id: 15,
+      tag_id: 26,
+      name: 'Angular',
     },
   ],
 };
