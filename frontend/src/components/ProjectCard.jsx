@@ -36,12 +36,15 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { USER_BADGE_COLORS } from '../data/options';
+import DetailModal from './DetailModal';
 import React, { useState } from 'react';
 
 export default function ProjectCard({ project, isLogged, user }) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [credit, setCredit] = useState(1);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
   const handleApply = async () => {
     const body = {
       userId: user.user_id,
@@ -73,6 +76,10 @@ export default function ProjectCard({ project, isLogged, user }) {
       });
       console.error(err.message);
     }
+  };
+
+  const onDetailOpen = () => {
+    setIsDetailOpen(true);
   };
 
   return (
@@ -208,13 +215,23 @@ export default function ProjectCard({ project, isLogged, user }) {
               </Stack>
             </GridItem>
             <GridItem colSpan={1}>
-              <Button variant={'outline'} mr="5" colorScheme="blue">
-                See more
+              <Button
+                onClick={onDetailOpen}
+                variant={'outline'}
+                mr="5"
+                colorScheme="blue"
+              >
+                See More
               </Button>
             </GridItem>
           </Grid>
         </Box>
       </Box>
+      <DetailModal
+        isDetailOpen={isDetailOpen}
+        setIsDetailOpen={setIsDetailOpen}
+        project={project}
+      />
       <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
         <ModalOverlay />
         <ModalContent>

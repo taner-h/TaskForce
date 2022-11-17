@@ -1,63 +1,37 @@
 import {
   Box,
-  chakra,
-  Container,
   Stack,
   Text,
-  Image,
-  Flex,
-  Divider,
-  Avatar,
-  VStack,
   Button,
   Heading,
-  SimpleGrid,
-  StackDivider,
   Tag,
   Badge,
   TagLabel,
-  useColorModeValue,
-  VisuallyHidden,
-  List,
-  ListItem,
-  useBreakpointValue,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
 import { ModalCloseButton } from '@chakra-ui/react';
-import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
-import { MdLocalShipping } from 'react-icons/md';
-import { useState } from 'react';
-import { project, project2 } from '../data/options';
 import { USER_BADGE_COLORS } from '../data/options';
 
-export default function Detail() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrollBehavior, setScrollBehavior] = useState('inside');
-  const onOpen = () => {
-    setIsOpen(true);
-  };
-  console.log(project);
-
-  const onClose = () => {
-    setIsOpen(false);
+export default function DetailModal({
+  project,
+  isDetailOpen,
+  setIsDetailOpen,
+}) {
+  const onDetailClose = () => {
+    setIsDetailOpen(false);
   };
   return (
     <>
-      <Button onClick={onOpen}>Project Details</Button>
-
       <Modal
-        scrollBehavior={scrollBehavior}
-        preserveScrollBarGap={false}
         size="2xl"
         isCentered
         closeOnOverlayClick={false}
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isDetailOpen}
+        onClose={onDetailClose}
       >
         <ModalOverlay />
         <ModalContent>
@@ -129,53 +103,58 @@ export default function Detail() {
                 </Tag>
               ))}
             </Box>
-            <Heading
-              paddingBottom="3px"
-              paddingTop="10px"
-              paddingLeft="5px"
-              fontWeight={'700'}
-              fontSize="xl"
-            >
-              {' '}
-              Skills
-            </Heading>
+            {project.skills?.length !== 0 && (
+              <Heading
+                paddingBottom="3px"
+                paddingTop="10px"
+                paddingLeft="5px"
+                fontWeight={'700'}
+                fontSize="xl"
+              >
+                Skills
+              </Heading>
+            )}
             <Box align="left">
-              {project.skills?.map(skill => (
-                <Tag
-                  size={'sm'}
-                  fontWeight={'600'}
-                  m="1"
-                  borderRadius="full"
-                  variant="subtle"
-                  colorScheme="blue"
-                >
-                  <TagLabel>{skill.name}</TagLabel>
-                </Tag>
-              ))}
+              {project.skills?.length !== 0 &&
+                project.skills?.map(skill => (
+                  <Tag
+                    size={'sm'}
+                    fontWeight={'600'}
+                    m="1"
+                    borderRadius="full"
+                    variant="subtle"
+                    colorScheme="blue"
+                  >
+                    <TagLabel>{skill.name}</TagLabel>
+                  </Tag>
+                ))}
             </Box>
-            <Heading
-              paddingBottom="3px"
-              paddingTop="10px"
-              paddingLeft="5px"
-              fontWeight={'700'}
-              fontSize="xl"
-            >
-              {' '}
-              Tags
-            </Heading>
+            {project.tags?.length !== 0 && (
+              <Heading
+                paddingBottom="3px"
+                paddingTop="10px"
+                paddingLeft="5px"
+                fontWeight={'700'}
+                fontSize="xl"
+              >
+                {' '}
+                Tags
+              </Heading>
+            )}
             <Box align="left">
-              {project.tags?.map(tag => (
-                <Tag
-                  size={'sm'}
-                  fontWeight={'600'}
-                  m="1"
-                  borderRadius="full"
-                  variant="subtle"
-                  colorScheme="blue"
-                >
-                  <TagLabel>{'#' + tag.name}</TagLabel>
-                </Tag>
-              ))}
+              {project.tags?.length !== 0 &&
+                project.tags?.map(tag => (
+                  <Tag
+                    size={'sm'}
+                    fontWeight={'600'}
+                    m="1"
+                    borderRadius="full"
+                    variant="subtle"
+                    colorScheme="blue"
+                  >
+                    <TagLabel>{'#' + tag.name}</TagLabel>
+                  </Tag>
+                ))}
             </Box>
             <Heading
               paddingBottom="3px"
@@ -206,7 +185,7 @@ export default function Detail() {
           <ModalFooter>
             <Button
               fontWeight={'700'}
-              onClick={onClose}
+              onClick={onDetailClose}
               colorScheme="blue"
               mr={3}
             >
