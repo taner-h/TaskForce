@@ -337,13 +337,14 @@ export default function SearchProject() {
         <Center pt={6} pb="10">
           {Object.keys(content).length !== 0 && (
             <SimpleGrid columns={{ base: 1, lg: 2, '2xl': 3 }}>
-              {content.projects?.map(project => (
-                <ProjectCard
-                  project={project}
-                  isLogged={isLogged}
-                  user={user}
-                />
-              ))}
+              {!isPending &&
+                content.projects?.map(project => (
+                  <ProjectCard
+                    project={project}
+                    isLogged={isLogged}
+                    user={user}
+                  />
+                ))}
             </SimpleGrid>
           )}
         </Center>
@@ -356,7 +357,10 @@ export default function SearchProject() {
               },
             }}
             defaultCurrent={1}
-            onChange={page => setPage(page)}
+            onChange={page => {
+              setPage(page);
+              setIsPending(true);
+            }}
             pageSize={9}
             current={page}
             total={content?.totalItems}
