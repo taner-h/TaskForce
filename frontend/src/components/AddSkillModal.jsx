@@ -4,6 +4,7 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
+  IconButton,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
@@ -15,6 +16,7 @@ import {
   Container,
 } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
 import { useDisclosure } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
@@ -91,15 +93,17 @@ export default function AddSkillModal({ setSelectedSkills }) {
 
   return (
     <>
-      <Button
+      <IconButton
         size={'xs'}
-        onClick={onOpen}
+        onClick={async () => {
+          onOpen();
+        }}
         variant="solid"
         colorScheme="blue"
         rounded="full"
       >
-        +
-      </Button>
+        <AddIcon boxSize={2.5} />
+      </IconButton>
 
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
         <ModalOverlay />

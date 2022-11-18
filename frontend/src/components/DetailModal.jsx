@@ -168,17 +168,20 @@ export default function DetailModal({
             </Heading>
 
             <Stack direction={'column'} spacing={0} fontSize={'sm'}>
-              <Text
-                fontWeight={500}
-                fontSize={'sm'}
-                paddingLeft="5px"
-                align="left"
+              <Box
+                color="gray.500"
+                fontWeight="semibold"
+                letterSpacing="wide"
+                fontSize="sm"
+                py="1"
+                textTransform="uppercase"
+                ml="2"
               >
                 {`${project.creator_name} ${project.creator_surname}`}
                 <Badge colorScheme={USER_BADGE_COLORS[project.sub_tier]} m="1">
                   {project.sub_tier}
                 </Badge>
-              </Text>
+              </Box>
             </Stack>
           </ModalBody>
 

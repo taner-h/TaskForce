@@ -49,7 +49,7 @@ export default function CreateProject() {
   const [tags, setTags] = useState([]);
 
   return (
-    <>
+    <Box bg={useColorModeValue('gray.50', 'gray.800')}>
       <Container
         maxW={'8xl'}
         minH={' calc(100vh - 64px)'}
@@ -343,6 +343,6 @@ export default function CreateProject() {
         </Stack>
       </Container>
       <Footer />
-    </>
+    </Box>
   );
 }

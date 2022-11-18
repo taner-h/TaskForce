@@ -11,10 +11,13 @@ import {
   useBoolean,
   FormControl,
   FormLabel,
+  IconButton,
   FormErrorMessage,
   Container,
 } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
+
 import { useDisclosure } from '@chakra-ui/react';
 import { CreatableSelect } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
@@ -92,15 +95,17 @@ export default function AddTagModal({ setSelectedTags }) {
 
   return (
     <>
-      <Button
+      <IconButton
         size={'xs'}
-        onClick={onOpen}
+        onClick={async () => {
+          onOpen();
+        }}
         variant="solid"
         colorScheme="blue"
         rounded="full"
       >
-        +
-      </Button>
+        <AddIcon boxSize={2.5} />
+      </IconButton>
 
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
         <ModalOverlay />

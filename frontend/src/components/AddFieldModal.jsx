@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { AddIcon } from '@chakra-ui/icons';
 import {
+  IconButton,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -91,7 +93,7 @@ export default function AddFieldModal({ setSelectedFields }) {
 
   return (
     <>
-      <Button
+      <IconButton
         size={'xs'}
         onClick={async () => {
           onOpen();
@@ -100,8 +102,8 @@ export default function AddFieldModal({ setSelectedFields }) {
         colorScheme="blue"
         rounded="full"
       >
-        +
-      </Button>
+        <AddIcon boxSize={2.5} />
+      </IconButton>
 
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
         <ModalOverlay />

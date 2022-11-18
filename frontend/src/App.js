@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './components/NotFound';
 import Pricing from './pages/Pricing';
+import MyProfile from './pages/MyProfile';
 import Home from './pages/Home';
 import CreateProject from './pages/CreateProject';
 import SearchProject from './pages/SearchProject';
@@ -60,6 +61,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/projects" element={<SearchProject />} />
+          <Route path="/profile" element={<MyProfile />} />
+
           <Route
             path="/projects/create"
             element={isLogged ? <CreateProject /> : <Register />}
