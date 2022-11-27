@@ -256,7 +256,10 @@ export default function CreateProject() {
                         />
                       </Tag>
                     ))}
-                    <AddFieldModal setSelectedFields={setFields} />
+                    <AddFieldModal
+                      setSelectedFields={setFields}
+                      selectedFields={fields}
+                    />
                   </Box>
                   <Box align="left">
                     <FormLabel>Skills</FormLabel>
@@ -278,7 +281,10 @@ export default function CreateProject() {
                         />
                       </Tag>
                     ))}
-                    <AddSkillModal setSelectedSkills={setSkills} />
+                    <AddSkillModal
+                      setSelectedSkills={setSkills}
+                      selectedSkills={skills}
+                    />
                   </Box>
                   <Box align="left">
                     <FormLabel>Tags</FormLabel>
@@ -300,7 +306,10 @@ export default function CreateProject() {
                         />
                       </Tag>
                     ))}
-                    <AddTagModal setSelectedTags={setTags} />
+                    <AddTagModal
+                      setSelectedTags={setTags}
+                      selectedTags={tags}
+                    />
                   </Box>
                   <Box align="center">
                     <FormLabel>Resources</FormLabel>
