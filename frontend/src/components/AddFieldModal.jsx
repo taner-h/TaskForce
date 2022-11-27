@@ -9,12 +9,9 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  HStack,
-  useBoolean,
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Container,
 } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
@@ -23,9 +20,17 @@ import { useForm, useController } from 'react-hook-form';
 
 const fields = [];
 
-const ControlledSelect = ({ control, name, id, label, rules, ...props }) => {
+const ControlledSelect = ({
+  control,
+  name,
+  id,
+  label,
+  rules,
+  onChange,
+  ...props
+}) => {
   const {
-    field: { onChange, onBlur, value, ref },
+    field: { onBlur, value, ref },
     fieldState: { error },
   } = useController({
     name,
@@ -55,16 +60,9 @@ const ControlledSelect = ({ control, name, id, label, rules, ...props }) => {
 
 const defaultValues = { field: [] };
 
-export default function AddFieldModal({ setSelectedFields }) {
+export default function AddFieldModal({ setSelectedFields, selectedFields }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { control, handleSubmit, reset } = useForm({ defaultValues });
-  const [isLoading, setLoading] = useBoolean(false);
-
-  const submit = async data => {
-    setLoading.on();
-    setSelectedFields(data.field);
-    setLoading.off();
-  };
+  const { control } = useForm({ defaultValues });
 
   const getFields = async () => {
     try {
@@ -111,42 +109,23 @@ export default function AddFieldModal({ setSelectedFields }) {
           <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Container as="form" mb={12} onSubmit={handleSubmit(submit)}>
-              <ControlledSelect
-                control={control}
-                isMulti
-                name="field"
-                id="field"
-                options={fields}
-                placeholder="Fields"
-                label="Fields"
-                rules={{ required: 'Please enter at least one field.' }}
-              />
-
-              <HStack spacing={4}>
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  colorScheme="red"
-                  w="full"
-                  onClick={() => reset(defaultValues)}
-                >
-                  Reset
-                </Button>
-
-                <Button
-                  isLoading={isLoading}
-                  type="submit"
-                  colorScheme="blue"
-                  w="full"
-                >
-                  Submit
-                </Button>
-              </HStack>
-            </Container>
+            <ControlledSelect
+              onChange={setSelectedFields}
+              value={selectedFields}
+              control={control}
+              isMulti
+              name="field"
+              id="field"
+              options={fields}
+              placeholder="Fields"
+              label="Fields"
+              rules={{ required: 'Please enter at least one field.' }}
+            />
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button colorScheme="blue" w="30%" onClick={onClose}>
+              Submit
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

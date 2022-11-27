@@ -24,9 +24,17 @@ import { useForm, useController } from 'react-hook-form';
 
 const tags = [];
 
-const ControlledSelect = ({ control, name, id, label, rules, ...props }) => {
+const ControlledSelect = ({
+  control,
+  name,
+  id,
+  label,
+  rules,
+  onChange,
+  ...props
+}) => {
   const {
-    field: { onChange, onBlur, value, ref },
+    field: { onBlur, value, ref },
     fieldState: { error },
   } = useController({
     name,
@@ -56,17 +64,9 @@ const ControlledSelect = ({ control, name, id, label, rules, ...props }) => {
 
 const defaultValues = { tag: [] };
 
-export default function AddTagModal({ setSelectedTags }) {
+export default function AddTagModal({ setSelectedTags, selectedTags }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { control, handleSubmit, reset } = useForm({ defaultValues });
-  const [isLoading, setLoading] = useBoolean(false);
-
-  const submit = async data => {
-    setLoading.on();
-    setSelectedTags(data.tag);
-    console.log(data.tag);
-    setLoading.off();
-  };
+  const { control } = useForm({ defaultValues });
 
   const getTags = async () => {
     try {
@@ -113,42 +113,23 @@ export default function AddTagModal({ setSelectedTags }) {
           <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Container as="form" mb={12} onSubmit={handleSubmit(submit)}>
-              <ControlledSelect
-                control={control}
-                isMulti
-                name="tag"
-                id="tag"
-                options={tags}
-                placeholder="Tags"
-                label="Tags"
-                rules={{ required: 'Please enter at least one tag.' }}
-              />
-
-              <HStack spacing={4}>
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  colorScheme="red"
-                  w="full"
-                  onClick={() => reset(defaultValues)}
-                >
-                  Reset
-                </Button>
-
-                <Button
-                  isLoading={isLoading}
-                  type="submit"
-                  colorScheme="blue"
-                  w="full"
-                >
-                  Submit
-                </Button>
-              </HStack>
-            </Container>
+            <ControlledSelect
+              onChange={setSelectedTags}
+              value={selectedTags}
+              control={control}
+              isMulti
+              name="tag"
+              id="tag"
+              options={tags}
+              placeholder="Tags"
+              label="Tags"
+              rules={{ required: 'Please enter at least one tag.' }}
+            />
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button colorScheme="blue" w="30%" onClick={onClose}>
+              Submit
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

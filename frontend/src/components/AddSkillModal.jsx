@@ -8,12 +8,9 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  HStack,
-  useBoolean,
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Container,
 } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
@@ -23,9 +20,17 @@ import { useForm, useController } from 'react-hook-form';
 
 const skills = [];
 
-const ControlledSelect = ({ control, name, id, label, rules, ...props }) => {
+const ControlledSelect = ({
+  control,
+  name,
+  id,
+  label,
+  rules,
+  onChange,
+  ...props
+}) => {
   const {
-    field: { onChange, onBlur, value, ref },
+    field: { onBlur, value, ref },
     fieldState: { error },
   } = useController({
     name,
@@ -55,16 +60,9 @@ const ControlledSelect = ({ control, name, id, label, rules, ...props }) => {
 
 const defaultValues = { skill: [] };
 
-export default function AddSkillModal({ setSelectedSkills }) {
+export default function AddSkillModal({ setSelectedSkills, selectedSkills }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { control, handleSubmit, reset } = useForm({ defaultValues });
-  const [isLoading, setLoading] = useBoolean(false);
-
-  const submit = async data => {
-    setLoading.on();
-    setSelectedSkills(data.skill);
-    setLoading.off();
-  };
+  const { control } = useForm({ defaultValues });
 
   const getSkills = async () => {
     try {
@@ -111,42 +109,23 @@ export default function AddSkillModal({ setSelectedSkills }) {
           <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Container as="form" mb={12} onSubmit={handleSubmit(submit)}>
-              <ControlledSelect
-                control={control}
-                isMulti
-                name="skill"
-                id="skill"
-                options={skills}
-                placeholder="Skills"
-                label="Skills"
-                rules={{ required: 'Please enter at least one skill.' }}
-              />
-
-              <HStack spacing={4}>
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  colorScheme="red"
-                  w="full"
-                  onClick={() => reset(defaultValues)}
-                >
-                  Reset
-                </Button>
-
-                <Button
-                  isLoading={isLoading}
-                  type="submit"
-                  colorScheme="blue"
-                  w="full"
-                >
-                  Submit
-                </Button>
-              </HStack>
-            </Container>
+            <ControlledSelect
+              onChange={setSelectedSkills}
+              value={selectedSkills}
+              control={control}
+              isMulti
+              name="skill"
+              id="skill"
+              options={skills}
+              placeholder="Skills"
+              label="Skills"
+              rules={{ required: 'Please enter at least one skill.' }}
+            />
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button colorScheme="blue" w="30%" onClick={onClose}>
+              Submit
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
