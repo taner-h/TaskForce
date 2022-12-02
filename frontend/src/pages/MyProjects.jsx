@@ -46,8 +46,8 @@ export default function MyProjects() {
   //   }, [projects]);
 
   useEffect(() => {
-    getPageContent();
-  }, [page]);
+    if (projects) getPageContent();
+  }, [page, projects]);
 
   useEffect(() => {
     if (!isPending) {
@@ -151,22 +151,23 @@ export default function MyProjects() {
                 <MenuItemOption value="all">
                   All{' '}
                   <Badge>
-                    {Object.keys(projects)
-                      .map(key => projects[key].length)
-                      .reduce((a, b) => a + b)}
+                    {projects &&
+                      Object.keys(projects)
+                        .map(key => projects[key].length)
+                        .reduce((a, b) => a + b)}
                   </Badge>
                 </MenuItemOption>
                 <MenuItemOption value="creator">
-                  Creator <Badge>{projects.creator.length}</Badge>
+                  Creator <Badge>{projects?.creator.length}</Badge>
                 </MenuItemOption>
                 <MenuItemOption value="member">
-                  Member <Badge>{projects.member.length}</Badge>
+                  Member <Badge>{projects?.member.length}</Badge>
                 </MenuItemOption>
                 <MenuItemOption value="applicant">
-                  Applicant <Badge>{projects.applicant.length}</Badge>
+                  Applicant <Badge>{projects?.applicant.length}</Badge>
                 </MenuItemOption>
                 <MenuItemOption value="invitee">
-                  Invitee <Badge>{projects.invitee.length}</Badge>
+                  Invitee <Badge>{projects?.invitee.length}</Badge>
                 </MenuItemOption>
               </MenuOptionGroup>
             </MenuList>
@@ -185,7 +186,7 @@ export default function MyProjects() {
           )}
         </Center>
         <Center pt={6} pb="10">
-          {Object.keys(content.projects).length !== 0 && (
+          {Object.keys(content).length !== 0 && (
             <SimpleGrid columns={{ base: 1, lg: 2, '2xl': 3 }}>
               {content.projects?.map(project => (
                 <ProjectCard
@@ -196,7 +197,7 @@ export default function MyProjects() {
               ))}
             </SimpleGrid>
           )}
-          {Object.keys(content.projects).length === 0 && !isPending && (
+          {Object.keys(content).length === 0 && !isPending && (
             <Text>You have no {role} projects.</Text>
           )}
         </Center>
