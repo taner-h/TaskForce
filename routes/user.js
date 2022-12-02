@@ -22,7 +22,26 @@ router.get("/:id", async (req, res) => {
       [id]
     );
 
-    res.json(user.rows[0]);
+    const response = user.rows[0];
+
+    const fields = await pool.query(
+      `SELECT field.field_id, name FROM user_field 
+      INNER JOIN field ON user_field.field_id = field.field_id 
+       WHERE user_id = $1`,
+      [id]
+    );
+
+    const skills = await pool.query(
+      `SELECT skill.skill_id, name FROM user_skill
+      INNER JOIN skill ON user_skill.skill_id = skill.skill_id 
+      WHERE user_id = $1`,
+      [id]
+    );
+
+    response.fields = fields.rows;
+    response.skills = skills.rows;
+
+    res.json(response);
   } catch (err) {
     console.error(err.message);
   }

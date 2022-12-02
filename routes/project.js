@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const constants = require("../data/constants");
 const generateFilterQueryString = require("../utils/generateFilterQueryString");
 const formatProjectsResponse = require("../utils/formatProjectsResponse");
+const getProjectsByRole = require("../utils/getProjectsByRole");
 const format = require("pg-format");
 // Add a project
 router.post("/", async (req, res) => {
@@ -277,6 +278,131 @@ router.get("/:id", async (req, res) => {
     response.resources = resources.rows;
 
     res.json(response);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get all project_ids of user
+router.get("/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const creator = await pool.query(
+      "SELECT project_id FROM project where creator_id = $1",
+      [id]
+    );
+
+    const member = await pool.query(
+      "SELECT project_id FROM member where user_id = $1",
+      [id]
+    );
+
+    const applicant = await pool.query(
+      "SELECT project_id FROM application where user_id = $1",
+      [id]
+    );
+
+    const invitee = await pool.query(
+      "SELECT project_id FROM invite where user_id = $1",
+      [id]
+    );
+
+    const response = {
+      creator: creator.rows.map((project) => project.project_id),
+      member: member.rows.map((project) => project.project_id),
+      applicant: applicant.rows.map((project) => project.project_id),
+      invitee: invitee.rows.map((project) => project.project_id),
+    };
+
+    res.json(response);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+router.post("/user", async (req, res) => {
+  try {
+    const projects = req.body;
+    const role = req.query.role || "all";
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9;
+    const sortBy = req.query.sortBy || "create_time";
+    const order = req.query.order || "ASC";
+
+    const filtered = getProjectsByRole(projects, role);
+    const response = {};
+
+    response.totalItems = filtered.length;
+    response.totalPageCount = Math.ceil(response.totalItems / limit);
+    response.currentPage = page;
+    response.pageSize = limit;
+    response.projects = [];
+
+    if (filtered.length === 0) {
+      response.currentPageItems = 0;
+      response.message = "No projects found with the selected filters.";
+      res.json(response);
+    } else {
+      const projectQuery = format(
+        `SELECT project_id, creator_id, project.name as project_name, description, 
+    summary, repo, project.credit_count as credit_count, member_count,
+    project.create_time as create_time, type as project_type, users.name as 
+    creator_name, surname as creator_surname, sub_tier.name as sub_tier
+    FROM project
+    INNER JOIN project_type ON project.project_type_id = project_type.project_type_id
+    INNER JOIN users ON project.creator_id = users.user_id
+    INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+    WHERE project_id IN (%L) ORDER BY %I %s LIMIT %s OFFSET %s `,
+        filtered,
+        sortBy,
+        order,
+        limit,
+        limit * (page - 1)
+      );
+
+      const projects = await pool.query(projectQuery);
+      response.currentPageItems = projects.rows.length;
+
+      const projectIds = projects.rows.map((project) => project.project_id);
+
+      const fieldQuery = format(
+        `SELECT * FROM project_field 
+        INNER JOIN field ON project_field.field_id = field.field_id
+        WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allFields = await pool.query(fieldQuery);
+
+      const skillQuery = format(
+        `SELECT * FROM project_skill 
+        INNER JOIN skill ON project_skill.skill_id = skill.skill_id
+        WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allSkills = await pool.query(skillQuery);
+
+      const tagQuery = format(
+        `SELECT * FROM project_tag 
+        INNER JOIN tag ON project_tag.tag_id = tag.tag_id
+        WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allTags = await pool.query(tagQuery);
+
+      response.projects = formatProjectsResponse(
+        projectIds,
+        projects.rows,
+        allFields.rows,
+        allSkills.rows,
+        allTags.rows
+      );
+
+      res.json(response);
+    }
   } catch (err) {
     console.error(err.message);
   }

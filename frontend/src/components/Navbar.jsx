@@ -174,11 +174,13 @@ export default function Navbar() {
                 </Center>
                 {/* <MenuItem icon={<ColorModeSwitcher />}>Toggle Theme </MenuItem> */}
                 <MenuDivider />
-                <MenuItem>
-                  <Link to="/profile">Your Profile</Link>
-                </MenuItem>
-                <MenuItem>Your Projects</MenuItem>
-                <MenuItem>Your Tasks</MenuItem>
+                <Link to="/profile">
+                  <MenuItem>My Profile</MenuItem>
+                </Link>
+                <Link to="/myprojects">
+                  <MenuItem>My Projects</MenuItem>
+                </Link>
+                <MenuItem>My Tasks</MenuItem>
                 <MenuItem>Notifications</MenuItem>
                 <MenuItem>Settings</MenuItem>
                 <MenuItem

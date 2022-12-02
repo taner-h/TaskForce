@@ -17,7 +17,13 @@ import {
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
-import { setAuth, fetchUser } from '../reducers/authSlice';
+import {
+  setAuth,
+  fetchUser,
+  setUser,
+  setProjects,
+  fetchProjects,
+} from '../reducers/authSlice';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/FooterSmall';
@@ -43,6 +49,12 @@ export default function Login() {
       const parseRes = await response.json();
 
       if (parseRes.token) {
+        dispatch(
+          setAuth({
+            token: parseRes.token,
+            isLogged: true,
+          })
+        );
         localStorage.setItem('token', parseRes.token);
         // localStorage.setItem('user', parseRes.userId);
         navigate('/');
@@ -58,10 +70,16 @@ export default function Login() {
         const user = await dispatch(fetchUser(parseRes.userId));
 
         dispatch(
-          setAuth({
-            token: parseRes.token,
+          setUser({
             user: user.payload,
-            isLogged: true,
+          })
+        );
+
+        const projects = await dispatch(fetchProjects(user.payload.user_id));
+
+        dispatch(
+          setProjects({
+            projects: projects.payload,
           })
         );
       } else {

@@ -30,4 +30,20 @@ router.get("/:project_id", async (req, res) => {
   }
 });
 
+// get fields of user
+router.get("/user/:user_id", async (req, res) => {
+  try {
+    const { user_id } = req.params;
+
+    const fields = await pool.query(
+      `SELECT * FROM user_field
+      WHERE user_id = $1`,
+      [user_id]
+    );
+
+    res.json(fields.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 module.exports = router;
