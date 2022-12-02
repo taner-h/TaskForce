@@ -39,7 +39,7 @@ import { USER_BADGE_COLORS } from '../data/options';
 import DetailModal from './DetailModal';
 import React, { useState } from 'react';
 
-export default function ProjectCard({ project, isLogged, user }) {
+export default function ProjectCard({ project, isLogged, user, page }) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [credit, setCredit] = useState(1);
@@ -119,26 +119,28 @@ export default function ProjectCard({ project, isLogged, user }) {
               </Heading>
             </GridItem>
             <GridItem colSpan={1}>
-              <Button
-                variant={'solid'}
-                colorScheme="blue"
-                bgGradient="linear(to-r, blue.300, blue.600)"
-                onClick={() => {
-                  if (!isLogged) {
-                    toast({
-                      title: `You're not logged in.`,
-                      description: 'Please log in or register first.',
-                      status: 'error',
-                      duration: 2000,
-                      isClosable: true,
-                    });
-                  } else {
-                    onOpen();
-                  }
-                }}
-              >
-                Apply
-              </Button>
+              {page !== 'myprojects' && (
+                <Button
+                  variant={'solid'}
+                  colorScheme="blue"
+                  bgGradient="linear(to-r, blue.300, blue.600)"
+                  onClick={() => {
+                    if (!isLogged) {
+                      toast({
+                        title: `You're not logged in.`,
+                        description: 'Please log in or register first.',
+                        status: 'error',
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                    } else {
+                      onOpen();
+                    }
+                  }}
+                >
+                  Apply
+                </Button>
+              )}
             </GridItem>
           </Grid>
 

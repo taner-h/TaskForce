@@ -190,6 +190,7 @@ export default function MyProjects() {
             <SimpleGrid columns={{ base: 1, lg: 2, '2xl': 3 }}>
               {content.projects?.map(project => (
                 <ProjectCard
+                  page={'myprojects'}
                   project={project}
                   isLogged={isLogged}
                   user={user}
@@ -197,7 +198,7 @@ export default function MyProjects() {
               ))}
             </SimpleGrid>
           )}
-          {Object.keys(content).length === 0 && !isPending && (
+          {Object.keys(content.projects).length === 0 && !isPending && (
             <Text>You have no {role} projects.</Text>
           )}
         </Center>
