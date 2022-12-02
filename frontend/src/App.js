@@ -9,11 +9,15 @@ import NotFound from './components/NotFound';
 import Pricing from './pages/Pricing';
 import MyProfile from './pages/MyProfile';
 import Home from './pages/Home';
+import MyProjects from './pages/MyProjects';
 import CreateProject from './pages/CreateProject';
 import SearchProject from './pages/SearchProject';
 import {
   setAuth,
+  setUser,
   fetchUser,
+  setProjects,
+  fetchProjects,
   verifyToken,
   getIsLogged,
 } from './reducers/authSlice';
@@ -31,16 +35,25 @@ function App() {
       dispatch(
         setAuth({
           token: localStorage.token,
-          user: null,
           isLogged: true,
         })
       );
+
       const user = await dispatch(fetchUser(isTokenValid.payload.userId));
+
       dispatch(
-        setAuth({
-          token: localStorage.token,
+        setUser({
           user: user.payload,
-          isLogged: true,
+        })
+      );
+
+      const projects = await dispatch(
+        fetchProjects(isTokenValid.payload.userId)
+      );
+
+      dispatch(
+        setProjects({
+          projects: projects.payload,
         })
       );
     }
@@ -62,6 +75,7 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/projects" element={<SearchProject />} />
           <Route path="/profile" element={<MyProfile />} />
+          <Route path="/myprojects" element={<MyProjects />} />
 
           <Route
             path="/projects/create"

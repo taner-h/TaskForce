@@ -5,7 +5,18 @@ import {
   FormLabel,
   Input,
   InputGroup,
+  IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   HStack,
+  Tag,
+  TagLabel,
+  useDisclosure,
   Textarea,
   InputRightElement,
   InputLeftAddon,
@@ -16,11 +27,13 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { useState, useEffect } from 'react';
+import { ViewIcon, ViewOffIcon, AddIcon } from '@chakra-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { setAuth, fetchUser } from '../reducers/authSlice';
+import { setAuth, setUser, fetchUser } from '../reducers/authSlice';
 import { useDispatch } from 'react-redux';
+import { Select } from 'chakra-react-select';
+
 import Footer from '../components/FooterSmall';
 
 export default function Register() {
@@ -33,12 +46,58 @@ export default function Register() {
   const [linkedin, setLinkedin] = useState('');
   const [github, setGithub] = useState('');
   const [bio, setBio] = useState('');
+  const [selectedFields, setSelectedFields] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [allFields, setAllFields] = useState([]);
+  const [allSkills, setAllSkills] = useState([]);
+  const {
+    isOpen: isOpenFields,
+    onOpen: onOpenFields,
+    onClose: onCloseFields,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenSkills,
+    onOpen: onOpenSkills,
+    onClose: onCloseSkills,
+  } = useDisclosure();
+
   const toast = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    getOptions();
+  }, []);
+
+  const getOptions = async () => {
+    try {
+      const responseFields = await fetch('http://localhost:5000/field');
+      const fields = await responseFields.json();
+
+      setAllFields(
+        fields.map(field => ({
+          value: field.field_id,
+          label: field.name,
+        }))
+      );
+
+      const responseSkills = await fetch('http://localhost:5000/skill');
+      const skills = await responseSkills.json();
+
+      setAllSkills(
+        skills.map(skill => ({
+          value: skill.skill_id,
+          label: skill.name,
+        }))
+      );
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   const handleSubmit = async event => {
     event.preventDefault();
+
     const body = {
       email,
       password,
@@ -48,6 +107,8 @@ export default function Register() {
       linkedin,
       github,
       bio,
+      fields: selectedFields.map(field => field.value),
+      skills: selectedSkills.map(skill => skill.value),
     };
     try {
       const response = await fetch('http://localhost:5000/auth/register', {
@@ -58,6 +119,12 @@ export default function Register() {
       const parseRes = await response.json();
 
       if (parseRes.token) {
+        dispatch(
+          setAuth({
+            token: parseRes.token,
+            isLogged: true,
+          })
+        );
         localStorage.setItem('token', parseRes.token);
         // localStorage.setItem('userId', parseRes.userId);
         navigate('/');
@@ -73,10 +140,8 @@ export default function Register() {
         const user = await dispatch(fetchUser(parseRes.userId));
 
         dispatch(
-          setAuth({
-            token: parseRes.token,
+          setUser({
             user: user.payload,
-            isLogged: true,
           })
         );
       } else {
@@ -242,6 +307,148 @@ export default function Register() {
               </FormControl>
 
               <FormControl id="email" mt={1}>
+                <Flex>
+                  <FormLabel>Favorite Fields</FormLabel>
+                  <IconButton
+                    size={'xs'}
+                    onClick={onOpenFields}
+                    variant="solid"
+                    colorScheme="blue"
+                    rounded="full"
+                  >
+                    <AddIcon boxSize={2.5} />
+                  </IconButton>
+                </Flex>
+                <Modal
+                  isOpen={isOpenFields}
+                  onClose={onCloseFields}
+                  size={'xl'}
+                  closeOnOverlayClick={false}
+                  isCentered
+                >
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Add your favorite fields</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <FormControl p={4}>
+                        <FormLabel>Fields</FormLabel>
+                        <Select
+                          isMulti
+                          options={allFields}
+                          value={selectedFields}
+                          onChange={setSelectedFields}
+                          variant="flushed"
+                          placeholder="Select fields to filter..."
+                          closeMenuOnSelect={false}
+                          selectedOptionStyle="check"
+                          tagVariant="subtle"
+                          hideSelectedOptions={false}
+                        />
+                      </FormControl>
+                    </ModalBody>
+
+                    <ModalFooter>
+                      <Button colorScheme="blue" mr={3} onClick={onCloseFields}>
+                        Save
+                      </Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+                <Box alignItems={'center'} justifyContent="center">
+                  {selectedFields.length === 0 && (
+                    <Text fontSize={'sm'} color={'gray.600'}>
+                      You have no favorite fields selected! Click the plus
+                      button above to add your favorite fields!
+                    </Text>
+                  )}
+
+                  {selectedFields.map(field => (
+                    <Tag
+                      size={'sm'}
+                      m="1"
+                      borderRadius="full"
+                      variant="subtle"
+                      colorScheme="gray"
+                    >
+                      <TagLabel>{field.label}</TagLabel>
+                    </Tag>
+                  ))}
+                </Box>
+              </FormControl>
+
+              <FormControl id="email" mt={1}>
+                <Flex>
+                  <FormLabel>Favorite Skills</FormLabel>
+                  <IconButton
+                    size={'xs'}
+                    onClick={onOpenSkills}
+                    variant="solid"
+                    colorScheme="blue"
+                    rounded="full"
+                  >
+                    <AddIcon boxSize={2.5} />
+                  </IconButton>
+                </Flex>
+                <Modal
+                  isOpen={isOpenSkills}
+                  onClose={onCloseSkills}
+                  size={'xl'}
+                  closeOnOverlayClick={false}
+                  isCentered
+                >
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Add your favorite skills</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <FormControl p={4}>
+                        <FormLabel>Skills</FormLabel>
+                        <Select
+                          isMulti
+                          options={allSkills}
+                          value={selectedSkills}
+                          onChange={setSelectedSkills}
+                          variant="flushed"
+                          placeholder="Select skills to filter..."
+                          closeMenuOnSelect={false}
+                          selectedOptionStyle="check"
+                          tagVariant="subtle"
+                          hideSelectedOptions={false}
+                        />
+                      </FormControl>
+                    </ModalBody>
+
+                    <ModalFooter>
+                      <Button colorScheme="blue" mr={3} onClick={onCloseSkills}>
+                        Save
+                      </Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+                <Box alignItems={'center'} justifyContent="center">
+                  {selectedSkills.length === 0 && (
+                    <Text fontSize={'sm'} color={'gray.600'}>
+                      You have no favorite skills selected! Click the plus
+                      button above to add your favorite skills!
+                    </Text>
+                  )}
+
+                  {selectedSkills.map(skill => (
+                    <Tag
+                      size={'sm'}
+                      m="1"
+                      borderRadius="full"
+                      variant="subtle"
+                      colorScheme="gray"
+                    >
+                      <TagLabel>{skill.label}</TagLabel>
+                    </Tag>
+                  ))}
+                </Box>
+              </FormControl>
+
+              <FormControl id="email" mt={1}>
                 <FormLabel>About</FormLabel>
                 <Textarea
                   placeholder="Tell us about yourself. Other people will be able to see this."
@@ -255,6 +462,7 @@ export default function Register() {
                   }}
                 />
               </FormControl>
+
               <Stack spacing={10} pt={2}>
                 <Button
                   loadingText="Submitting"
