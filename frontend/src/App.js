@@ -11,6 +11,7 @@ import MyProfile from './pages/MyProfile';
 import Home from './pages/Home';
 import MyProjects from './pages/MyProjects';
 import CreateProject from './pages/CreateProject';
+import CreateTask from './pages/CreateTask';
 import SearchProject from './pages/SearchProject';
 import {
   setAuth,
@@ -80,6 +81,11 @@ function App() {
           <Route
             path="/projects/create"
             element={isLogged ? <CreateProject /> : <Register />}
+          />
+
+          <Route
+            path="/tasks/create"
+            element={isLogged ? <CreateTask /> : <Register />}
           />
 
           <Route path="*" element={<NotFound />} />

@@ -166,7 +166,7 @@ export default function Register() {
         justify={'center'}
         bg={useColorModeValue('gray.50', 'gray.800')}
       >
-        <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack spacing={8} mx={'auto'} maxW={'2xl'} py={12} px={6}>
           <Stack align={'center'}>
             <Heading fontSize={'4xl'} textAlign={'center'}>
               Register for free
@@ -187,26 +187,23 @@ export default function Register() {
           >
             <Stack spacing={4}>
               <HStack>
-                <Box>
-                  <FormControl id="firstName" isRequired>
-                    <FormLabel>First Name</FormLabel>
-                    <Input
-                      type="text"
-                      value={name}
-                      onChange={event => setName(event.target.value)}
-                    />
-                  </FormControl>
-                </Box>
-                <Box>
-                  <FormControl id="lastName" isRequired>
-                    <FormLabel>Last Name</FormLabel>
-                    <Input
-                      type="text"
-                      value={surname}
-                      onChange={event => setSurname(event.target.value)}
-                    />
-                  </FormControl>
-                </Box>
+                <FormControl w="100%" id="firstName" isRequired>
+                  <FormLabel>First Name</FormLabel>
+                  <Input
+                    type="text"
+                    value={name}
+                    onChange={event => setName(event.target.value)}
+                  />
+                </FormControl>
+
+                <FormControl w="100%" id="lastName" isRequired>
+                  <FormLabel>Last Name</FormLabel>
+                  <Input
+                    type="text"
+                    value={surname}
+                    onChange={event => setSurname(event.target.value)}
+                  />
+                </FormControl>
               </HStack>
               <FormControl id="email" isRequired>
                 <FormLabel>Email address</FormLabel>
@@ -357,7 +354,7 @@ export default function Register() {
                 </Modal>
                 <Box alignItems={'center'} justifyContent="center">
                   {selectedFields.length === 0 && (
-                    <Text fontSize={'sm'} color={'gray.600'}>
+                    <Text fontSize={'sm'} color={'gray.500'}>
                       You have no favorite fields selected! Click the plus
                       button above to add your favorite fields!
                     </Text>
@@ -428,7 +425,7 @@ export default function Register() {
                 </Modal>
                 <Box alignItems={'center'} justifyContent="center">
                   {selectedSkills.length === 0 && (
-                    <Text fontSize={'sm'} color={'gray.600'}>
+                    <Text fontSize={'sm'} color={'gray.500'}>
                       You have no favorite skills selected! Click the plus
                       button above to add your favorite skills!
                     </Text>
