@@ -198,9 +198,9 @@ export default function MyProjects() {
               ))}
             </SimpleGrid>
           )}
-          {Object.keys(content.projects).length === 0 && !isPending && (
-            <Text>You have no {role} projects.</Text>
-          )}
+          {Object.keys(content).length !== 0 &&
+            content.projects.length === 0 &&
+            !isPending && <Text>You have no {role} projects.</Text>}
         </Center>
         <Center pb="10">
           <Pagination
