@@ -192,7 +192,10 @@ export default function CreateTask() {
                     />
                   </InputGroup>
                 </FormControl>
-                <Tooltip label="This is the number of credits that you will be paying for the creation of the task.">
+                <Tooltip
+                  hasArrow
+                  label="This is the number of credits that you will be paying for the creation of the task."
+                >
                   <FormControl w={'40%'} id="credits" isRequired>
                     <FormLabel>Credit fee</FormLabel>
                     <NumberInput
@@ -210,7 +213,10 @@ export default function CreateTask() {
                     </NumberInput>
                   </FormControl>
                 </Tooltip>
-                <Tooltip label="This is the number of credits that you will pay for the approved answer to your task. The credit is withdrawn at the creation of the task.">
+                <Tooltip
+                  hasArrow
+                  label="This is the number of credits that you will pay for the approved answer to your task. The credit is withdrawn at the creation of the task."
+                >
                   <FormControl w={'40%'} id="credits" isRequired>
                     <FormLabel>Credit reward</FormLabel>
                     <NumberInput

@@ -13,6 +13,8 @@ import MyProjects from './pages/MyProjects';
 import CreateProject from './pages/CreateProject';
 import CreateTask from './pages/CreateTask';
 import SearchProject from './pages/SearchProject';
+import SearchTask from './pages/SearchTask';
+import TaskCard from './components/TaskCard';
 import {
   setAuth,
   setUser,
@@ -75,8 +77,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/projects" element={<SearchProject />} />
+          <Route path="/tasks" element={<SearchTask />} />
           <Route path="/profile" element={<MyProfile />} />
           <Route path="/myprojects" element={<MyProjects />} />
+          <Route path="/task" element={<TaskCard />} />
 
           <Route
             path="/projects/create"
