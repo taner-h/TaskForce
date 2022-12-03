@@ -33,11 +33,10 @@ import React, { useEffect, useState } from 'react';
 import '../asset/pagination.css';
 import task from '../asset/task.svg';
 import Footer from '../components/FooterSmall';
-import ProjectCard from '../components/ProjectCard';
+import TaskCard from '../components/TaskCard';
 import { Select } from 'chakra-react-select';
 import { useSelector } from 'react-redux';
 import { getIsLogged, getUser } from '../reducers/authSlice';
-
 export default function SearchTask() {
   const [page, setPage] = useState(1);
   const [content, setContent] = useState({});
@@ -81,7 +80,7 @@ export default function SearchTask() {
     setIsPending(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/project/search?page=${page}&sortBy=${sortBy}&order=${order}`,
+        `http://localhost:5000/task/search?page=${page}&sortBy=${sortBy}&order=${order}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -312,11 +311,14 @@ export default function SearchTask() {
                 type="radio"
               >
                 <MenuItemOption value="create_time">Create Time</MenuItemOption>
-                <MenuItemOption value="member_count">
-                  Member Count
+                <MenuItemOption value="commit_count">
+                  Commit Count
                 </MenuItemOption>
-                <MenuItemOption value="credit_count">
+                <MenuItemOption value="credit_reward">
                   Credit Count
+                </MenuItemOption>
+                <MenuItemOption value="answer_count">
+                  Answer Count
                 </MenuItemOption>
               </MenuOptionGroup>
             </MenuList>
@@ -334,17 +336,13 @@ export default function SearchTask() {
             />
           )}
         </Center>
-        <Center pt={6} pb="10">
+        <Center p={10}>
           {Object.keys(content).length !== 0 && (
-            <SimpleGrid columns={{ base: 1, lg: 2, '2xl': 3 }}>
-              {content.projects?.map(project => (
-                <ProjectCard
-                  project={project}
-                  isLogged={isLogged}
-                  user={user}
-                />
+            <Stack spacing={5}>
+              {content.tasks?.map(task => (
+                <TaskCard task={task} isLogged={isLogged} user={user} />
               ))}
-            </SimpleGrid>
+            </Stack>
           )}
         </Center>
         <Center pb="10">

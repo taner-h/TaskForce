@@ -1,4 +1,4 @@
-const generateFilterQueryString = (fields, skills, tags) => {
+const generateFilterProjectQueryString = (fields, skills, tags) => {
   const arr = [];
   const params = [];
 
@@ -36,4 +36,4 @@ const generateFilterQueryString = (fields, skills, tags) => {
   return { query, params };
 };
 
-module.exports = generateFilterQueryString;
+module.exports = generateFilterProjectQueryString;

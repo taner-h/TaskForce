@@ -2,7 +2,7 @@ const router = require("express").Router();
 const pool = require("../database");
 const auth = require("../middleware/auth");
 const constants = require("../data/constants");
-const generateFilterQueryString = require("../utils/generateFilterQueryString");
+const generateFilterProjectQueryString = require("../utils/generateFilterProjectQueryString");
 const formatProjectsResponse = require("../utils/formatProjectsResponse");
 const getProjectsByRole = require("../utils/getProjectsByRole");
 const format = require("pg-format");
@@ -142,7 +142,7 @@ router.post("/search", async (req, res) => {
     const sortBy = req.query.sortBy || "create_time";
     const order = req.query.order || "ASC";
 
-    const filterQuery = generateFilterQueryString(fields, skills, tags);
+    const filterQuery = generateFilterProjectQueryString(fields, skills, tags);
     const { query, params } = filterQuery;
 
     const filteredProjects = await pool.query(query, params);
