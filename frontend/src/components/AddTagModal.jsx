@@ -22,8 +22,6 @@ import { useDisclosure } from '@chakra-ui/react';
 import { CreatableSelect } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
 
-const tags = [];
-
 const ControlledSelect = ({
   control,
   name,
@@ -67,6 +65,7 @@ const defaultValues = { tag: [] };
 export default function AddTagModal({ setSelectedTags, selectedTags }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { control } = useForm({ defaultValues });
+  const [tags, setTags] = useState([]);
 
   const getTags = async () => {
     try {
@@ -76,13 +75,15 @@ export default function AddTagModal({ setSelectedTags, selectedTags }) {
       })
         .then(response => response.json())
         .then(data => {
+          let allTags = [];
           for (let i = 0; i < Object.keys(data).length; i++) {
             const tag = {
               label: data[i].name,
               value: data[i].tag_id,
             };
-            tags.push(tag);
+            allTags.push(tag);
           }
+          setTags(allTags);
         });
     } catch (err) {
       console.error(err.message);

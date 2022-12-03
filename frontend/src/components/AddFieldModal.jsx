@@ -18,8 +18,6 @@ import { useDisclosure } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
 
-const fields = [];
-
 const ControlledSelect = ({
   control,
   name,
@@ -63,6 +61,7 @@ const defaultValues = { field: [] };
 export default function AddFieldModal({ setSelectedFields, selectedFields }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { control } = useForm({ defaultValues });
+  const [fields, setFields] = useState([]);
 
   const getFields = async () => {
     try {
@@ -72,13 +71,15 @@ export default function AddFieldModal({ setSelectedFields, selectedFields }) {
       })
         .then(response => response.json())
         .then(data => {
+          let allFields = [];
           for (let i = 0; i < Object.keys(data).length; i++) {
             const field = {
               label: data[i].name,
               value: data[i].field_id,
             };
-            fields.push(field);
+            allFields.push(field);
           }
+          setFields(allFields);
         });
     } catch (err) {
       console.error(err.message);

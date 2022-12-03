@@ -18,8 +18,6 @@ import { useDisclosure } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
 
-const skills = [];
-
 const ControlledSelect = ({
   control,
   name,
@@ -63,6 +61,7 @@ const defaultValues = { skill: [] };
 export default function AddSkillModal({ setSelectedSkills, selectedSkills }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { control } = useForm({ defaultValues });
+  const [skills, setSkills] = useState([]);
 
   const getSkills = async () => {
     try {
@@ -72,13 +71,15 @@ export default function AddSkillModal({ setSelectedSkills, selectedSkills }) {
       })
         .then(response => response.json())
         .then(data => {
+          let allSkills = [];
           for (let i = 0; i < Object.keys(data).length; i++) {
             const skill = {
               label: data[i].name,
               value: data[i].skill_id,
             };
-            skills.push(skill);
+            allSkills.push(skill);
           }
+          setSkills(allSkills);
         });
     } catch (err) {
       console.error(err.message);
