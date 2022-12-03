@@ -1,17 +1,16 @@
 import {
   Box,
   Button,
+  Center,
   Container,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   HStack,
-  Input,
-  Center,
-  InputGroup,
   Image,
-  useToast,
+  Input,
+  InputGroup,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -19,20 +18,22 @@ import {
   NumberInputStepper,
   Stack,
   Tag,
-  TagLabel,
   TagCloseButton,
+  TagLabel,
   Text,
   Textarea,
+  Tooltip,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
-import { getUser } from '../reducers/authSlice';
-import tasks from '../asset/tasks.svg';
-import Footer from '../components/FooterSmall';
-import AddFieldModal from '../components/AddFieldModal';
-import AddTagModal from '../components/AddTagModal';
-import AddSkillModal from '../components/AddSkillModal';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import tasks from '../asset/tasks.svg';
+import AddFieldModal from '../components/AddFieldModal';
+import AddSkillModal from '../components/AddSkillModal';
+import AddTagModal from '../components/AddTagModal';
+import Footer from '../components/FooterSmall';
+import { getUser } from '../reducers/authSlice';
 export default function CreateTask() {
   const user = useSelector(getUser);
 
@@ -41,7 +42,8 @@ export default function CreateTask() {
   const [tags, setTags] = useState([]);
   const [title, setTitle] = useState('');
   const [repo, setRepo] = useState('');
-  const [credit, setCredit] = useState(1);
+  const [creditFee, setCreditFee] = useState(1);
+  const [creditReward, setCreditReward] = useState(1);
   const [description, setDescription] = useState('');
 
   const toast = useToast();
@@ -50,10 +52,12 @@ export default function CreateTask() {
     event.preventDefault();
 
     const body = {
+      creatorId: user.user_id,
       title,
       repo,
-      credit,
       description,
+      creditFee,
+      creditReward,
       fields: fields.map(field => field.value),
       skills: skills.map(skill => skill.value),
       tags: tags.filter(tag => tag.__isNew__ !== true).map(tag => tag.value),
@@ -67,18 +71,18 @@ export default function CreateTask() {
       });
       const parseRes = await response.json();
 
-      if (parseRes.token) {
+      if (parseRes) {
         toast({
-          title: 'Register successful.',
-          description: 'Welcome to TaskForce!',
+          title: 'Succesfull.',
+          description: 'Task added succesfully',
           status: 'success',
           duration: 2000,
           isClosable: true,
         });
       } else {
         toast({
-          title: 'Register failed.',
-          description: 'Make sure that email is valid.',
+          title: 'Error.',
+          description: 'Task creation failed.',
           status: 'error',
           duration: 2000,
           isClosable: true,
@@ -164,7 +168,7 @@ export default function CreateTask() {
           >
             <Stack spacing={4}>
               <HStack spacing={6} justify="center">
-                <FormControl w="50%" id="firstName" isRequired>
+                <FormControl w="70%" id="firstName" isRequired>
                   <FormLabel>Title</FormLabel>
                   <Input
                     type="text"
@@ -188,23 +192,42 @@ export default function CreateTask() {
                     />
                   </InputGroup>
                 </FormControl>
-
-                <FormControl w={'60%'} id="credits" isRequired>
-                  <FormLabel>Credit to pay</FormLabel>
-                  <NumberInput
-                    defaultValue={1}
-                    onChange={setCredit}
-                    value={credit}
-                    min={1}
-                    max={user?.credit_count}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FormControl>
+                <Tooltip label="This is the number of credits that you will be paying for the creation of the task.">
+                  <FormControl w={'40%'} id="credits" isRequired>
+                    <FormLabel>Credit fee</FormLabel>
+                    <NumberInput
+                      defaultValue={1}
+                      onChange={setCreditFee}
+                      value={creditFee}
+                      min={1}
+                      max={user?.credit_count - creditReward}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
+                </Tooltip>
+                <Tooltip label="This is the number of credits that you will pay for the approved answer to your task. The credit is withdrawn at the creation of the task.">
+                  <FormControl w={'40%'} id="credits" isRequired>
+                    <FormLabel>Credit reward</FormLabel>
+                    <NumberInput
+                      defaultValue={1}
+                      onChange={setCreditReward}
+                      value={creditReward}
+                      min={1}
+                      max={user?.credit_count - creditFee}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
+                </Tooltip>
               </HStack>
 
               <FormControl id="desc" mt={1} isRequired>

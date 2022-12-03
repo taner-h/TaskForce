@@ -69,6 +69,7 @@ router.post("/", async (req, res) => {
 
       await pool.query(skillQuery);
     }
+    let newTagIds;
 
     if (newTags !== undefined && newTags.length != 0) {
       const newTagQuery = format(
@@ -78,7 +79,7 @@ router.post("/", async (req, res) => {
 
       const newInsertedTags = await pool.query(newTagQuery);
 
-      const newTagIds = newInsertedTags.rows.map((tag) => tag.tag_id);
+      newTagIds = newInsertedTags.rows.map((tag) => tag.tag_id);
       if (tags !== undefined && tags.length != 0) {
         tags.push(...newTagIds);
       }
@@ -89,6 +90,13 @@ router.post("/", async (req, res) => {
       const tagQuery = format(
         "INSERT INTO project_tag (project_id, tag_id) VALUES %L",
         tags.map((tag) => [project.rows[0].project_id, tag])
+      );
+
+      await pool.query(tagQuery);
+    } else {
+      const tagQuery = format(
+        "INSERT INTO project_tag (project_id, tag_id) VALUES %L",
+        newTagIds.map((tag) => [project.rows[0].project_id, tag])
       );
 
       await pool.query(tagQuery);

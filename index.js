@@ -20,3 +20,4 @@ app.use("/tag", require("./routes/tag"));
 app.use("/application", require("./routes/application"));
 app.use("/member", require("./routes/member"));
 app.use("/invite", require("./routes/invite"));
+app.use("/task", require("./routes/task"));
