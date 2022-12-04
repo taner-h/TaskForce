@@ -81,7 +81,7 @@ export default function TaskCard({ task, isLogged, user, page }) {
       </Center>
       <Tooltip hasArrow label="Commit to task">
         <IconButton
-          disabled={user.user_id === task.creator_id}
+          disabled={user?.user_id === task.creator_id}
           ml="5"
           mr="2"
           variant="outline"
@@ -92,7 +92,7 @@ export default function TaskCard({ task, isLogged, user, page }) {
       </Tooltip>
       <Tooltip hasArrow label="Answer task">
         <IconButton
-          disabled={user.user_id === task.creator_id}
+          disabled={user?.user_id === task.creator_id}
           mx="1"
           variant="outline"
           colorScheme="blue"
