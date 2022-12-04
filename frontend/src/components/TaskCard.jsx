@@ -17,9 +17,9 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-export default function TaskCard({ task, isLogged, user }) {
+export default function TaskCard({ task, isLogged, user, page }) {
   return (
-    <Card align="center" direction={'row'} maxW="6xl">
+    <Card align="center" variant="elevated" direction={'row'} maxW="6xl">
       <CardHeader>
         <Tooltip
           hasArrow
@@ -31,10 +31,7 @@ export default function TaskCard({ task, isLogged, user }) {
             borderRadius="lg"
             bg={useColorModeValue('gray.200', 'gray.800')}
           >
-            <Heading
-              color={useColorModeValue('blue.400', 'blue.400')}
-              fontSize="25px"
-            >
+            <Heading color={'blue.400'} fontSize="25px">
               {task.commit_count > 99 ? '99+' : task.commit_count}
             </Heading>
           </Center>
@@ -83,16 +80,33 @@ export default function TaskCard({ task, isLogged, user }) {
         <Divider orientation="vertical" />
       </Center>
       <Tooltip hasArrow label="Commit to task">
-        <IconButton ml="5" variant="outline" colorScheme="blue">
+        <IconButton
+          disabled={user.user_id === task.creator_id}
+          ml="5"
+          mr="2"
+          variant="outline"
+          colorScheme="blue"
+        >
           <StarIcon />
         </IconButton>
       </Tooltip>
       <Tooltip hasArrow label="Answer task">
-        <IconButton mx="3" variant="outline" colorScheme="blue">
+        <IconButton
+          disabled={user.user_id === task.creator_id}
+          mx="1"
+          variant="outline"
+          colorScheme="blue"
+        >
           <ChatIcon />
         </IconButton>
       </Tooltip>
-      <IconButton mr="5" colorScheme="blue">
+
+      <IconButton
+        mr="5"
+        ml="2"
+        bgGradient="linear(to-r, blue.300, blue.600)"
+        colorScheme="blue"
+      >
         <InfoIcon />
       </IconButton>
     </Card>

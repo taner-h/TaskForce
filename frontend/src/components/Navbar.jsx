@@ -180,7 +180,9 @@ export default function Navbar() {
                 <Link to="/myprojects">
                   <MenuItem>My Projects</MenuItem>
                 </Link>
-                <MenuItem>My Tasks</MenuItem>
+                <Link to="/mytasks">
+                  <MenuItem>My Tasks</MenuItem>
+                </Link>
                 <MenuItem>Notifications</MenuItem>
                 <MenuItem>Settings</MenuItem>
                 <MenuItem

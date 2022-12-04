@@ -3,6 +3,8 @@ const pool = require("../database");
 const format = require("pg-format");
 const formatTasksResponse = require("../utils/formatTasksResponse");
 const generateFilterTaskQueryString = require("../utils/generateFilterTaskQueryString");
+const getTasksByType = require("../utils/getTasksByType");
+
 // get all tasks
 router.get("/all", async (req, res) => {
   try {
@@ -130,6 +132,125 @@ router.post("/search", async (req, res) => {
     response.tasks = [];
 
     if (filteredTasks.rowCount === 0) {
+      response.currentPageItems = 0;
+      response.message = "No tasks found with the selected filters.";
+      res.json(response);
+    } else {
+      const taskQuery = format(
+        `SELECT task_id, creator_id, title, description, repo, 
+    task.credit_count as credit_count, credit_reward, task.create_time as 
+    create_time, users.name as creator_name, surname as creator_surname, 
+    sub_tier.name as sub_tier, commit_count, answer_count
+    FROM task
+    INNER JOIN users ON task.creator_id = users.user_id
+    INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+    WHERE task_id IN (%L) ORDER BY %I %s LIMIT %s OFFSET %s `,
+        filtered,
+        sortBy,
+        order,
+        limit,
+        limit * (page - 1)
+      );
+
+      const tasks = await pool.query(taskQuery);
+      response.currentPageItems = tasks.rows.length;
+
+      const taskIds = tasks.rows.map((task) => task.task_id);
+
+      const fieldQuery = format(
+        `SELECT * FROM task_field 
+        INNER JOIN field ON task_field.field_id = field.field_id
+        WHERE task_id IN (%L)`,
+        taskIds
+      );
+
+      const allFields = await pool.query(fieldQuery);
+
+      const skillQuery = format(
+        `SELECT * FROM task_skill 
+        INNER JOIN skill ON task_skill.skill_id = skill.skill_id
+        WHERE task_id IN (%L)`,
+        taskIds
+      );
+
+      const allSkills = await pool.query(skillQuery);
+
+      const tagQuery = format(
+        `SELECT * FROM task_tag 
+        INNER JOIN tag ON task_tag.tag_id = tag.tag_id
+        WHERE task_id IN (%L)`,
+        taskIds
+      );
+
+      const allTags = await pool.query(tagQuery);
+
+      response.tasks = formatTasksResponse(
+        taskIds,
+        tasks.rows,
+        allFields.rows,
+        allSkills.rows,
+        allTags.rows
+      );
+
+      res.json(response);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get all task_ids of user
+router.get("/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const created = await pool.query(
+      "SELECT task_id FROM task where creator_id = $1",
+      [id]
+    );
+
+    const answered = await pool.query(
+      "SELECT task_id FROM answer where responder_id = $1",
+      [id]
+    );
+
+    const committed = await pool.query(
+      "SELECT task_id FROM commitment where user_id = $1",
+      [id]
+    );
+
+    const response = {
+      created: created.rows.map((task) => task.task_id),
+      answered: answered.rows.map((task) => task.task_id),
+      committed: committed.rows.map((task) => task.task_id),
+    };
+
+    res.json(response);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get tasks of user by task_ids
+router.post("/user", async (req, res) => {
+  try {
+    const tasks = req.body;
+    const type = req.query.type || "all";
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const sortBy = req.query.sortBy || "create_time";
+    const order = req.query.order || "ASC";
+
+    const filtered = getTasksByType(tasks, type);
+    const response = {};
+
+    response.totalItems = filtered.length;
+    response.totalPageCount = Math.ceil(response.totalItems / limit);
+    response.currentPage = page;
+    response.pageSize = limit;
+    response.tasks = [];
+
+    if (filtered.length === 0) {
       response.currentPageItems = 0;
       response.message = "No tasks found with the selected filters.";
       res.json(response);

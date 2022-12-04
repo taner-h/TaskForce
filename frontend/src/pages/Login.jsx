@@ -21,6 +21,8 @@ import {
   setAuth,
   fetchUser,
   setUser,
+  setTasks,
+  fetchTasks,
   setProjects,
   fetchProjects,
 } from '../reducers/authSlice';
@@ -80,6 +82,14 @@ export default function Login() {
         dispatch(
           setProjects({
             projects: projects.payload,
+          })
+        );
+
+        const tasks = await dispatch(fetchTasks(user.payload.user_id));
+
+        dispatch(
+          setTasks({
+            tasks: tasks.payload,
           })
         );
       } else {

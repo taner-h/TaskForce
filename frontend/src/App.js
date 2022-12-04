@@ -10,18 +10,20 @@ import Pricing from './pages/Pricing';
 import MyProfile from './pages/MyProfile';
 import Home from './pages/Home';
 import MyProjects from './pages/MyProjects';
+import MyTasks from './pages/MyTasks';
 import CreateProject from './pages/CreateProject';
 import CreateTask from './pages/CreateTask';
 import SearchProject from './pages/SearchProject';
 import SearchTask from './pages/SearchTask';
-import TaskCard from './components/TaskCard';
 import {
   setAuth,
   setUser,
-  fetchUser,
   setProjects,
-  fetchProjects,
+  setTasks,
+  fetchTasks,
   verifyToken,
+  fetchUser,
+  fetchProjects,
   getIsLogged,
 } from './reducers/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -59,6 +61,13 @@ function App() {
           projects: projects.payload,
         })
       );
+      const tasks = await dispatch(fetchTasks(isTokenValid.payload.userId));
+
+      dispatch(
+        setTasks({
+          tasks: tasks.payload,
+        })
+      );
     }
   };
 
@@ -78,15 +87,19 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/projects" element={<SearchProject />} />
           <Route path="/tasks" element={<SearchTask />} />
-          <Route path="/profile" element={<MyProfile />} />
-          <Route path="/myprojects" element={<MyProjects />} />
-          <Route path="/task" element={<TaskCard />} />
-
+          <Route
+            path="/profile"
+            element={isLogged ? <MyProfile /> : <Login />}
+          />
+          <Route
+            path="/myprojects"
+            element={isLogged ? <MyProjects /> : <Login />}
+          />
+          <Route path="/mytasks" element={isLogged ? <MyTasks /> : <Login />} />
           <Route
             path="/projects/create"
             element={isLogged ? <CreateProject /> : <Register />}
           />
-
           <Route
             path="/tasks/create"
             element={isLogged ? <CreateTask /> : <Register />}

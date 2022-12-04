@@ -23,44 +23,44 @@ import {
 import Pagination from 'rc-pagination';
 import React, { useEffect, useState } from 'react';
 import '../asset/pagination.css';
-import development from '../asset/development.svg';
+import tasklist from '../asset/task-list.svg';
 import Footer from '../components/FooterSmall';
-import ProjectCard from '../components/ProjectCard';
+import TaskCard from '../components/TaskCard';
 import { useSelector } from 'react-redux';
-import { getIsLogged, getUser, getProjects } from '../reducers/authSlice';
+import { getIsLogged, getUser, getTasks } from '../reducers/authSlice';
 
-export default function MyProjects() {
+export default function MyTasks() {
   const [page, setPage] = useState(1);
   const [content, setContent] = useState({});
   const [order, setOrder] = useState('DESC');
   const [sortBy, setSortBy] = useState('create_time');
   const [isPending, setIsPending] = useState(true);
-  const [role, setRole] = useState('all');
+  const [type, setType] = useState('all');
 
   const isLogged = useSelector(getIsLogged);
   const user = useSelector(getUser);
-  const projects = useSelector(getProjects);
+  const tasks = useSelector(getTasks);
 
   useEffect(() => {
-    if (projects) getPageContent();
-  }, [page, projects]);
+    if (tasks) getPageContent();
+  }, [page, tasks]);
 
   useEffect(() => {
     if (!isPending) {
       if (page === 1) getPageContent();
       else setPage(1);
     }
-  }, [role]);
+  }, [type]);
 
   const getPageContent = async () => {
     setIsPending(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/project/user?role=${role}&page=${page}&sortBy=${sortBy}&order=${order}`,
+        `http://localhost:5000/task/user?type=${type}&page=${page}&sortBy=${sortBy}&order=${order}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(projects),
+          body: JSON.stringify(tasks),
         }
       );
 
@@ -102,7 +102,7 @@ export default function MyProjects() {
                 bgGradient="linear(to-r, blue.300, blue.600)"
                 bgClip="text"
               >
-                My Projects
+                My Tasks
               </Text>
             </Heading>
             <Flex
@@ -125,7 +125,7 @@ export default function MyProjects() {
                   align={'center'}
                   w={'100%'}
                   h={'100%'}
-                  src={development}
+                  src={tasklist}
                 />
               </Box>
             </Flex>
@@ -134,36 +134,33 @@ export default function MyProjects() {
         <Center>
           <Menu closeOnSelect={false}>
             <MenuButton as={Button} mx="3" width="100px" colorScheme="gray">
-              Role
+              Type
             </MenuButton>
             <MenuList minWidth="240px">
               <MenuOptionGroup
                 defaultValue="create_time"
-                title="Project role"
-                value={role}
-                onChange={setRole}
+                title="Tasks type"
+                value={type}
+                onChange={setType}
                 type="radio"
               >
                 <MenuItemOption value="all">
                   All{' '}
                   <Badge>
-                    {projects &&
-                      Object.keys(projects)
-                        .map(key => projects[key].length)
+                    {tasks &&
+                      Object.keys(tasks)
+                        .map(key => tasks[key].length)
                         .reduce((a, b) => a + b)}
                   </Badge>
                 </MenuItemOption>
-                <MenuItemOption value="creator">
-                  Creator <Badge>{projects?.creator.length}</Badge>
+                <MenuItemOption value="created">
+                  Created <Badge>{tasks?.created.length}</Badge>
                 </MenuItemOption>
-                <MenuItemOption value="member">
-                  Member <Badge>{projects?.member.length}</Badge>
+                <MenuItemOption value="answered">
+                  Answered <Badge>{tasks?.answered.length}</Badge>
                 </MenuItemOption>
-                <MenuItemOption value="applicant">
-                  Applicant <Badge>{projects?.applicant.length}</Badge>
-                </MenuItemOption>
-                <MenuItemOption value="invitee">
-                  Invitee <Badge>{projects?.invitee.length}</Badge>
+                <MenuItemOption value="committed">
+                  Committed <Badge>{tasks?.committed.length}</Badge>
                 </MenuItemOption>
               </MenuOptionGroup>
             </MenuList>
@@ -183,20 +180,22 @@ export default function MyProjects() {
         </Center>
         <Center pt={6} pb="10">
           {Object.keys(content).length !== 0 && (
-            <SimpleGrid columns={{ base: 1, lg: 2, '2xl': 3 }}>
-              {content.projects?.map(project => (
-                <ProjectCard
-                  page={'myprojects'}
-                  project={project}
+            <Stack spacing={5}>
+              {content.tasks?.map(task => (
+                <TaskCard
+                  page="mytasks"
+                  task={task}
                   isLogged={isLogged}
                   user={user}
                 />
               ))}
-            </SimpleGrid>
+            </Stack>
           )}
           {Object.keys(content).length !== 0 &&
-            content.projects.length === 0 &&
-            !isPending && <Text>You have no {role} projects.</Text>}
+            content.tasks.length === 0 &&
+            !isPending && (
+              <Text>You have no {type === 'all' ? '' : type} tasks.</Text>
+            )}
         </Center>
         <Center pb="10">
           <Pagination

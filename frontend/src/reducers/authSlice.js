@@ -5,6 +5,7 @@ const initialState = {
   token: null,
   user: null,
   projects: null,
+  tasks: null,
 };
 
 export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
@@ -49,6 +50,17 @@ export const fetchProjects = createAsyncThunk(
     }
   }
 );
+export const fetchTasks = createAsyncThunk('user/getTasks', async userId => {
+  try {
+    const response = await fetch(`http://localhost:5000/task/user/${userId}`, {
+      method: 'GET',
+    });
+
+    return await response.json();
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -56,7 +68,6 @@ export const authSlice = createSlice({
   reducers: {
     setAuth: (state, action) => {
       const { token, isLogged } = action.payload;
-      // state.user = user;
       state.token = token;
       state.isLogged = isLogged;
     },
@@ -64,15 +75,16 @@ export const authSlice = createSlice({
     setUser: (state, action) => {
       const { user } = action.payload;
       state.user = user;
-      // state.token = token;
-      // state.isLogged = isLogged;
     },
 
     setProjects: (state, action) => {
       const { projects } = action.payload;
       state.projects = projects;
-      // state.token = token;
-      // state.isLogged = isLogged;
+    },
+
+    setTasks: (state, action) => {
+      const { tasks } = action.payload;
+      state.tasks = tasks;
     },
 
     logOut: (state, action) => {
@@ -80,13 +92,15 @@ export const authSlice = createSlice({
       state.token = null;
       state.isLogged = false;
       state.projects = null;
+      state.tasks = null;
 
       localStorage.removeItem('token');
     },
   },
 });
 
-export const { setAuth, setUser, setProjects, logOut } = authSlice.actions;
+export const { setAuth, setUser, setProjects, setTasks, logOut } =
+  authSlice.actions;
 
 export default authSlice.reducer;
 
@@ -94,3 +108,4 @@ export const getUser = state => state.auth.user;
 export const getToken = state => state.auth.token;
 export const getIsLogged = state => state.auth.isLogged;
 export const getProjects = state => state.auth.projects;
+export const getTasks = state => state.auth.tasks;

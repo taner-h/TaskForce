@@ -30,7 +30,13 @@ import {
 import { useState, useEffect } from 'react';
 import { ViewIcon, ViewOffIcon, AddIcon } from '@chakra-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { setAuth, setUser, fetchUser } from '../reducers/authSlice';
+import {
+  setAuth,
+  setUser,
+  fetchUser,
+  setTasks,
+  setProjects,
+} from '../reducers/authSlice';
 import { useDispatch } from 'react-redux';
 import { Select } from 'chakra-react-select';
 
@@ -142,6 +148,27 @@ export default function Register() {
         dispatch(
           setUser({
             user: user.payload,
+          })
+        );
+
+        dispatch(
+          setProjects({
+            projects: {
+              creator: [],
+              member: [],
+              applicant: [],
+              invitee: [],
+            },
+          })
+        );
+
+        dispatch(
+          setTasks({
+            tasks: {
+              created: [],
+              answered: [],
+              committed: [],
+            },
           })
         );
       } else {

@@ -168,7 +168,7 @@ export default function CreateTask() {
           >
             <Stack spacing={4}>
               <HStack spacing={6} justify="center">
-                <FormControl w="70%" id="firstName" isRequired>
+                <FormControl id="firstName" isRequired>
                   <FormLabel>Title</FormLabel>
                   <Input
                     type="text"

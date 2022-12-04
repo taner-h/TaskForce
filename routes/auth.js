@@ -63,18 +63,22 @@ router.post("/register", validInfo, async (req, res) => {
       ]
     );
 
-    const fieldQuery = format(
-      "INSERT INTO user_field (user_id, field_id) VALUES %L",
-      fields.map((field) => [newUser.rows[0].user_id, field])
-    );
+    if (fields !== undefined && fields.length != 0) {
+      const fieldQuery = format(
+        "INSERT INTO user_field (user_id, field_id) VALUES %L",
+        fields.map((field) => [newUser.rows[0].user_id, field])
+      );
 
-    await pool.query(fieldQuery);
+      await pool.query(fieldQuery);
+    }
 
-    const skillQuery = format(
-      "INSERT INTO user_skill (user_id, skill_id) VALUES %L",
-      skills.map((skill) => [newUser.rows[0].user_id, skill])
-    );
-    await pool.query(skillQuery);
+    if (skills !== undefined && skills.length != 0) {
+      const skillQuery = format(
+        "INSERT INTO user_skill (user_id, skill_id) VALUES %L",
+        skills.map((skill) => [newUser.rows[0].user_id, skill])
+      );
+      await pool.query(skillQuery);
+    }
 
     // generating web token
     const token = generateJWT(newUser.rows[0].user_id);
