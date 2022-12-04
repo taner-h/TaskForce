@@ -214,7 +214,7 @@ router.get("/user/:id", async (req, res) => {
     );
 
     const committed = await pool.query(
-      "SELECT task_id FROM commitment where user_id = $1",
+      "SELECT task_id FROM commit where user_id = $1",
       [id]
     );
 

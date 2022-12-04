@@ -89,7 +89,7 @@ export default function ProjectCard({ project, isLogged, user, page }) {
         // minH="500px"
         w={'full'}
         m="4"
-        bg={useColorModeValue('white', 'gray.900')}
+        bg={useColorModeValue('white', 'gray.700')}
         boxShadow={'2xl'}
         rounded={'md'}
         position="relative"
@@ -144,7 +144,7 @@ export default function ProjectCard({ project, isLogged, user, page }) {
             </GridItem>
           </Grid>
 
-          <Text color={'gray.500'}>
+          <Text color={useColorModeValue('gray.600', 'gray.400')}>
             {project.summary || project.description}
           </Text>
           <Box align="left">
@@ -206,7 +206,7 @@ export default function ProjectCard({ project, isLogged, user, page }) {
                   </Badge>
                 </Text>
 
-                <Text color={'gray.500'}>
+                <Text color={useColorModeValue('gray.600', 'gray.400')}>
                   {new Date(project.create_time).toLocaleDateString('en-uk', {
                     day: 'numeric',
                     month: 'short',

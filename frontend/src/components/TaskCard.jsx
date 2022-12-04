@@ -15,9 +15,75 @@ import {
   Tooltip,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { setTasks } from '../reducers/authSlice';
 
-export default function TaskCard({ task, isLogged, user, page }) {
+export default function TaskCard({
+  task,
+  isLogged,
+  user,
+  page,
+  taskIds,
+  dispatch,
+}) {
+  const [userIsCommitted, setUserIsCommitted] = useState(false);
+  const [commit_count, setCommitCount] = useState(task.commit_count);
+
+  const handleCommit = async () => {
+    if (userIsCommitted) {
+      let newTaskIds = JSON.parse(JSON.stringify(taskIds));
+      newTaskIds.committed = newTaskIds.committed.filter(
+        taskId => taskId !== task.task_id
+      );
+
+      dispatch(
+        setTasks({
+          tasks: newTaskIds,
+        })
+      );
+
+      setCommitCount(commit_count => commit_count - 1);
+
+      try {
+        await fetch(`http://localhost:5000/commit`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.user_id,
+            taskId: task.task_id,
+          }),
+        });
+      } catch (err) {
+        console.error(err.message);
+      }
+    } else {
+      const newTaskIds = JSON.parse(JSON.stringify(taskIds));
+      newTaskIds.committed.push(task.task_id);
+      dispatch(
+        setTasks({
+          tasks: newTaskIds,
+        })
+      );
+      setCommitCount(commit_count => commit_count + 1);
+
+      try {
+        await fetch(`http://localhost:5000/commit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.user_id,
+            taskId: task.task_id,
+          }),
+        });
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  };
+  useEffect(() => {
+    setUserIsCommitted(taskIds?.committed.includes(task?.task_id));
+  }, [task, taskIds]);
+
   return (
     <Card align="center" variant="elevated" direction={'row'} maxW="6xl">
       <CardHeader>
@@ -32,7 +98,7 @@ export default function TaskCard({ task, isLogged, user, page }) {
             bg={useColorModeValue('gray.200', 'gray.800')}
           >
             <Heading color={'blue.400'} fontSize="25px">
-              {task.commit_count > 99 ? '99+' : task.commit_count}
+              {commit_count > 99 ? '99+' : commit_count}
             </Heading>
           </Center>
         </Tooltip>
@@ -79,13 +145,17 @@ export default function TaskCard({ task, isLogged, user, page }) {
       <Center height="64px">
         <Divider orientation="vertical" />
       </Center>
-      <Tooltip hasArrow label="Commit to task">
+      <Tooltip
+        hasArrow
+        label={userIsCommitted ? 'Uncommit from task' : 'Commit to task'}
+      >
         <IconButton
           disabled={user?.user_id === task.creator_id}
           ml="5"
           mr="2"
+          onClick={handleCommit}
           variant="outline"
-          colorScheme="blue"
+          colorScheme={userIsCommitted ? 'yellow' : 'blue'}
         >
           <StarIcon />
         </IconButton>

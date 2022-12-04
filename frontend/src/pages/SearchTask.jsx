@@ -35,8 +35,9 @@ import task from '../asset/task.svg';
 import Footer from '../components/FooterSmall';
 import TaskCard from '../components/TaskCard';
 import { Select } from 'chakra-react-select';
-import { useSelector } from 'react-redux';
-import { getIsLogged, getUser } from '../reducers/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { getIsLogged, getUser, getTasks } from '../reducers/authSlice';
+
 export default function SearchTask() {
   const [page, setPage] = useState(1);
   const [content, setContent] = useState({});
@@ -52,8 +53,11 @@ export default function SearchTask() {
   const [filters, setFilters] = useState({ fields: [], skills: [], tags: [] });
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const dispatch = useDispatch();
+
   const isLogged = useSelector(getIsLogged);
   const user = useSelector(getUser);
+  const tasks = useSelector(getTasks);
 
   useEffect(() => {
     getPageContent();
@@ -340,7 +344,13 @@ export default function SearchTask() {
           {Object.keys(content).length !== 0 && (
             <Stack spacing={5}>
               {content.tasks?.map(task => (
-                <TaskCard task={task} isLogged={isLogged} user={user} />
+                <TaskCard
+                  task={task}
+                  isLogged={isLogged}
+                  user={user}
+                  taskIds={tasks}
+                  dispatch={dispatch}
+                />
               ))}
             </Stack>
           )}
@@ -357,7 +367,7 @@ export default function SearchTask() {
             onChange={page => {
               setPage(page);
             }}
-            pageSize={9}
+            pageSize={12}
             current={page}
             total={content?.totalItems}
           />

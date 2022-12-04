@@ -26,7 +26,7 @@ import '../asset/pagination.css';
 import tasklist from '../asset/task-list.svg';
 import Footer from '../components/FooterSmall';
 import TaskCard from '../components/TaskCard';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getIsLogged, getUser, getTasks } from '../reducers/authSlice';
 
 export default function MyTasks() {
@@ -36,7 +36,7 @@ export default function MyTasks() {
   const [sortBy, setSortBy] = useState('create_time');
   const [isPending, setIsPending] = useState(true);
   const [type, setType] = useState('all');
-
+  const dispatch = useDispatch();
   const isLogged = useSelector(getIsLogged);
   const user = useSelector(getUser);
   const tasks = useSelector(getTasks);
@@ -185,8 +185,10 @@ export default function MyTasks() {
                 <TaskCard
                   page="mytasks"
                   task={task}
+                  taskIds={tasks}
                   isLogged={isLogged}
                   user={user}
+                  dispatch={dispatch}
                 />
               ))}
             </Stack>
@@ -209,7 +211,7 @@ export default function MyTasks() {
             onChange={page => {
               setPage(page);
             }}
-            pageSize={9}
+            pageSize={12}
             current={page}
             total={content?.totalItems}
           />
