@@ -13,7 +13,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { useDisclosure } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
@@ -58,7 +58,11 @@ const ControlledSelect = ({
 
 const defaultValues = { skill: [] };
 
-export default function AddSkillModal({ setSelectedSkills, selectedSkills }) {
+export default function AddSkillModal({
+  setSelectedSkills,
+  selectedSkills,
+  page,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { control } = useForm({ defaultValues });
   const [skills, setSkills] = useState([]);
@@ -101,7 +105,7 @@ export default function AddSkillModal({ setSelectedSkills, selectedSkills }) {
         colorScheme="blue"
         rounded="full"
       >
-        <AddIcon boxSize={2.5} />
+        {page === 'profile' ? <EditIcon /> : <AddIcon boxSize={2.5} />}
       </IconButton>
 
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>

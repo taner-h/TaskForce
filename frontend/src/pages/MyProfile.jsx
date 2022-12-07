@@ -6,7 +6,11 @@ import {
   Stack,
   Tag,
   TagCloseButton,
+  IconButton,
   TagLabel,
+  Popover,
+  PopoverTrigger,
+  HStack,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -16,11 +20,16 @@ import AddFieldModal from '../components/AddFieldModal';
 import AddSkillModal from '../components/AddSkillModal';
 import Footer from '../components/FooterSmall';
 import { getUser } from '../reducers/authSlice';
+import { EditIcon } from '@chakra-ui/icons';
 
 export default function MyProfile() {
   const user = useSelector(getUser);
-  const [skills, setSkills] = useState([]);
-  const [fields, setFields] = useState([]);
+  const [skills, setSkills] = useState(
+    user.skills.map(skill => ({ label: skill.name, value: skill.skill_id }))
+  );
+  const [fields, setFields] = useState(
+    user.fields.map(field => ({ label: field.name, value: field.field_id }))
+  );
 
   return (
     <>
@@ -44,10 +53,33 @@ export default function MyProfile() {
             boxShadow={'lg'}
             p={8}
           >
+            <Stack spacing={4}>
+              <HStack>
+                <Box paddingBottom="10px">
+                  <Heading size={'sm'} paddingBottom="5px">
+                    Name
+                  </Heading>
+                  <Box
+                    display="inline-block"
+                    mr={3}
+                    //value={name}
+                    // onChange={event => setName(event.target.value)}
+                  >
+                    {`${user.name} ${user.surname}`}
+                  </Box>
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconButton size="xs" icon={<EditIcon />} />
+                    </PopoverTrigger>
+                  </Popover>
+                </Box>
+              </HStack>
+            </Stack>
             <Box align="left">
               <Heading size={'md'} paddingBottom="5px">
                 Skills
               </Heading>
+
               {skills.map(skill => (
                 <Tag
                   size={'md'}
@@ -58,15 +90,13 @@ export default function MyProfile() {
                   colorScheme="gray"
                 >
                   <TagLabel>{skill.label}</TagLabel>
-                  <TagCloseButton
-                    onClick={() => {
-                      const temp_skills = skills.filter(i => i !== skill);
-                      setSkills(temp_skills);
-                    }}
-                  />
                 </Tag>
               ))}
-              <AddSkillModal setSelectedSkills={setSkills} />
+              <AddSkillModal
+                setSelectedSkills={setSkills}
+                selectedSkills={skills}
+                page="profile"
+              />
             </Box>
             <Box align="left">
               <Heading paddingBottom={'5px'} paddingTop={'5px'} size={'md'}>
@@ -82,15 +112,13 @@ export default function MyProfile() {
                   colorScheme="gray"
                 >
                   <TagLabel>{field.label}</TagLabel>
-                  <TagCloseButton
-                    onClick={() => {
-                      const temp_fields = fields.filter(i => i !== field);
-                      setFields(temp_fields);
-                    }}
-                  />
                 </Tag>
               ))}
-              <AddFieldModal setSelectedFields={setFields} />
+              <AddFieldModal
+                setSelectedFields={setFields}
+                selectedFields={fields}
+                page="profile"
+              />
             </Box>
             <Stack
               paddingTop={'20px'}
