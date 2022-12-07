@@ -233,6 +233,7 @@ export default function ProjectCard({ project, isLogged, user, page }) {
         isDetailOpen={isDetailOpen}
         setIsDetailOpen={setIsDetailOpen}
         project={project}
+        page={'myprojects'}
       />
       <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
         <ModalOverlay />
