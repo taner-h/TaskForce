@@ -34,7 +34,9 @@ export default function DetailModal({
   page,
 }) {
   const [member, setMember] = useState([]);
+  const [applicant, setApplicant] = useState([]);
   const user = useSelector(getUser);
+
   const projectId = project.project_id;
   const onDetailClose = () => {
     setIsDetailOpen(false);
@@ -43,7 +45,7 @@ export default function DetailModal({
   const getMemberInfo = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/member/project/${projectId}`,
+        `http://localhost:5000/member/project/${1}`,
         {
           method: 'GET',
         }
@@ -55,11 +57,29 @@ export default function DetailModal({
       console.error(err.message);
     }
   };
+  const getApplicantInfo = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/application/project/${projectId}`,
+        {
+          method: 'GET',
+        }
+      );
+
+      const res = await response.json();
+      setApplicant(res);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   useEffect(() => {
     if (!member?.length) {
       getMemberInfo();
     }
+    // if (!applicant?.length) {
+    //   getApplicantInfo();
+    // }
   });
 
   return (
@@ -77,7 +97,8 @@ export default function DetailModal({
             <Tabs>
               <TabList>
                 <Tab>Overview</Tab>
-                {user?.user_id === project?.creator_id && <Tab>Members</Tab>}
+                <Tab>Members</Tab>
+                {user?.user_id === project?.creator_id && <Tab>Applicants</Tab>}
               </TabList>
 
               <TabPanels>
