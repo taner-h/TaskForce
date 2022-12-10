@@ -24,8 +24,9 @@ import {
   Text,
   Textarea,
   useColorModeValue,
+  IconButton,
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { useSelector } from 'react-redux';
 import { getUser } from '../reducers/authSlice';
 import coworking from '../asset/co-working.svg';
@@ -47,6 +48,9 @@ export default function CreateProject() {
   const [fields, setFields] = useState([]);
   const [skills, setSkills] = useState([]);
   const [tags, setTags] = useState([]);
+  const [resources, setResources] = useState([]);
+
+  const [urls, setUrls] = useState(['url_0']);
 
   return (
     <Box bg={useColorModeValue('gray.50', 'gray.800')}>
@@ -312,25 +316,94 @@ export default function CreateProject() {
                     />
                   </Box>
                   <Box align="center">
-                    <FormLabel>Resources</FormLabel>
-                    <InputGroup size="sm">
-                      <InputLeftAddon
-                        bg="gray.50"
-                        _dark={{
-                          bg: 'gray.800',
+                    <FormLabel>
+                      Resources
+                      <IconButton
+                        marginLeft={1.5}
+                        size={'xs'}
+                        onClick={async () => {
+                          if (urls.length === 0) {
+                            setUrls(['url_0']);
+                          } else {
+                            setUrls([
+                              ...urls,
+                              `url_${
+                                parseInt(
+                                  urls[urls.length - 1].charAt(
+                                    urls[urls.length - 1].length - 1
+                                  )
+                                ) + 1
+                              }`,
+                            ]);
+                          }
+
+                          console.log(urls);
                         }}
-                        color="gray.500"
-                        rounded="md"
+                        variant="solid"
+                        colorScheme="blue"
+                        rounded="full"
                       >
-                        https://
-                      </InputLeftAddon>
-                      <Input
-                        type="tel"
-                        placeholder="www.example.com"
-                        focusBorderColor="brand.400"
-                        rounded="md"
-                      />
-                    </InputGroup>
+                        <AddIcon boxSize={2.5} />
+                      </IconButton>
+                    </FormLabel>
+
+                    {urls.map(url => (
+                      <InputGroup id={url} marginBottom={2} size="sm">
+                        <InputLeftAddon
+                          bg="gray.50"
+                          _dark={{
+                            bg: 'gray.800',
+                          }}
+                          color="gray.500"
+                          rounded="md"
+                        >
+                          https://
+                        </InputLeftAddon>
+                        <Input
+                          type="tel"
+                          placeholder="www.example.com"
+                          focusBorderColor="brand.400"
+                          rounded="md"
+                          value={resources[urls.indexOf(url)]}
+                          onChange={e => {
+                            var newResources = [...resources];
+                            newResources[urls.indexOf(url)] = e.target.value;
+                            setResources(newResources);
+                          }}
+                        />
+                        <IconButton
+                          marginLeft={1.5}
+                          size={'xs'}
+                          onClick={async () => {
+                            var newUrls = [...urls];
+                            var index = newUrls.indexOf(url);
+
+                            newUrls = newUrls.filter(value => {
+                              if (newUrls.indexOf(value) !== index) {
+                                return value;
+                              }
+                            });
+
+                            setUrls(newUrls);
+
+                            var newResources = [...resources];
+
+                            newResources = newResources.filter(value => {
+                              if (newResources.indexOf(value) !== index) {
+                                return value;
+                              }
+                            });
+
+                            setResources(newResources);
+                          }}
+                          variant="solid"
+                          colorScheme="red"
+                          rounded="full"
+                        >
+                          <MinusIcon boxSize={2.5} />
+                        </IconButton>
+                      </InputGroup>
+                    ))}
                   </Box>
 
                   <Stack pt="8" align="center" spacing={10}>
@@ -340,6 +413,10 @@ export default function CreateProject() {
                       bgGradient="linear(to-r, blue.300, blue.600)"
                       _hover={{
                         bgGradient: 'linear(to-r, blue.200, blue.500)',
+                      }}
+                      onClick={() => {
+                        //bi deniyim dedim, çalışıyo sıkıntı yok
+                        console.log(resources);
                       }}
                     >
                       Create project
