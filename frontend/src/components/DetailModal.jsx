@@ -45,7 +45,7 @@ export default function DetailModal({
   const getMemberInfo = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/member/project/${1}`,
+        `http://localhost:5000/member/project/${projectId}`,
         {
           method: 'GET',
         }
@@ -282,10 +282,10 @@ export default function DetailModal({
                           >
                             {`${mem.name} ${mem.surname}`}{' '}
                             <Badge
-                              colorScheme={USER_BADGE_COLORS[project.sub_tier]}
+                              colorScheme={USER_BADGE_COLORS[mem.sub_tier]}
                               m="1"
                             >
-                              {project.sub_tier}
+                              {mem.sub_tier}
                             </Badge>
                           </ListItem>
                         ))}
