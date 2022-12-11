@@ -14,9 +14,22 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  FormControl,
+  ModalCloseButton,
+  ModalHeader,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+  Input,
+  Textarea,
 } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { setTasks } from '../reducers/authSlice';
+import TaskDetail from './TaskDetail';
 
 export default function TaskCard({
   task,
@@ -28,6 +41,9 @@ export default function TaskCard({
 }) {
   const [userIsCommitted, setUserIsCommitted] = useState(false);
   const [commit_count, setCommitCount] = useState(task.commit_count);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [answer, setAnswer] = useState('');
 
   const handleCommit = async () => {
     if (userIsCommitted) {
@@ -80,6 +96,11 @@ export default function TaskCard({
       }
     }
   };
+
+  const onDetailOpen = () => {
+    setIsDetailOpen(true);
+  };
+
   useEffect(() => {
     setUserIsCommitted(taskIds?.committed.includes(task?.task_id));
   }, [task, taskIds]);
@@ -160,25 +181,67 @@ export default function TaskCard({
           <StarIcon />
         </IconButton>
       </Tooltip>
+
       <Tooltip hasArrow label="Answer task">
         <IconButton
           disabled={user?.user_id === task.creator_id}
           mx="1"
           variant="outline"
           colorScheme="blue"
+          onClick={onOpen}
         >
           <ChatIcon />
         </IconButton>
       </Tooltip>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Answer to {task.creator_name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Center>
+              <FormControl w={'100%'} l={'100%'} id="credits">
+                <Textarea
+                  placeholder="Place for your bright idea"
+                  rows={4}
+                  onChange={event => setAnswer(event.target.value)}
+                  value={answer}
+                  focusBorderColor="brand.400"
+                />
+              </FormControl>
+            </Center>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                console.log(answer);
+                onClose();
+              }}
+            >
+              Submit
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       <IconButton
         mr="5"
         ml="2"
         bgGradient="linear(to-r, blue.300, blue.600)"
         colorScheme="blue"
+        onClick={onDetailOpen}
       >
         <InfoIcon />
       </IconButton>
+      <TaskDetail
+        isDetailOpen={isDetailOpen}
+        setIsDetailOpen={setIsDetailOpen}
+        task={task}
+        page={'mytasks'}
+      />
     </Card>
   );
 }
