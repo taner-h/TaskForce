@@ -42,7 +42,7 @@ export default function SearchProject() {
   const [page, setPage] = useState(1);
   const [content, setContent] = useState({});
   const [order, setOrder] = useState('DESC');
-  const [sortBy, setSortBy] = useState('create_time');
+  const [sortBy, setSortBy] = useState('recommended');
   const [isPending, setIsPending] = useState(true);
   const [selectedFields, setSelectedFields] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
@@ -305,12 +305,13 @@ export default function SearchProject() {
               </MenuOptionGroup>
               <MenuDivider />
               <MenuOptionGroup
-                defaultValue="create_time"
+                defaultValue="recommended"
                 title="Attribute"
                 value={sortBy}
                 onChange={setSortBy}
                 type="radio"
               >
+                <MenuItemOption value="recommended">Recommended</MenuItemOption>
                 <MenuItemOption value="create_time">Create Time</MenuItemOption>
                 <MenuItemOption value="member_count">
                   Member Count

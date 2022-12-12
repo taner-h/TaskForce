@@ -160,8 +160,28 @@ router.post("/search", async (req, res) => {
       response.message = "No projects found with the selected filters.";
       res.json(response);
     } else {
-      const projectQuery = format(
-        `SELECT project_id, creator_id, project.name as project_name, description, 
+      let projectQuery;
+
+      if (sortBy === "recommended") {
+        projectQuery = format(
+          `SELECT project_id, creator_id, project.name as project_name, description, 
+    summary, repo, project.credit_count as credit_count, member_count,
+    project.create_time as create_time, type as project_type, users.name as 
+    creator_name, surname as creator_surname, sub_tier.name as sub_tier, 
+    (LOG(2, project.credit_count) + LOG(3, project.credit_count) + 2)/2 * random() as rank
+    FROM project
+    INNER JOIN project_type ON project.project_type_id = project_type.project_type_id
+    INNER JOIN users ON project.creator_id = users.user_id
+    INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+    WHERE project_id IN (%L) ORDER BY rank %s LIMIT %s OFFSET %s `,
+          filtered,
+          order,
+          limit,
+          limit * (page - 1)
+        );
+      } else {
+        projectQuery = format(
+          `SELECT project_id, creator_id, project.name as project_name, description, 
     summary, repo, project.credit_count as credit_count, member_count,
     project.create_time as create_time, type as project_type, users.name as 
     creator_name, surname as creator_surname, sub_tier.name as sub_tier
@@ -170,12 +190,13 @@ router.post("/search", async (req, res) => {
     INNER JOIN users ON project.creator_id = users.user_id
     INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
     WHERE project_id IN (%L) ORDER BY %I %s LIMIT %s OFFSET %s `,
-        filtered,
-        sortBy,
-        order,
-        limit,
-        limit * (page - 1)
-      );
+          filtered,
+          sortBy,
+          order,
+          limit,
+          limit * (page - 1)
+        );
+      }
 
       const projects = await pool.query(projectQuery);
       response.currentPageItems = projects.rows.length;

@@ -36,8 +36,8 @@ router.post("/", async (req, res) => {
     // add the task
     const task = await pool.query(
       `INSERT INTO task (creator_id, title, description, repo, 
-          credit_count, credit_reward, create_time) 
-          VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+          credit_count, credit_reward, create_time, answer_count, commit_count) 
+          VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0) RETURNING *`,
       [creatorId, title, description, repo, creditFee, creditReward, createTime]
     );
 
@@ -136,21 +136,41 @@ router.post("/search", async (req, res) => {
       response.message = "No tasks found with the selected filters.";
       res.json(response);
     } else {
-      const taskQuery = format(
-        `SELECT task_id, creator_id, title, description, repo, 
-    task.credit_count as credit_count, credit_reward, task.create_time as 
-    create_time, users.name as creator_name, surname as creator_surname, 
-    sub_tier.name as sub_tier, commit_count, answer_count
-    FROM task
-    INNER JOIN users ON task.creator_id = users.user_id
-    INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
-    WHERE task_id IN (%L) ORDER BY %I %s LIMIT %s OFFSET %s `,
-        filtered,
-        sortBy,
-        order,
-        limit,
-        limit * (page - 1)
-      );
+      let taskQuery;
+      if (sortBy === "recommended") {
+        taskQuery = format(
+          `SELECT task_id, creator_id, title, description, repo, 
+      task.credit_count as credit_count, credit_reward, task.create_time as 
+      create_time, users.name as creator_name, surname as creator_surname, 
+      sub_tier.name as sub_tier, commit_count, answer_count, 
+      (LOG(2, task.credit_count + credit_reward) + 
+      LOG(3, task.credit_count + credit_reward) + 2)/2 * random() as rank
+      FROM task
+      INNER JOIN users ON task.creator_id = users.user_id
+      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+      WHERE task_id IN (%L) ORDER BY rank %s LIMIT %s OFFSET %s `,
+          filtered,
+          order,
+          limit,
+          limit * (page - 1)
+        );
+      } else {
+        taskQuery = format(
+          `SELECT task_id, creator_id, title, description, repo, 
+      task.credit_count as credit_count, credit_reward, task.create_time as 
+      create_time, users.name as creator_name, surname as creator_surname, 
+      sub_tier.name as sub_tier, commit_count, answer_count
+      FROM task
+      INNER JOIN users ON task.creator_id = users.user_id
+      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+      WHERE task_id IN (%L) ORDER BY %I %s LIMIT %s OFFSET %s `,
+          filtered,
+          sortBy,
+          order,
+          limit,
+          limit * (page - 1)
+        );
+      }
 
       const tasks = await pool.query(taskQuery);
       response.currentPageItems = tasks.rows.length;
