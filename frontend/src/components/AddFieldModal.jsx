@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { AddIcon } from '@chakra-ui/icons';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import {
   IconButton,
@@ -59,7 +58,7 @@ const ControlledSelect = ({
 
 const defaultValues = { field: [] };
 
-export default function AddFieldModal({ setSelectedFields, selectedFields }) {
+
   export default function AddFieldModal({
                                           setSelectedFields,
                                           selectedFields,
@@ -139,5 +138,5 @@ export default function AddFieldModal({ setSelectedFields, selectedFields }) {
           </Modal>
         </>
     );
-  }}
+  }
 

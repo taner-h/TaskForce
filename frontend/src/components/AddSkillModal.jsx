@@ -13,7 +13,6 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { useDisclosure } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
@@ -59,7 +58,6 @@ const ControlledSelect = ({
 
 const defaultValues = { skill: [] };
 
-export default function AddSkillModal({ setSelectedSkills, selectedSkills }) {
   export default function AddSkillModal({
                                           setSelectedSkills,
                                           selectedSkills,
@@ -139,4 +137,4 @@ export default function AddSkillModal({ setSelectedSkills, selectedSkills }) {
           </Modal>
         </>
     );
-  }}
+  }
