@@ -15,6 +15,8 @@ import CreateProject from './pages/CreateProject';
 import CreateTask from './pages/CreateTask';
 import SearchProject from './pages/SearchProject';
 import SearchTask from './pages/SearchTask';
+import OmerinYeri from './pages/OmerinYeri';
+
 import {
   setAuth,
   setUser,
@@ -87,6 +89,7 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/projects" element={<SearchProject />} />
           <Route path="/tasks" element={<SearchTask />} />
+          <Route path="/omer" element={<OmerinYeri />} />
           <Route
             path="/profile"
             element={isLogged ? <MyProfile /> : <Login />}

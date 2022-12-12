@@ -183,6 +183,9 @@ export default function Navbar() {
                 <Link to="/mytasks">
                   <MenuItem>My Tasks</MenuItem>
                 </Link>
+                <Link to="/omer">
+                  <MenuItem>Omerin Yeri</MenuItem>
+                </Link>
                 <MenuItem>Notifications</MenuItem>
                 <MenuItem>Settings</MenuItem>
                 <MenuItem
