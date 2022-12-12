@@ -22,3 +22,4 @@ app.use("/member", require("./routes/member"));
 app.use("/invite", require("./routes/invite"));
 app.use("/task", require("./routes/task"));
 app.use("/commit", require("./routes/commit"));
+app.use("/answer", require("./routes/answer"));
