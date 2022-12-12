@@ -24,7 +24,11 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
 
     const answers = await pool.query(
-      `SELECT * FROM answer WHERE task_id = $1`,
+      `SELECT answer_id, task_id, responder_id, repo, answer, points, answer.create_time,
+      users.name as responder_name, users.surname as responder_surname
+      FROM answer
+      INNER JOIN users ON answer.responder_id = users.user_id
+        WHERE task_id = $1`,
       [id]
     );
 
