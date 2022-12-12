@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
+import { AddIcon } from '@chakra-ui/icons';
 import {
   IconButton,
   Modal,
@@ -58,11 +58,7 @@ const ControlledSelect = ({
 
 const defaultValues = { field: [] };
 
-export default function AddFieldModal({
-  setSelectedFields,
-  selectedFields,
-  page,
-}) {
+export default function AddFieldModal({ setSelectedFields, selectedFields }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { control } = useForm({ defaultValues });
   const [fields, setFields] = useState([]);
@@ -105,7 +101,7 @@ export default function AddFieldModal({
         colorScheme="blue"
         rounded="full"
       >
-        {page === 'profile' ? <EditIcon /> : <AddIcon boxSize={2.5} />}
+        <AddIcon boxSize={2.5} />
       </IconButton>
 
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>
