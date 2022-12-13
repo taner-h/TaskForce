@@ -103,7 +103,7 @@ export default function ApplicantCard({
                         </Heading>
                     </Stack>
                     <Text fontSize='xs' color={"gray"} paddingLeft='5px' >
-                        applicantion time
+                        application time
                         {' '}
                         {new Date(applicant.application_time).toLocaleDateString('en-uk', {
                             day: 'numeric',
