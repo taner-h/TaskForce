@@ -67,4 +67,20 @@ router.get("/project/:id", async (req, res) => {
   }
 });
 
+// delete application
+router.delete("/project/:projectId/user/:userId", async (req, res) => {
+  try {
+    const { projectId, userId } = req.params;
+
+    const application = await pool.query(
+      `DELETE FROM application WHERE project_id = $1 AND user_id = $2 RETURNING *`,
+      [projectId, userId]
+    );
+
+    res.json(application.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;

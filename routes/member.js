@@ -26,18 +26,18 @@ router.post("/", async (req, res) => {
       [userId, projectId, createTime]
     );
 
-    // if user has invite delete invite
-    const hasInvite = await pool.query(
-      "SELECT * FROM invite WHERE user_id = $1 AND project_id = $2",
-      [userId, projectId]
-    );
+    // // if user has invite delete invite
+    // const hasInvite = await pool.query(
+    //   "SELECT * FROM invite WHERE user_id = $1 AND project_id = $2",
+    //   [userId, projectId]
+    // );
 
-    if (hasInvite.rows.length !== 0) {
-      await pool.query(
-        "DELETE FROM invite WHERE user_id = $1 AND project_id = $2",
-        [userId, projectId]
-      );
-    }
+    // if (hasInvite.rows.length !== 0) {
+    //   await pool.query(
+    //     "DELETE FROM invite WHERE user_id = $1 AND project_id = $2",
+    //     [userId, projectId]
+    //   );
+    // }
 
     // if user has request delete request
     const hasApplication = await pool.query(
