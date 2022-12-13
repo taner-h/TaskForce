@@ -15,6 +15,7 @@ import CreateProject from './pages/CreateProject';
 import CreateTask from './pages/CreateTask';
 import SearchProject from './pages/SearchProject';
 import SearchTask from './pages/SearchTask';
+import Match from './pages/Match';
 import OmerinYeri from './pages/OmerinYeri';
 
 import {
@@ -89,6 +90,7 @@ function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/projects" element={<SearchProject />} />
           <Route path="/tasks" element={<SearchTask />} />
+          <Route path="/match" element={<Match />} />
           <Route path="/omer" element={<OmerinYeri />} />
           <Route
             path="/profile"

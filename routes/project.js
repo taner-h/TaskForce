@@ -437,4 +437,155 @@ router.post("/user", async (req, res) => {
   }
 });
 
+router.post("/match", async (req, res) => {
+  try {
+    const {
+      userId,
+      fields,
+      skills,
+      created,
+      member,
+      applied,
+      opened,
+      committed,
+      answered,
+    } = req.body;
+
+    const prevMatches = await pool.query(
+      `select project_id from match_project where user_id = $1`,
+      [userId]
+    );
+
+    const matchIds = prevMatches.rows.map((match) => match.project_id);
+
+    const query = format(
+      `select project.project_id, 
+    (LOG(2, project.credit_count) + LOG(3, project.credit_count) + 2)/2 * 
+    random() as rank
+    from project inner join 
+    (select p.project_id,
+    COALESCE(field_count, 0) * 5 + 
+    COALESCE(skill_count, 0) * 5 + 
+    COALESCE(created_tag_count, 0) * 2 + 
+    COALESCE(member_tag_count, 0) * 2 +
+    COALESCE(applied_tag_count, 0) +
+    COALESCE(opened_tag_count, 0) * 2 +
+    COALESCE(answered_tag_count, 0) +
+    COALESCE(committed_tag_count, 0) 
+    as points
+    from project p
+    left join (select project_id, count(field_id) as field_count 
+    from project_field where field_id in (%L) group by project_id) f
+    on p.project_id = f.project_id
+    left join (select project_id, count(skill_id) as skill_count 
+    from project_skill where skill_id in (%L) group by project_id) s
+    on p.project_id = s.project_id
+    left join (select project_id, count(tag_id) as created_tag_count 
+    from project_tag where tag_id in (%L) group by project_id) ct
+    on p.project_id = ct.project_id
+    left join (select project_id, count(tag_id) as member_tag_count 
+    from project_tag where tag_id in (%L) group by project_id) mt
+    on p.project_id = mt.project_id
+    left join (select project_id, count(tag_id) as applied_tag_count 
+    from project_tag where tag_id in (%L) group by project_id) apt
+    on p.project_id = apt.project_id
+    left join (select project_id, count(tag_id) as opened_tag_count 
+    from project_tag where tag_id in (%L) group by project_id) ot
+    on p.project_id = ot.project_id
+    left join (select project_id, count(tag_id) as answered_tag_count 
+    from project_tag where tag_id in (%L) group by project_id) ant
+    on p.project_id = ant.project_id
+    left join (select project_id, count(tag_id) as committed_tag_count 
+    from project_tag where tag_id in (%L) group by project_id) cot
+    on p.project_id = cot.project_id
+    order by points desc
+    limit 10) q1
+    on project.project_id = q1.project_id
+    order by rank desc
+    `,
+      fields,
+      skills,
+      created,
+      member,
+      applied,
+      opened,
+      answered,
+      committed
+    );
+    const bestProjects = await pool.query(query);
+
+    const projectIds = bestProjects.rows
+      .filter((project) => !matchIds.includes(project.project_id))
+      .slice(0, 2)
+      .map((project) => project.project_id);
+
+    if (projectIds.length === 0) {
+      res.json([]);
+    } else {
+      const createTime = new Date(Date.now()).toISOString();
+
+      const queryString = format(
+        `insert into match_project (project_id, user_id, match_time) values %L`,
+        projectIds.map((project) => [project, userId, createTime])
+      );
+
+      await pool.query(queryString);
+
+      const projectQuery = format(
+        `SELECT project_id, creator_id, project.name as project_name, description, 
+  summary, repo, project.credit_count as credit_count, member_count,
+  project.create_time as create_time, type as project_type, users.name as 
+  creator_name, surname as creator_surname, sub_tier.name as sub_tier
+  FROM project
+  INNER JOIN project_type ON project.project_type_id = project_type.project_type_id
+  INNER JOIN users ON project.creator_id = users.user_id
+  INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+  WHERE project_id IN (%L) `,
+        projectIds
+      );
+
+      const projects = await pool.query(projectQuery);
+
+      const fieldQuery = format(
+        `SELECT * FROM project_field 
+      INNER JOIN field ON project_field.field_id = field.field_id
+      WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allFields = await pool.query(fieldQuery);
+
+      const skillQuery = format(
+        `SELECT * FROM project_skill 
+      INNER JOIN skill ON project_skill.skill_id = skill.skill_id
+      WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allSkills = await pool.query(skillQuery);
+
+      const tagQuery = format(
+        `SELECT * FROM project_tag 
+      INNER JOIN tag ON project_tag.tag_id = tag.tag_id
+      WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allTags = await pool.query(tagQuery);
+
+      response = formatProjectsResponse(
+        projectIds,
+        projects.rows,
+        allFields.rows,
+        allSkills.rows,
+        allTags.rows
+      );
+
+      res.json(response);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;
