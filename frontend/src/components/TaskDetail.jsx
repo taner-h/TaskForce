@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux';
 import { getUser } from '../reducers/authSlice';
 import { useEffect, useState } from 'react';
 
-export default function DetailModal({
+export default function TaskDetail({
   task,
   isDetailOpen,
   setIsDetailOpen,

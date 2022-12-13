@@ -26,6 +26,10 @@ import { USER_BADGE_COLORS } from '../data/options';
 import { useSelector } from 'react-redux';
 import { getUser } from '../reducers/authSlice';
 import { useEffect, useState } from 'react';
+import MemberCard from "./MemberCard";
+import ApplicantCard from "./ApplicantCard";
+
+import app from "../App";
 
 export default function DetailModal({
   project,
@@ -33,8 +37,10 @@ export default function DetailModal({
   setIsDetailOpen,
   page,
 }) {
-  const [member, setMember] = useState([]);
-  const [applicant, setApplicant] = useState([]);
+  const scrollBehavior='outside'
+  const [tabIndex, setTabIndex] = useState(0)
+  const [members, setMembers] = useState([]);
+  const [applicants, setApplicants] = useState([]);
   const user = useSelector(getUser);
 
   const projectId = project.project_id;
@@ -42,7 +48,7 @@ export default function DetailModal({
     setIsDetailOpen(false);
   };
 
-  const getMemberInfo = async () => {
+  const getMembersInfo = async () => {
     try {
       const response = await fetch(
         `http://localhost:5000/member/project/${projectId}`,
@@ -52,12 +58,12 @@ export default function DetailModal({
       );
 
       const res = await response.json();
-      setMember(res);
+      setMembers(res);
     } catch (err) {
       console.error(err.message);
     }
   };
-  const getApplicantInfo = async () => {
+  const getApplicantsInfo = async () => {
     try {
       const response = await fetch(
         `http://localhost:5000/application/project/${projectId}`,
@@ -67,34 +73,32 @@ export default function DetailModal({
       );
 
       const res = await response.json();
-      setApplicant(res);
+      setApplicants(res);
     } catch (err) {
       console.error(err.message);
     }
   };
-
   useEffect(() => {
-    if (!member?.length) {
-      getMemberInfo();
+    if(tabIndex===1){
+      getMembersInfo();
     }
-    // if (!applicant?.length) {
-    //   getApplicantInfo();
-    // }
-  });
+    if(tabIndex===2){
+      getApplicantsInfo();
+    }
+  },[tabIndex, members?.length, applicants?.length]);
 
   return (
     <>
-      <Modal
+      <Modal 
         size="2xl"
-        isCentered
-        closeOnOverlayClick={false}
+        scrollBehavior={scrollBehavior}
         isOpen={isDetailOpen}
         onClose={onDetailClose}
       >
         <ModalOverlay />
-        <ModalContent marginBottom="15px">
+        <ModalContent marginBottom="15px"  >
           {page === 'myprojects' && (
-            <Tabs>
+            <Tabs onChange={(index) => setTabIndex(index)}>
               <TabList>
                 <Tab>Overview</Tab>
                 <Tab>Members</Tab>
@@ -259,43 +263,30 @@ export default function DetailModal({
                 <TabPanel>
                   <ModalCloseButton />
                   <ModalBody>
-                    <Heading
-                      paddingBottom="3px"
-                      paddingLeft="3px"
-                      fontWeight={'700'}
-                      fontSize="xl"
-                      // eslint-disable-next-line react-hooks/rules-of-hooks
-                      color={useColorModeValue('blue.900', 'blue.200')}
-                    >
-                      {' '}
-                      Members
-                    </Heading>
-                    <UnorderedList paddingLeft="5px">
-                      {member?.length !== 0 &&
-                        member?.map(mem => (
-                          <ListItem
-                            fontSize={'sm'}
-                            paddingLeft="5px"
-                            fontWeight={'500'}
-                            align="left"
-                            colorScheme="blue"
-                          >
-                            {`${mem.name} ${mem.surname}`}{' '}
-                            <Badge
-                              colorScheme={USER_BADGE_COLORS[mem.sub_tier]}
-                              m="1"
-                            >
-                              {mem.sub_tier}
-                            </Badge>
-                          </ListItem>
-                        ))}
-                    </UnorderedList>
+
+                    {members?.length !==0 ? members.map((mem)=>(
+                        <MemberCard members={members} member={mem} setMembers={setMembers} user={user} project={project}/>
+
+                    )) : <Text align='center'> Empty </Text>}
                   </ModalBody>
                 </TabPanel>
+                {user?.user_id === project?.creator_id &&
+                    <>
+                    <TabPanel>
+                  <ModalCloseButton/>
+                  <ModalBody>
+
+                    {applicants?.length !==0 ? applicants.map((app)=>(
+                        <ApplicantCard applicants={applicants} applicant={app} setApplicants={setMembers} user={user} project={project}/>
+
+                    )) : <Text align='center'> Empty </Text>}
+                  </ModalBody>
+                </TabPanel>
+                    </>
+                }
               </TabPanels>
             </Tabs>
           )}
-
           <ModalFooter>
             <Button
               fontWeight={'700'}
