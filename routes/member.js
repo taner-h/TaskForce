@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
     if (isMember.rows.length !== 0) {
       return res
         .status(401)
-        .json("Can't send an invite. User is already a member.");
+        .json("Can't add user to project. User is already a member.");
     }
 
     const createTime = new Date(Date.now()).toISOString();
@@ -52,6 +52,11 @@ router.post("/", async (req, res) => {
       );
     }
 
+    await pool.query(
+      `UPDATE project SET member_count = member_count + 1 where project_id = $1`,
+      [projectId]
+    );
+
     res.json(member.rows[0]);
   } catch (err) {
     console.error(err.message);
@@ -86,6 +91,11 @@ router.delete("/project/:projectId/user/:userId", async (req, res) => {
       `
     DELETE FROM member WHERE project_id = $1 AND user_id = $2 RETURNING *`,
       [projectId, userId]
+    );
+
+    await pool.query(
+      `UPDATE project SET member_count = member_count - 1 where project_id = $1`,
+      [projectId]
     );
 
     res.json(members.rows);
