@@ -77,4 +77,21 @@ router.get("/project/:id", async (req, res) => {
   }
 });
 
+// remove member from project
+router.delete("/project/:projectId/user/:userId", async (req, res) => {
+  try {
+    const { projectId, userId } = req.params;
+
+    const members = await pool.query(
+      `
+    DELETE FROM member WHERE project_id = $1 AND user_id = $2 RETURNING *`,
+      [projectId, userId]
+    );
+
+    res.json(members.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;
