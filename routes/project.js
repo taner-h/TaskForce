@@ -449,6 +449,7 @@ router.post("/match", async (req, res) => {
       opened,
       committed,
       answered,
+      method,
     } = req.body;
 
     const prevMatches = await pool.query(
@@ -457,6 +458,7 @@ router.post("/match", async (req, res) => {
     );
 
     const matchIds = prevMatches.rows.map((match) => match.project_id);
+    const matchedCount = matchIds.length;
 
     const query = format(
       `select project.project_id, 
@@ -499,7 +501,7 @@ router.post("/match", async (req, res) => {
     from project_tag where tag_id in (%L) group by project_id) cot
     on p.project_id = cot.project_id
     order by points desc
-    limit 10) q1
+    limit 10 + ${matchedCount}) q1
     on project.project_id = q1.project_id
     order by rank desc
     `,
@@ -580,6 +582,18 @@ router.post("/match", async (req, res) => {
         allSkills.rows,
         allTags.rows
       );
+
+      if (method === "free") {
+        pool.query(
+          `update users set match_credit = match_credit - 1 where user_id = $1`,
+          [userId]
+        );
+      } else if (method === "credit") {
+        pool.query(
+          `update users set credit_count = credit_count - 3 where user_id = $1`,
+          [userId]
+        );
+      }
 
       res.json(response);
     }

@@ -46,8 +46,8 @@ router.post("/register", validInfo, async (req, res) => {
     // insert user into database
     const newUser = await pool.query(
       `INSERT INTO users (email, password, name, surname, credit_count,
-      create_time, sub_tier_id, portfolio, linkedin, github, bio )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11 ) RETURNING *`,
+      create_time, sub_tier_id, portfolio, linkedin, github, bio, match_credit )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 5) RETURNING *`,
       [
         email,
         hashedPassword,

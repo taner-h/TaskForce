@@ -166,7 +166,13 @@ export default function Navbar() {
                 {/* <br /> */}
                 <MenuDivider />
                 <Center>
-                  <Text>{user && `You have ${user.credit_count} credits`}</Text>
+                  <Text>{user && `Credits: ${user.credit_count}`}</Text>
+                </Center>
+                <MenuDivider />
+                <Center>
+                  <Text>
+                    {user && `You have ${user.match_credit} free matches`}
+                  </Text>
                 </Center>
                 <MenuDivider />
                 <Center>
@@ -177,12 +183,7 @@ export default function Navbar() {
                 <Link to="/profile">
                   <MenuItem>My Profile</MenuItem>
                 </Link>
-                <Link to="/myprojects">
-                  <MenuItem>My Projects</MenuItem>
-                </Link>
-                <Link to="/mytasks">
-                  <MenuItem>My Tasks</MenuItem>
-                </Link>
+
                 <Link to="/omer">
                   <MenuItem>Omerin Yeri</MenuItem>
                 </Link>
