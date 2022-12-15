@@ -1,46 +1,38 @@
-import { SearchIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
   Center,
   Flex,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Heading,
   Image,
   SimpleGrid,
   Spinner,
-  useToast,
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import adventure from '../asset/adventure.svg';
+import Footer from '../components/FooterSmall';
+import ProjectCard from '../components/ProjectCard';
 import {
+  getIsLogged,
   getProjects,
   getTasks,
   getUser,
-  getIsLogged,
   setUser,
 } from '../reducers/authSlice';
-import Footer from '../components/FooterSmall';
-import ProjectCard from '../components/ProjectCard';
-import adventure from '../asset/adventure.svg';
 
 export default function MatchProjects() {
   const [tagIds, setTagIds] = useState({});
   const [matchedProjects, setMatchedProjects] = useState([]);
+  const [prevMatchedProjects, setPrevMatchedProjects] = useState([]);
   const [isTagIdsFetched, setIsTagIdsFetched] = useState(false);
   const [isPending, setIsPending] = useState(false);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [view, setView] = useState('new');
 
   const dispatch = useDispatch();
   const toast = useToast();
@@ -100,6 +92,7 @@ export default function MatchProjects() {
         const res = await response.json();
         setMatchedProjects(res);
         setIsPending(false);
+        setView('new');
         if (method === 'free') {
           dispatch(
             setUser({
@@ -141,11 +134,24 @@ export default function MatchProjects() {
     }
   }
 
-  return (
-    // <Center>
-    //   <Button onClick={getProjectMatches}>Match</Button>
-    // </Center>
+  async function getPreviousProjectMatches() {
+    try {
+      setIsPending(true);
+      const response = await fetch(
+        `http://localhost:5000/project/match/${user.user_id}`
+      );
+      const res = await response.json();
+      setPrevMatchedProjects(res);
+      setView('all');
+      setIsPending(false);
+    } catch (err) {
+      setIsPending(false);
 
+      console.error(err.message);
+    }
+  }
+
+  return (
     <>
       <Box
         bg={useColorModeValue('gray.50', 'gray.800')}
@@ -205,19 +211,6 @@ export default function MatchProjects() {
           </Stack>
         </Center>
         <Center>
-          {/* <Button
-            mx="4"
-            color={'white'}
-            width="120px"
-            colorScheme="blue"
-            bgGradient="linear(to-r, blue.300, blue.600)"
-            _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-            leftIcon={<SearchIcon />}
-            onClick={onOpen}
-          >
-            Match
-          </Button> */}
-
           <Stack spacing={5}>
             <Heading size="sm" align="center">
               {user && `You have ${user.match_credit} free matches`}
@@ -246,51 +239,14 @@ export default function MatchProjects() {
                 </Button>
               </>
             )}
-            <Button variant="ghost" colorScheme="blue">
+            <Button
+              variant="ghost"
+              colorScheme="blue"
+              onClick={getPreviousProjectMatches}
+            >
               See previous matches
             </Button>
           </Stack>
-
-          <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            size={'xs'}
-            closeOnOverlayClick={false}
-            isCentered
-          >
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader></ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Stack spacing={5}>
-                  <Text align="center">
-                    {user && `You have ${user.match_credit} free matches`}
-                  </Text>
-                  <Button
-                    disabled={user?.match_credit === 0}
-                    onClick={() => {
-                      onClose();
-                      getProjectMatches('free');
-                    }}
-                  >
-                    Use a free match
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      onClose();
-                      getProjectMatches('credit');
-                    }}
-                    disabled={user?.credit_count < 3}
-                  >
-                    Use 3 credits
-                  </Button>
-                </Stack>
-              </ModalBody>
-
-              <ModalFooter></ModalFooter>
-            </ModalContent>
-          </Modal>
         </Center>
         <Center>
           {isPending && (
@@ -304,11 +260,25 @@ export default function MatchProjects() {
           )}
         </Center>
         <Center pt={6} pb="10">
-          {Object.keys(matchedProjects).length !== 0 && (
+          {Object.keys(matchedProjects).length !== 0 && view === 'new' && (
             <SimpleGrid
               columns={matchedProjects.length === 2 ? { base: 1, lg: 2 } : 1}
             >
               {matchedProjects?.map(project => (
+                <ProjectCard
+                  project={project}
+                  isLogged={isLogged}
+                  user={user}
+                />
+              ))}
+            </SimpleGrid>
+          )}
+          {prevMatchedProjects.length !== 0 && view === 'all' && (
+            <SimpleGrid
+              // columns={{ base: 1, lg: 2, '2xl': 3 }}
+              columns={matchedProjects.length === 1 ? 1 : { base: 1, lg: 2 }}
+            >
+              {prevMatchedProjects?.map(project => (
                 <ProjectCard
                   project={project}
                   isLogged={isLogged}

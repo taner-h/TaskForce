@@ -602,4 +602,74 @@ router.post("/match", async (req, res) => {
   }
 });
 
+router.get("/match/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const projects = await pool.query(
+      `SELECT project_id from match_project where user_id = $1`,
+      [userId]
+    );
+
+    const projectIds = projects.rows.map((project) => project.project_id);
+    if (projectIds.length === 0) {
+      res.json([]);
+    } else {
+      const projectQuery = format(
+        `SELECT project_id, creator_id, project.name as project_name, description, 
+  summary, repo, project.credit_count as credit_count, member_count,
+  project.create_time as create_time, type as project_type, users.name as 
+  creator_name, surname as creator_surname, sub_tier.name as sub_tier
+  FROM project
+  INNER JOIN project_type ON project.project_type_id = project_type.project_type_id
+  INNER JOIN users ON project.creator_id = users.user_id
+  INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id 
+  WHERE project_id IN (%L) `,
+        projectIds
+      );
+
+      const projects = await pool.query(projectQuery);
+
+      const fieldQuery = format(
+        `SELECT * FROM project_field 
+      INNER JOIN field ON project_field.field_id = field.field_id
+      WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allFields = await pool.query(fieldQuery);
+
+      const skillQuery = format(
+        `SELECT * FROM project_skill 
+      INNER JOIN skill ON project_skill.skill_id = skill.skill_id
+      WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allSkills = await pool.query(skillQuery);
+
+      const tagQuery = format(
+        `SELECT * FROM project_tag 
+      INNER JOIN tag ON project_tag.tag_id = tag.tag_id
+      WHERE project_id IN (%L)`,
+        projectIds
+      );
+
+      const allTags = await pool.query(tagQuery);
+
+      response = formatProjectsResponse(
+        projectIds,
+        projects.rows,
+        allFields.rows,
+        allSkills.rows,
+        allTags.rows
+      );
+
+      res.json(response);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;
