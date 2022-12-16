@@ -91,7 +91,7 @@ function App() {
           <Route path="/projects" element={<SearchProject />} />
           <Route path="/tasks" element={<SearchTask />} />
           <Route
-            path="/match/projects"
+            path="/match"
             element={isLogged ? <MatchProjects /> : <Login />}
           />
           <Route path="/omer" element={<OmerinYeri />} />

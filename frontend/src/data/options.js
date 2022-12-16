@@ -42,18 +42,7 @@ export const NAV_ITEMS = [
   },
   {
     label: 'Match',
-    children: [
-      {
-        label: 'Projects',
-        subLabel: "Match with projects that we think you'd like",
-        href: '/match/projects',
-      },
-      {
-        label: 'Tasks',
-        subLabel: "Match with projects that we think you'd like",
-        href: '/match/tasks',
-      },
-    ],
+    href: '/match',
   },
   {
     label: 'Pricing',
