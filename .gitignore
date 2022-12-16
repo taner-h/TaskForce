@@ -4,6 +4,7 @@ node_modules/
 .npm
 # Optional eslint cache
 .eslintcache
+.idea/
 
 # dotenv environment variable files
 .env

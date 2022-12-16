@@ -26,19 +26,6 @@ router.post("/", async (req, res) => {
       [userId, projectId, createTime]
     );
 
-    // // if user has invite delete invite
-    // const hasInvite = await pool.query(
-    //   "SELECT * FROM invite WHERE user_id = $1 AND project_id = $2",
-    //   [userId, projectId]
-    // );
-
-    // if (hasInvite.rows.length !== 0) {
-    //   await pool.query(
-    //     "DELETE FROM invite WHERE user_id = $1 AND project_id = $2",
-    //     [userId, projectId]
-    //   );
-    // }
-
     // if user has request delete request
     const hasApplication = await pool.query(
       "SELECT * FROM application WHERE user_id = $1 AND project_id = $2",
@@ -58,6 +45,15 @@ router.post("/", async (req, res) => {
     );
 
     res.json(member.rows[0]);
+
+    await pool.query(
+      `INSERT INTO notification 
+      (owner_id, causer_id, type, action, object_id, is_seen, create_time) 
+      SELECT $1, project.creator_id, 'member', 'insert', $2, FALSE, $3
+      FROM project
+      WHERE project_id = $4`,
+      [userId, projectId, createTime, projectId]
+    );
   } catch (err) {
     console.error(err.message);
   }
@@ -96,6 +92,17 @@ router.delete("/project/:projectId/user/:userId", async (req, res) => {
     await pool.query(
       `UPDATE project SET member_count = member_count - 1 where project_id = $1`,
       [projectId]
+    );
+
+    const createTime = new Date(Date.now()).toISOString();
+
+    await pool.query(
+      `INSERT INTO notification 
+      (owner_id, causer_id, type, action, object_id, is_seen, create_time) 
+      SELECT $1, project.creator_id, 'member', 'delete', $2, FALSE, $3
+      FROM project
+      WHERE project_id = $4`,
+      [userId, projectId, createTime, projectId]
     );
 
     res.json(members.rows);

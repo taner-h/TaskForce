@@ -37,12 +37,21 @@ router.post("/", async (req, res) => {
       [userId, projectId, creditCount, createTime]
     );
 
+    res.json(newApplication.rows[0]);
+
     await pool.query(
       `UPDATE users SET credit_count = credit_count - $1 where user_id = $2`,
       [creditCount, userId]
     );
 
-    res.json(newApplication.rows[0]);
+    await pool.query(
+      `INSERT INTO notification 
+      (owner_id, causer_id, type, action, object_id, is_seen, create_time) 
+      SELECT project.creator_id, $1, 'application', 'insert', $2, FALSE, $3
+      FROM project
+      WHERE project_id = $4`,
+      [userId, projectId, createTime, projectId]
+    );
   } catch (err) {
     console.error(err.message);
   }
