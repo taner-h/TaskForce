@@ -23,6 +23,8 @@ import {
   setUser,
   setTasks,
   fetchTasks,
+  fetchNotifications,
+  setNotifications,
   setProjects,
   fetchProjects,
 } from '../reducers/authSlice';
@@ -90,6 +92,16 @@ export default function Login() {
         dispatch(
           setTasks({
             tasks: tasks.payload,
+          })
+        );
+
+        const notifications = await dispatch(
+          fetchNotifications(user.payload.user_id)
+        );
+
+        dispatch(
+          setNotifications({
+            notifications: notifications.payload,
           })
         );
       } else {

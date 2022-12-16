@@ -6,8 +6,12 @@ router.get("/new/:id", async (req, res) => {
     const { id } = req.params;
 
     const notifications = await pool.query(
-      `SELECT * FROM notification
-        WHERE owner_id = $1 and is_seen = FALSE`,
+      `SELECT notification_id, owner_id, causer_id, type, action, object_id, 
+    object_name, is_seen, notification.create_time, users.name as causer_name,
+    users.surname as causer_surname
+    FROM notification
+    INNER JOIN users on notification.causer_id = users.user_id
+    WHERE owner_id = $1 and is_seen = FALSE`,
       [id]
     );
 
@@ -22,8 +26,12 @@ router.get("/all/:id", async (req, res) => {
     const { id } = req.params;
 
     const notifications = await pool.query(
-      `SELECT * FROM notification
-        WHERE owner_id = $1`,
+      `SELECT notification_id, owner_id, causer_id, type, action, object_id, 
+      object_name, is_seen, notification.create_time, users.name as causer_name,
+      users.surname as causer_surname
+      FROM notification
+      INNER JOIN users on notification.causer_id = users.user_id
+      WHERE owner_id = $1`,
       [id]
     );
 

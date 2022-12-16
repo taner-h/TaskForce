@@ -16,7 +16,6 @@ import CreateTask from './pages/CreateTask';
 import SearchProject from './pages/SearchProject';
 import SearchTask from './pages/SearchTask';
 import MatchProjects from './pages/MatchProjects';
-import OmerinYeri from './pages/OmerinYeri';
 
 import {
   setAuth,
@@ -27,6 +26,8 @@ import {
   verifyToken,
   fetchUser,
   fetchProjects,
+  fetchNotifications,
+  setNotifications,
   getIsLogged,
 } from './reducers/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
@@ -71,6 +72,16 @@ function App() {
           tasks: tasks.payload,
         })
       );
+
+      const notifications = await dispatch(
+        fetchNotifications(isTokenValid.payload.userId)
+      );
+
+      dispatch(
+        setNotifications({
+          notifications: notifications.payload,
+        })
+      );
     }
   };
 
@@ -94,7 +105,7 @@ function App() {
             path="/match"
             element={isLogged ? <MatchProjects /> : <Login />}
           />
-          <Route path="/omer" element={<OmerinYeri />} />
+
           <Route
             path="/profile"
             element={isLogged ? <MyProfile /> : <Login />}

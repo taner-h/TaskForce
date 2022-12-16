@@ -18,13 +18,19 @@ import {
   Center,
   Text,
   useBreakpointValue,
+  AvatarBadge,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import DesktopNavbar from './DesktopNavbar';
 import MobileNavbar from './MobileNavbar';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getIsLogged, logOut, getUser } from '../reducers/authSlice';
+import {
+  getIsLogged,
+  logOut,
+  getUser,
+  getNotifications,
+} from '../reducers/authSlice';
 import { USER_BADGE_COLORS } from '../data/options';
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -33,6 +39,7 @@ export default function Navbar() {
   const registerButtonColor = useColorModeValue('gray.700', 'white');
   const navigate = useNavigate();
   const user = useSelector(getUser);
+  const notifications = useSelector(getNotifications);
 
   return (
     <Box position="sticky" top="0" zIndex={'5'}>
@@ -138,7 +145,18 @@ export default function Navbar() {
                   p={'1'}
                   bgGradient="linear(to-r, blue.300, blue.600)"
                   _hover={{ bgGradient: 'linear(to-r, blue.200, blue.500)' }}
-                />
+                >
+                  {notifications && notifications.length > 0 && (
+                    <AvatarBadge
+                      p="8px"
+                      boxSize="1.25em"
+                      bg="red.500"
+                      fontSize="14"
+                    >
+                      {notifications.length}
+                    </AvatarBadge>
+                  )}
+                </Avatar>
               </MenuButton>
               <MenuList alignItems={'center'}>
                 <br />
@@ -184,10 +202,12 @@ export default function Navbar() {
                   <MenuItem>My Profile</MenuItem>
                 </Link>
 
-                <Link to="/omer">
-                  <MenuItem>Omerin Yeri</MenuItem>
-                </Link>
-                <MenuItem>Notifications</MenuItem>
+                <MenuItem>
+                  Notifications
+                  {notifications &&
+                    notifications.length > 0 &&
+                    ` (${notifications.length})`}
+                </MenuItem>
                 <MenuItem>Settings</MenuItem>
                 <MenuItem
                   onClick={() => {

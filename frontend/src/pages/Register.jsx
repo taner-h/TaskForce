@@ -35,6 +35,7 @@ import {
   setUser,
   fetchUser,
   setTasks,
+  setNotifications,
   setProjects,
 } from '../reducers/authSlice';
 import { useDispatch } from 'react-redux';
@@ -169,6 +170,12 @@ export default function Register() {
               answered: [],
               committed: [],
             },
+          })
+        );
+
+        dispatch(
+          setNotifications({
+            notifications: [],
           })
         );
       } else {
