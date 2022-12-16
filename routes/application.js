@@ -52,8 +52,10 @@ router.post("/", async (req, res) => {
 router.get("/project/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
 
-    const applicants = await pool.query(
+    const applicantCount = await pool.query(
       `SELECT *, users.name as name, sub_tier.name as sub_tier
         FROM application INNER JOIN users ON users.user_id = application.user_id
         INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id
@@ -61,7 +63,26 @@ router.get("/project/:id", async (req, res) => {
       [id]
     );
 
-    res.json(applicants.rows);
+    const response = {};
+    response.totalItems = applicantCount.rowCount;
+    response.totalPageCount = Math.ceil(response.totalItems / limit);
+    response.currentPage = page;
+    response.pageSize = limit;
+
+    const applicants = await pool.query(
+      `SELECT (LOG(2, application.credit_count) +
+      LOG(3, application.credit_count) + 2)/2 * random() as rank, project_id, users.user_id, application_time,
+      users.name as name, surname, sub_tier.name as sub_tier, email
+      FROM application INNER JOIN users ON users.user_id = application.user_id
+      INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id
+      WHERE project_id = $1
+      ORDER BY rank desc`,
+      [id]
+    );
+
+    response.applicants = applicants.rows;
+
+    res.json(response);
   } catch (err) {
     console.error(err.message);
   }

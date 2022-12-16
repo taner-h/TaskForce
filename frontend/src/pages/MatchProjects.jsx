@@ -15,7 +15,8 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import adventure from '../asset/adventure.svg';
+import dark from '../asset/dark.gif';
+import light from '../asset/light.gif';
 import Footer from '../components/FooterSmall';
 import ProjectCard from '../components/ProjectCard';
 import {
@@ -185,7 +186,7 @@ export default function MatchProjects() {
               </Text>
             </Heading>
             <Flex
-              maxW="md"
+              maxW="xl"
               flex={1}
               justify={'center'}
               align={'center'}
@@ -194,9 +195,10 @@ export default function MatchProjects() {
             >
               <Box
                 position={'relative'}
-                height={'240px'}
+                // height={'240px'}
+                // w="900px"
                 rounded={'2xl'}
-                width={'full'}
+                // width={'full'}
                 overflow={'hidden'}
               >
                 <Image
@@ -204,7 +206,7 @@ export default function MatchProjects() {
                   align={'center'}
                   w={'100%'}
                   h={'100%'}
-                  src={adventure}
+                  src={useColorModeValue(light, dark)}
                 />
               </Box>
             </Flex>
