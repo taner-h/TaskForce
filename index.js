@@ -23,3 +23,4 @@ app.use("/invite", require("./routes/invite"));
 app.use("/task", require("./routes/task"));
 app.use("/commit", require("./routes/commit"));
 app.use("/answer", require("./routes/answer"));
+app.use("/notification", require("./routes/notification"));

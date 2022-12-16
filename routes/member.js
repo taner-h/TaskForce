@@ -48,8 +48,8 @@ router.post("/", async (req, res) => {
 
     await pool.query(
       `INSERT INTO notification 
-      (owner_id, causer_id, type, action, object_id, is_seen, create_time) 
-      SELECT $1, project.creator_id, 'member', 'insert', $2, FALSE, $3
+      (owner_id, causer_id, type, action, object_id, object_name, is_seen, create_time) 
+      SELECT $1, project.creator_id, 'member', 'insert', $2, project.name, FALSE, $3
       FROM project
       WHERE project_id = $4`,
       [userId, projectId, createTime, projectId]
@@ -98,8 +98,8 @@ router.delete("/project/:projectId/user/:userId", async (req, res) => {
 
     await pool.query(
       `INSERT INTO notification 
-      (owner_id, causer_id, type, action, object_id, is_seen, create_time) 
-      SELECT $1, project.creator_id, 'member', 'delete', $2, FALSE, $3
+      (owner_id, causer_id, type, action, object_id, object_name, is_seen, create_time) 
+      SELECT $1, project.creator_id, 'member', 'delete', $2, project.name ,FALSE, $3
       FROM project
       WHERE project_id = $4`,
       [userId, projectId, createTime, projectId]

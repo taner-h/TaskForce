@@ -46,8 +46,8 @@ router.post("/", async (req, res) => {
 
     await pool.query(
       `INSERT INTO notification 
-      (owner_id, causer_id, type, action, object_id, is_seen, create_time) 
-      SELECT project.creator_id, $1, 'application', 'insert', $2, FALSE, $3
+      (owner_id, causer_id, type, action, object_id, object_name, is_seen, create_time) 
+      SELECT project.creator_id, $1, 'application', 'insert', $2, project.name, FALSE, $3
       FROM project
       WHERE project_id = $4`,
       [userId, projectId, createTime, projectId]
