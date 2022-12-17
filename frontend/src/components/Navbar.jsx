@@ -1,4 +1,4 @@
-import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { CloseIcon, HamburgerIcon, CheckIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   IconButton,
   Stack,
   Avatar,
+  Card,
   Menu,
   MenuButton,
   MenuList,
@@ -19,6 +20,19 @@ import {
   Text,
   useBreakpointValue,
   AvatarBadge,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Heading,
+  CardBody,
+  Divider,
+  CardHeader,
+  CardFooter,
+  Tooltip,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import DesktopNavbar from './DesktopNavbar';
@@ -29,18 +43,39 @@ import {
   getIsLogged,
   logOut,
   getUser,
+  setNotifications,
   getNotifications,
 } from '../reducers/authSlice';
 import { USER_BADGE_COLORS } from '../data/options';
+import getNotificationText from '../utils/getNotificationText';
+
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
+  const {
+    isOpen: isOpenModal,
+    onOpen: onOpenModal,
+    onClose: onCloseModal,
+  } = useDisclosure();
+
   const isLogged = useSelector(getIsLogged);
-  const dispatch = useDispatch();
-  const registerButtonColor = useColorModeValue('gray.700', 'white');
-  const navigate = useNavigate();
   const user = useSelector(getUser);
   const notifications = useSelector(getNotifications);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const registerButtonColor = useColorModeValue('gray.700', 'white');
+  const notificationCardBgColor = useColorModeValue('gray.200', 'gray.800');
+  const notificationSubTextColor = useColorModeValue('gray.600', 'gray.400');
+
+  function markAllAsRead() {
+    onCloseModal();
+    dispatch(
+      setNotifications({
+        notifications: [],
+      })
+    );
+  }
   return (
     <Box position="sticky" top="0" zIndex={'5'}>
       <Flex
@@ -201,8 +236,7 @@ export default function Navbar() {
                 <Link to="/profile">
                   <MenuItem>My Profile</MenuItem>
                 </Link>
-
-                <MenuItem>
+                <MenuItem onClick={onOpenModal}>
                   Notifications
                   {notifications &&
                     notifications.length > 0 &&
@@ -218,6 +252,79 @@ export default function Navbar() {
                   Logout
                 </MenuItem>
               </MenuList>
+              <Modal
+                isOpen={isOpenModal}
+                onClose={onCloseModal}
+                size={'2xl'}
+                closeOnOverlayClick={false}
+                isCentered
+              >
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Notifications</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    {notifications &&
+                      notifications.length > 0 &&
+                      notifications.map(notification => (
+                        <Card
+                          align="center"
+                          bg={notificationCardBgColor}
+                          variant="elevated"
+                          direction={'row'}
+                          maxW="6xl"
+                          size="sm"
+                          my="4"
+                        >
+                          <CardHeader>
+                            <Center w="60px" h="60px" borderRadius="lg">
+                              <Avatar
+                                color={'white'}
+                                colorScheme="blue"
+                                bgGradient="linear(to-r, blue.300, blue.600)"
+                                _hover={{
+                                  bgGradient:
+                                    'linear(to-r, blue.200, blue.500)',
+                                }}
+                                name={`${notification.causer_name} ${notification.causer_surname}`}
+                                size={'md'}
+                              />
+                            </Center>
+                          </CardHeader>
+                          <CardBody>
+                            <Stack spacing="1">
+                              <Heading noOfLines={1} fontSize="1.2rem">
+                                {getNotificationText(notification)}
+                              </Heading>
+                              {/* <Badge colorScheme="green">NEW</Badge> */}
+                              <Text
+                                noOfLines={1}
+                                color={notificationSubTextColor}
+                                justify="center"
+                                fontSize="0.9rem"
+                              >
+                                at 24 March 2021
+                              </Text>
+                            </Stack>
+                          </CardBody>
+                          <CardFooter>
+                            <Tooltip hasArrow label="Mark as read.">
+                              <IconButton colorScheme="blue" mr="2">
+                                <CheckIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </CardFooter>
+                        </Card>
+                      ))}
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button colorScheme="blue" onClick={markAllAsRead}>
+                      Mark all as read
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
             </Menu>
           )}
         </Stack>
