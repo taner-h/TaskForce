@@ -30,12 +30,14 @@ export default function MemberCard({
   const projectId = project.project_id;
   const userId = user.user_id;
 
-  const handleMemberRemove = async id => {
+  const handleMemberRemove = async () => {
     try {
-      const response = await fetch(
+      await fetch(
         `http://localhost:5000/member/project/${member.project_id}/user/${member.user_id}`,
-        { method: 'DELETE' }
-      ).then(() => setMembers(members.filter(mem => mem.id !== id)));
+        { method: 'DELETE', headers: { 'Content-Type': 'application/json' } }
+      );
+
+      setMembers(members.filter(mem => mem.user_id !== member.user_id));
     } catch (err) {
       console.error(err.message);
     }
@@ -96,7 +98,7 @@ export default function MemberCard({
               <IconButton
                 colorScheme="red"
                 alignSelf="flex-end"
-                onClick={() => handleMemberRemove(member.id)}
+                onClick={handleMemberRemove}
               >
                 <DeleteIcon />
               </IconButton>

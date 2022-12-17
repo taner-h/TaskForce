@@ -68,7 +68,7 @@ export default function Navbar() {
   const notificationCardBgColor = useColorModeValue('gray.200', 'gray.800');
   const notificationSubTextColor = useColorModeValue('gray.600', 'gray.400');
 
-  function markAllAsRead() {
+  async function markAllAsRead() {
     onCloseModal();
     dispatch(
       setNotifications({

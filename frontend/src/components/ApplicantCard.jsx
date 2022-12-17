@@ -27,23 +27,27 @@ export default function ApplicantCard({
   project,
   setApplicants,
   applicants,
+  members,
+  setMembers,
 }) {
-  const projectId = project.project_id;
-  const userId = user.user_id;
   const toast = useToast();
 
-  const handleApplicantRemove = async id => {
+  const handleApplicantRemove = async () => {
     try {
       await fetch(
         `http://localhost:5000/application/project/${applicant.project_id}/user/${applicant.user_id}`,
-        { method: 'DELETE' }
-      ).then(() => setApplicants(applicants.filter(app => app.id !== id)));
+        { method: 'DELETE', headers: { 'Content-Type': 'application/json' } }
+      );
+      const newApplicants = applicants.applicants.filter(
+        app => app.user_id !== applicant.user_id
+      );
+      setApplicants({ ...applicants, applicants: newApplicants });
     } catch (err) {
       console.error(err.message);
     }
   };
 
-  const handleApplicantAccept = async id => {
+  const handleApplicantAccept = async () => {
     const body = {
       userId: applicant.user_id,
       projectId: applicant.project_id,
@@ -54,9 +58,23 @@ export default function ApplicantCard({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
+
       const res = await response.json();
+
       if (res) {
-        setApplicants(applicants.filter(app => app.id !== id));
+        const newApplicants = applicants.applicants.filter(
+          app => app.user_id !== applicant.user_id
+        );
+        setApplicants({ ...applicants, applicants: newApplicants });
+        setMembers([
+          ...members,
+          {
+            name: applicant.name,
+            surname: applicant.surname,
+            member_time: new Date(Date.now()),
+          },
+        ]);
+
         toast({
           title: 'Successful.',
           description: 'Applicant accepted successfully',
@@ -134,7 +152,7 @@ export default function ApplicantCard({
                 <IconButton
                   colorScheme="green"
                   alignSelf="flex-end"
-                  onClick={() => handleApplicantAccept(applicant.id)}
+                  onClick={handleApplicantAccept}
                 >
                   <CheckIcon />
                 </IconButton>
@@ -147,7 +165,7 @@ export default function ApplicantCard({
                   colorScheme="red"
                   alignSelf="flex-end"
                   marginLeft="5px"
-                  onClick={() => handleApplicantRemove(applicant.id)}
+                  onClick={handleApplicantRemove}
                 >
                   <CloseIcon />
                 </IconButton>

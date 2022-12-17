@@ -41,4 +41,21 @@ router.get("/all/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const notifications = await pool.query(
+      `UPDATE notification 
+      SET is_seen = TRUE
+      WHERE owner_id = $1`,
+      [id]
+    );
+
+    res.json(notifications.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 module.exports = router;

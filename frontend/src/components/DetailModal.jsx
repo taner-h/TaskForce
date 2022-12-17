@@ -26,10 +26,8 @@ import { USER_BADGE_COLORS } from '../data/options';
 import { useSelector } from 'react-redux';
 import { getUser } from '../reducers/authSlice';
 import { useEffect, useState } from 'react';
-import MemberCard from "./MemberCard";
-import ApplicantCard from "./ApplicantCard";
-
-import app from "../App";
+import MemberCard from './MemberCard';
+import ApplicantCard from './ApplicantCard';
 
 export default function DetailModal({
   project,
@@ -37,11 +35,13 @@ export default function DetailModal({
   setIsDetailOpen,
   page,
 }) {
-  const scrollBehavior='outside'
-  const [tabIndex, setTabIndex] = useState(0)
+  const scrollBehavior = 'outside';
+  const [tabIndex, setTabIndex] = useState(0);
   const [members, setMembers] = useState([]);
-  const [applicants, setApplicants] = useState([]);
+  const [applicants, setApplicants] = useState({});
   const user = useSelector(getUser);
+
+  console.log(members);
 
   const projectId = project.project_id;
   const onDetailClose = () => {
@@ -54,6 +54,7 @@ export default function DetailModal({
         `http://localhost:5000/member/project/${projectId}`,
         {
           method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
         }
       );
 
@@ -69,6 +70,7 @@ export default function DetailModal({
         `http://localhost:5000/application/project/${projectId}`,
         {
           method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
         }
       );
 
@@ -79,26 +81,24 @@ export default function DetailModal({
     }
   };
   useEffect(() => {
-    if(tabIndex===1){
+    if (isDetailOpen) {
       getMembersInfo();
-    }
-    if(tabIndex===2){
       getApplicantsInfo();
     }
-  },[tabIndex, members?.length, applicants?.length]);
+  }, [isDetailOpen]);
 
   return (
     <>
-      <Modal 
+      <Modal
         size="2xl"
         scrollBehavior={scrollBehavior}
         isOpen={isDetailOpen}
         onClose={onDetailClose}
       >
         <ModalOverlay />
-        <ModalContent marginBottom="15px"  >
+        <ModalContent marginBottom="15px">
           {page === 'myprojects' && (
-            <Tabs onChange={(index) => setTabIndex(index)}>
+            <Tabs onChange={index => setTabIndex(index)}>
               <TabList>
                 <Tab>Overview</Tab>
                 <Tab>Members</Tab>
@@ -263,27 +263,45 @@ export default function DetailModal({
                 <TabPanel>
                   <ModalCloseButton />
                   <ModalBody>
-
-                    {members?.length !==0 ? members.map((mem)=>(
-                        <MemberCard members={members} member={mem} setMembers={setMembers} user={user} project={project}/>
-
-                    )) : <Text align='center'> Empty </Text>}
+                    {members && members.length !== 0 ? (
+                      members.map(mem => (
+                        <MemberCard
+                          members={members}
+                          member={mem}
+                          setMembers={setMembers}
+                          user={user}
+                          project={project}
+                        />
+                      ))
+                    ) : (
+                      <Text align="center"> No members </Text>
+                    )}
                   </ModalBody>
                 </TabPanel>
-                {user?.user_id === project?.creator_id &&
-                    <>
+                {user?.user_id === project?.creator_id && (
+                  <>
                     <TabPanel>
-                  <ModalCloseButton/>
-                  <ModalBody>
-
-                    {applicants?.length !==0 ? applicants.map((app)=>(
-                        <ApplicantCard applicants={applicants} applicant={app} setApplicants={setMembers} user={user} project={project}/>
-
-                    )) : <Text align='center'> Empty </Text>}
-                  </ModalBody>
-                </TabPanel>
-                    </>
-                }
+                      <ModalCloseButton />
+                      <ModalBody>
+                        {applicants && Object.keys(applicants).length !== 0 ? (
+                          applicants?.applicants.map(app => (
+                            <ApplicantCard
+                              applicants={applicants}
+                              applicant={app}
+                              setApplicants={setApplicants}
+                              members={members}
+                              setMembers={setMembers}
+                              user={user}
+                              project={project}
+                            />
+                          ))
+                        ) : (
+                          <Text align="center"> Empty </Text>
+                        )}
+                      </ModalBody>
+                    </TabPanel>
+                  </>
+                )}
               </TabPanels>
             </Tabs>
           )}
