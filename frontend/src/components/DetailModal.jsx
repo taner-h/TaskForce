@@ -296,7 +296,7 @@ export default function DetailModal({
                             />
                           ))
                         ) : (
-                          <Text align="center"> Empty </Text>
+                          <Text align="center"> No applicants </Text>
                         )}
                       </ModalBody>
                     </TabPanel>

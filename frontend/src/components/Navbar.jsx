@@ -316,6 +316,12 @@ export default function Navbar() {
                           </CardFooter>
                         </Card>
                       ))}
+
+                    {notifications && notifications.length === 0 && (
+                      <Text my="5" align="center">
+                        No new notifications
+                      </Text>
+                    )}
                   </ModalBody>
 
                   <ModalFooter>

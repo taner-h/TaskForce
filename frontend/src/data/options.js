@@ -7,17 +7,7 @@ export const NAV_ITEMS = [
         subLabel: 'Find new projects to contribute',
         href: '/projects',
       },
-      {
-        label: 'Reccomended',
-        subLabel: 'Take a look at our reccommendations for you',
-        href: '/projects/reccomended',
-      },
-      {
-        label: 'Open Source',
-        subLabel:
-          'Explore open source projects to contribute to a free and open internet',
-        href: '/projects/opensource',
-      },
+
       {
         label: 'Create',
         subLabel: 'Create your own project and add other people to your team',
