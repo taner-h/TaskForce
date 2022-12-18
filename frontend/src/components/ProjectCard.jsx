@@ -39,7 +39,7 @@ import { USER_BADGE_COLORS } from '../data/options';
 import DetailModal from './DetailModal';
 import React, { useState } from 'react';
 
-export default function ProjectCard({ project, isLogged, user, page }) {
+export default function ProjectCard({ project, isLogged, user, pageName }) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [credit, setCredit] = useState(1);
@@ -119,7 +119,7 @@ export default function ProjectCard({ project, isLogged, user, page }) {
               </Heading>
             </GridItem>
             <GridItem colSpan={1}>
-              {page !== 'myprojects' && (
+              {pageName !== 'myprojects' && (
                 <Button
                   variant={'solid'}
                   colorScheme="blue"
@@ -233,7 +233,7 @@ export default function ProjectCard({ project, isLogged, user, page }) {
         isDetailOpen={isDetailOpen}
         setIsDetailOpen={setIsDetailOpen}
         project={project}
-        page={'myprojects'}
+        pageName={'myprojects'}
       />
       <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
         <ModalOverlay />

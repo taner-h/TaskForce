@@ -61,7 +61,7 @@ const defaultValues = { skill: [] };
 export default function AddSkillModal({
   setSelectedSkills,
   selectedSkills,
-  page,
+  pageName,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { control } = useForm({ defaultValues });
@@ -105,7 +105,7 @@ export default function AddSkillModal({
         colorScheme="blue"
         rounded="full"
       >
-        {page === 'profile' ? <EditIcon /> : <AddIcon boxSize={2.5} />}
+        {pageName === 'profile' ? <EditIcon /> : <AddIcon boxSize={2.5} />}
       </IconButton>
 
       <Modal onClose={onClose} size={'xl'} isOpen={isOpen}>

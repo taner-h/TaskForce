@@ -3,6 +3,7 @@ import {
   Stack,
   Text,
   Button,
+  Center,
   Heading,
   Tag,
   Tabs,
@@ -21,7 +22,9 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react';
+import Pagination from 'rc-pagination';
 import { ModalCloseButton } from '@chakra-ui/react';
+import '../asset/pagination.css';
 import { USER_BADGE_COLORS } from '../data/options';
 import { useSelector } from 'react-redux';
 import { getUser } from '../reducers/authSlice';
@@ -33,15 +36,14 @@ export default function DetailModal({
   project,
   isDetailOpen,
   setIsDetailOpen,
-  page,
+  pageName,
 }) {
   const scrollBehavior = 'outside';
+  const [page, setPage] = useState(1);
   const [tabIndex, setTabIndex] = useState(0);
   const [members, setMembers] = useState([]);
   const [applicants, setApplicants] = useState({});
   const user = useSelector(getUser);
-
-  console.log(members);
 
   const projectId = project.project_id;
   const onDetailClose = () => {
@@ -67,7 +69,7 @@ export default function DetailModal({
   const getApplicantsInfo = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/application/project/${projectId}`,
+        `http://localhost:5000/application/project/${projectId}?page=${page}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -85,7 +87,7 @@ export default function DetailModal({
       getMembersInfo();
       getApplicantsInfo();
     }
-  }, [isDetailOpen]);
+  }, [isDetailOpen, page]);
 
   return (
     <>
@@ -97,7 +99,7 @@ export default function DetailModal({
       >
         <ModalOverlay />
         <ModalContent marginBottom="15px">
-          {page === 'myprojects' && (
+          {pageName === 'myprojects' && (
             <Tabs onChange={index => setTabIndex(index)}>
               <TabList>
                 <Tab>Overview</Tab>
@@ -298,6 +300,23 @@ export default function DetailModal({
                         ) : (
                           <Text align="center"> No applicants </Text>
                         )}
+                        <Center pb="10">
+                          <Pagination
+                            sx={{
+                              '.rc-pagination-item': {
+                                backgroundColor: 'gray.700',
+                                border: '1px solid #d9d9d9',
+                              },
+                            }}
+                            defaultCurrent={1}
+                            onChange={page => {
+                              setPage(page);
+                            }}
+                            pageSize={12}
+                            current={page}
+                            total={applicants?.totalItems}
+                          />
+                        </Center>
                       </ModalBody>
                     </TabPanel>
                   </>

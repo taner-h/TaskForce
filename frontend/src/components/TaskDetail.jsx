@@ -31,7 +31,7 @@ export default function TaskDetail({
   task,
   isDetailOpen,
   setIsDetailOpen,
-  page,
+  pageName,
 }) {
   const [answers, setAnswers] = useState([]);
   const user = useSelector(getUser);
@@ -51,7 +51,7 @@ export default function TaskDetail({
       >
         <ModalOverlay />
         <ModalContent marginBottom="15px">
-          {page === 'mytasks' && (
+          {pageName === 'mytasks' && (
             <Tabs>
               <TabList>
                 <Tab>Overview</Tab>
