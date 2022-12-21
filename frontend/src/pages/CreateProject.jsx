@@ -30,10 +30,6 @@ import {
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { useSelector } from 'react-redux';
 import { getUser } from '../reducers/authSlice';
-import coworking from '../asset/co-working.svg';
-import team from '../asset/engineering_team.svg';
-import world from '../asset/world.svg';
-import startup from '../asset/startup.svg';
 import community from '../asset/community.svg';
 import Footer from '../components/FooterSmall';
 import AddFieldModal from '../components/AddFieldModal';

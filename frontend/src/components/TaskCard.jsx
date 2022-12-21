@@ -19,6 +19,7 @@ import {
   ModalBody,
   ModalFooter,
   FormControl,
+  useToast,
   ModalCloseButton,
   ModalHeader,
   ModalContent,
@@ -44,6 +45,46 @@ export default function TaskCard({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [answer, setAnswer] = useState('');
+  const toast = useToast();
+
+  async function handleAnswer(event) {
+    event.preventDefault();
+
+    const body = {
+      userId: user.user_id,
+      taskId: task.task_id,
+      answer,
+    };
+    try {
+      const response = await fetch('http://localhost:5000/answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const parseRes = await response.json();
+
+      if (parseRes) {
+        toast({
+          title: 'Succesfull.',
+          description: 'Answer sent succesfully',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Error.',
+          description: 'Answer submission failed.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
+    onClose();
+  }
 
   const handleCommit = async () => {
     if (userIsCommitted) {
@@ -213,14 +254,7 @@ export default function TaskCard({
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => {
-                console.log(answer);
-                onClose();
-              }}
-            >
+            <Button colorScheme="blue" mr={3} onClick={handleAnswer}>
               Submit
             </Button>
           </ModalFooter>
@@ -240,7 +274,7 @@ export default function TaskCard({
         isDetailOpen={isDetailOpen}
         setIsDetailOpen={setIsDetailOpen}
         task={task}
-        page={'mytasks'}
+        pageName={'mytasks'}
       />
     </Card>
   );
