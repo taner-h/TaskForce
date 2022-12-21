@@ -86,7 +86,7 @@ router.post("/", async (req, res) => {
     }
 
     // add the already existing project tags
-    if (tags !== undefined && tags.length != 0) {
+    if (tags !== undefined && tags.length !== 0) {
       const tagQuery = format(
         "INSERT INTO project_tag (project_id, tag_id) VALUES %L",
         tags.map((tag) => [project.rows[0].project_id, tag])

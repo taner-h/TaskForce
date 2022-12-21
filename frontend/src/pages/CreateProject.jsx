@@ -23,6 +23,7 @@ import {
   TagCloseButton,
   Text,
   Textarea,
+  useToast,
   useColorModeValue,
   IconButton,
 } from '@chakra-ui/react';
@@ -48,9 +49,64 @@ export default function CreateProject() {
   const [fields, setFields] = useState([]);
   const [skills, setSkills] = useState([]);
   const [tags, setTags] = useState([]);
-  const [resources, setResources] = useState([]);
 
+  const [title, setTitle] = useState('');
+  const [repo, setRepo] = useState('');
+  const [credit, setCredit] = useState(1);
+  const [type, setType] = useState(1);
+  const [summary, setSummary] = useState('');
+  const [description, setDescription] = useState('');
+  const [resources, setResources] = useState([]);
   const [urls, setUrls] = useState(['url_0']);
+
+  const toast = useToast();
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+
+    const body = {
+      creatorId: user.user_id,
+      name: title,
+      repo,
+      description,
+      summary,
+      creditCount: credit,
+      projectTypeId: type,
+      fields: fields.map(field => field.value),
+      skills: skills.map(skill => skill.value),
+      tags: tags.filter(tag => tag.__isNew__ !== true).map(tag => tag.value),
+      newTags: tags.filter(tag => tag.__isNew__ === true).map(tag => tag.label),
+      resources: resources.map(resource => ({ link: resource })),
+    };
+    try {
+      const response = await fetch('http://localhost:5000/project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const parseRes = await response.json();
+
+      if (parseRes) {
+        toast({
+          title: 'Succesfull.',
+          description: 'Project created succesfully',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Error.',
+          description: 'Project creation failed.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   return (
     <Box bg={useColorModeValue('gray.50', 'gray.800')}>
@@ -181,6 +237,8 @@ export default function CreateProject() {
                       <FormLabel>Title</FormLabel>
                       <Input
                         type="text"
+                        value={title}
+                        onChange={event => setTitle(event.target.value)}
                         placeholder="The title of your project"
                       />
                     </FormControl>
@@ -194,6 +252,8 @@ export default function CreateProject() {
                           type="tel"
                           placeholder="URL for your repository"
                           focusBorderColor="brand.400"
+                          onChange={event => setRepo(event.target.value)}
+                          value={repo}
                           rounded="md"
                         />
                       </InputGroup>
@@ -204,6 +264,8 @@ export default function CreateProject() {
                       <NumberInput
                         defaultValue={1}
                         min={1}
+                        onChange={setCredit}
+                        value={credit}
                         max={user?.credit_count}
                       >
                         <NumberInputField />
@@ -217,9 +279,13 @@ export default function CreateProject() {
                     <FormControl isRequired>
                       <FormLabel>Project Type</FormLabel>
 
-                      <Select placeholder="Select option">
-                        <option value="option1">Private Team</option>
-                        <option value="option2">Open Source</option>
+                      <Select
+                        placeholder="Select option"
+                        value={type}
+                        onChange={event => setType(event.target.value)}
+                      >
+                        <option value="1">Private Team</option>
+                        <option value="2">Open Source</option>
                       </Select>
                     </FormControl>
                   </HStack>
@@ -227,6 +293,8 @@ export default function CreateProject() {
                     <FormLabel>Summary</FormLabel>
                     <Input
                       type="text"
+                      value={summary}
+                      onChange={event => setSummary(event.target.value)}
                       placeholder="Give a short summary for you project"
                     />
                   </FormControl>
@@ -235,6 +303,8 @@ export default function CreateProject() {
                     <Textarea
                       placeholder="Describe your project in great detail"
                       rows={4}
+                      value={description}
+                      onChange={event => setDescription(event.target.value)}
                       // shadow="sm"
                       focusBorderColor="brand.400"
                     />
@@ -414,10 +484,7 @@ export default function CreateProject() {
                       _hover={{
                         bgGradient: 'linear(to-r, blue.200, blue.500)',
                       }}
-                      onClick={() => {
-                        //bi deniyim dedim, çalışıyo sıkıntı yok
-                        console.log(resources);
-                      }}
+                      onClick={handleSubmit}
                     >
                       Create project
                     </Button>
