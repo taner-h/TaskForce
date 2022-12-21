@@ -82,12 +82,19 @@ export default function DetailModal({
       console.error(err.message);
     }
   };
+
   useEffect(() => {
     if (isDetailOpen) {
       getMembersInfo();
       getApplicantsInfo();
     }
-  }, [isDetailOpen, page]);
+  }, [isDetailOpen]);
+
+  useEffect(() => {
+    if (isDetailOpen) {
+      getApplicantsInfo();
+    }
+  }, [page]);
 
   return (
     <>

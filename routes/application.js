@@ -62,7 +62,7 @@ router.get("/project/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12;
+    const limit = parseInt(req.query.limit) || 10;
 
     const applicantCount = await pool.query(
       `SELECT *, users.name as name, sub_tier.name as sub_tier
@@ -85,8 +85,10 @@ router.get("/project/:id", async (req, res) => {
       FROM application INNER JOIN users ON users.user_id = application.user_id
       INNER JOIN sub_tier on users.sub_tier_id = sub_tier.sub_tier_id
       WHERE project_id = $1
-      ORDER BY rank desc`,
-      [id]
+      ORDER BY rank desc
+      LIMIT $2 OFFSET $3
+      `,
+      [id, limit, limit * (page - 1)]
     );
 
     response.applicants = applicants.rows;
