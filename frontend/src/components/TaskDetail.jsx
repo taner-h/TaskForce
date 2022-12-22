@@ -40,6 +40,29 @@ export default function TaskDetail({
     setIsDetailOpen(false);
   };
 
+  const getAnswers = async () => {
+    if (isDetailOpen == true) {
+      try {
+        console.log('aloalo');
+        await fetch(`http://localhost:5000/answer/${task.task_id}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            setAnswers(data);
+          });
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getAnswers();
+  }, [isDetailOpen]);
+
   return (
     <>
       <Modal
@@ -203,7 +226,11 @@ export default function TaskDetail({
                     </Stack>
                   </ModalBody>
                 </TabPanel>
-                <TabPanel></TabPanel>
+                <TabPanel>
+                  {answers.map(answer => (
+                    <Text>{answer.answer}</Text>
+                  ))}
+                </TabPanel>
               </TabPanels>
             </Tabs>
           )}
