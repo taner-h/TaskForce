@@ -186,7 +186,7 @@ export default function MyProjects() {
             <SimpleGrid columns={{ base: 1, lg: 2, '2xl': 3 }}>
               {content.projects?.map(project => (
                 <ProjectCard
-                  page={'myprojects'}
+                  pageName={'myprojects'}
                   project={project}
                   isLogged={isLogged}
                   user={user}

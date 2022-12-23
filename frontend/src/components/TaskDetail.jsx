@@ -20,6 +20,10 @@ import {
   UnorderedList,
   ModalFooter,
   ModalBody,
+  Card,
+  CardHeader,
+  Center,
+  CardBody,
 } from '@chakra-ui/react';
 import { ModalCloseButton } from '@chakra-ui/react';
 import { USER_BADGE_COLORS } from '../data/options';
@@ -39,6 +43,9 @@ export default function TaskDetail({
   const onDetailClose = () => {
     setIsDetailOpen(false);
   };
+
+  const answerCardBackgroundColor = useColorModeValue('gray.200', 'gray.800');
+  const answerTextColor = useColorModeValue('gray.600', 'gray.400');
 
   const getAnswers = async () => {
     if (isDetailOpen == true) {
@@ -67,10 +74,10 @@ export default function TaskDetail({
     <>
       <Modal
         size="2xl"
-        isCentered
         closeOnOverlayClick={false}
         isOpen={isDetailOpen}
         onClose={onDetailClose}
+        scrollBehavior="outside"
       >
         <ModalOverlay />
         <ModalContent marginBottom="15px">
@@ -228,7 +235,39 @@ export default function TaskDetail({
                 </TabPanel>
                 <TabPanel>
                   {answers.map(answer => (
-                    <Text>{answer.answer}</Text>
+                    <Card
+                      bgColor={answerCardBackgroundColor}
+                      align="center"
+                      variant="elevated"
+                      // direction={'row'}
+                      maxW="6xl"
+                      my="5"
+                    >
+                      <CardBody>
+                        <Stack spacing="2">
+                          <Stack direction="row" align="center">
+                            <Heading noOfLines={1} size="md">
+                              {`${answer.responder_name} ${answer.responder_surname}`}
+                            </Heading>
+                            <Text noOfLines={1} justify="center">
+                              {' answered at '}
+                              {new Date(task.create_time).toLocaleDateString(
+                                'en-uk',
+                                {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                }
+                              )}{' '}
+                            </Text>
+                          </Stack>
+
+                          <Text color={answerTextColor} justify="center">
+                            {answer.answer}
+                          </Text>
+                        </Stack>
+                      </CardBody>
+                    </Card>
                   ))}
                 </TabPanel>
               </TabPanels>

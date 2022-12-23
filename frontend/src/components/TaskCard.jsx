@@ -147,7 +147,13 @@ export default function TaskCard({
   }, [task, taskIds]);
 
   return (
-    <Card align="center" variant="elevated" direction={'row'} maxW="6xl">
+    <Card
+      bgColor={useColorModeValue('gray.200', 'gray.700')}
+      align="center"
+      variant="elevated"
+      direction={'row'}
+      maxW="6xl"
+    >
       <CardHeader>
         <Tooltip
           hasArrow
@@ -157,7 +163,7 @@ export default function TaskCard({
             w="60px"
             h="60px"
             borderRadius="lg"
-            bg={useColorModeValue('gray.200', 'gray.800')}
+            bg={useColorModeValue('gray.300', 'gray.800')}
           >
             <Heading color={'blue.400'} fontSize="25px">
               {commit_count > 99 ? '99+' : commit_count}
