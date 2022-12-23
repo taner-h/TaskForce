@@ -113,7 +113,7 @@ export default function SearchTask() {
         }))
       );
 
-      const responseSkills = await fetch(baseUrl + 'skill');
+      const responseSkills = await fetch(baseUrl + '/skill');
       const skills = await responseSkills.json();
 
       setAllSkills(
