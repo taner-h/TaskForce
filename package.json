@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "backend": "nodemon index.js",
-    "frontend": "cd frontend && npm start"
+    "frontend": "cd frontend && npm start",
+    "build": "cd frontend && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
