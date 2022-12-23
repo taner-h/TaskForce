@@ -477,42 +477,42 @@ router.post("/match", async (req, res) => {
     as points
     from project p
     left join (select project_id, count(field_id) as field_count 
-    from project_field where field_id in (%L) group by project_id) f
+    from project_field where field_id = ANY (ARRAY[%L]::integer[]) group by project_id) f
     on p.project_id = f.project_id
     left join (select project_id, count(skill_id) as skill_count 
-    from project_skill where skill_id in (%L) group by project_id) s
+    from project_skill where skill_id  = ANY (ARRAY[%L]::integer[])  group by project_id) s
     on p.project_id = s.project_id
     left join (select project_id, count(tag_id) as created_tag_count 
-    from project_tag where tag_id in (%L) group by project_id) ct
+    from project_tag where tag_id  = ANY (ARRAY[%L]::integer[])  group by project_id) ct
     on p.project_id = ct.project_id
     left join (select project_id, count(tag_id) as member_tag_count 
-    from project_tag where tag_id in (%L) group by project_id) mt
+    from project_tag where tag_id  = ANY (ARRAY[%L]::integer[])  group by project_id) mt
     on p.project_id = mt.project_id
     left join (select project_id, count(tag_id) as applied_tag_count 
-    from project_tag where tag_id in (%L) group by project_id) apt
+    from project_tag where tag_id  = ANY (ARRAY[%L]::integer[])  group by project_id) apt
     on p.project_id = apt.project_id
     left join (select project_id, count(tag_id) as opened_tag_count 
-    from project_tag where tag_id in (%L) group by project_id) ot
+    from project_tag where tag_id  = ANY (ARRAY[%L]::integer[])  group by project_id) ot
     on p.project_id = ot.project_id
     left join (select project_id, count(tag_id) as answered_tag_count 
-    from project_tag where tag_id in (%L) group by project_id) ant
+    from project_tag where tag_id  = ANY (ARRAY[%L]::integer[])  group by project_id) ant
     on p.project_id = ant.project_id
     left join (select project_id, count(tag_id) as committed_tag_count 
-    from project_tag where tag_id in (%L) group by project_id) cot
+    from project_tag where tag_id  = ANY (ARRAY[%L]::integer[])  group by project_id) cot
     on p.project_id = cot.project_id
     order by points desc
     limit 10 + ${matchedCount}) q1
     on project.project_id = q1.project_id
     order by rank desc
     `,
-      fields,
-      skills,
-      created,
-      member,
-      applied,
-      opened,
-      answered,
-      committed
+      fields && fields.length !== 0 ? fields : [],
+      skills && skills.length !== 0 ? skills : [],
+      created && created.length !== 0 ? created : [],
+      member && member.length !== 0 ? member : [],
+      applied && applied.length !== 0 ? applied : [],
+      opened && opened.length !== 0 ? opened : [],
+      answered && answered.length !== 0 ? answered : [],
+      committed && committed.length !== 0 ? committed : []
     );
     const bestProjects = await pool.query(query);
 

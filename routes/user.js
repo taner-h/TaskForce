@@ -51,62 +51,95 @@ router.get("/:id", async (req, res) => {
 router.post("/tags", async (req, res) => {
   try {
     const { created, member, applied, opened, committed, answered } = req.body;
-    const createdQuery = format(
-      `select distinct tag_id from project_tag 
-    where project_id in (%L)
-    order by tag_id asc`,
-      created
-    );
-    const createdTags = await pool.query(createdQuery);
-
-    const memberQuery = format(
-      `select distinct tag_id from project_tag 
-    where project_id in (%L)
-    order by tag_id asc`,
-      member
-    );
-    const memberTags = await pool.query(memberQuery);
-
-    const appliedQuery = format(
-      `select distinct tag_id from project_tag 
-    where project_id in (%L)
-    order by tag_id asc`,
-      applied
-    );
-    const appliedTags = await pool.query(appliedQuery);
-
-    const openedQuery = format(
-      `select distinct tag_id from task_tag 
-    where task_id in (%L)
-    order by tag_id asc`,
-      opened
-    );
-    const openedTags = await pool.query(openedQuery);
-
-    const answeredQuery = format(
-      `select distinct tag_id from task_tag 
-    where task_id in (%L)
-    order by tag_id asc`,
-      answered
-    );
-    const answeredTags = await pool.query(answeredQuery);
-
-    const committedQuery = format(
-      `select distinct tag_id from task_tag 
-    where task_id in (%L)
-    order by tag_id asc`,
-      committed
-    );
-    const committedTags = await pool.query(committedQuery);
 
     const response = {
-      created: createdTags.rows.map((tag) => tag.tag_id),
-      member: memberTags.rows.map((tag) => tag.tag_id),
-      applied: appliedTags.rows.map((tag) => tag.tag_id),
-      opened: openedTags.rows.map((tag) => tag.tag_id),
-      committed: committedTags.rows.map((tag) => tag.tag_id),
-      answered: answeredTags.rows.map((tag) => tag.tag_id),
+      created: [],
+      member: [],
+      applied: [],
+      opened: [],
+      committed: [],
+      answered: [],
     };
+
+    if (created && created.length !== 0) {
+      const createdQuery = format(
+        `select distinct tag_id from project_tag 
+      where project_id in (%L)
+      order by tag_id asc`,
+        created
+      );
+      const createdTags = await pool.query(createdQuery);
+      response.created = createdTags.rows.map((tag) => tag.tag_id);
+    }
+
+    if (member && member.length !== 0) {
+      const memberQuery = format(
+        `select distinct tag_id from project_tag 
+    where project_id in (%L)
+    order by tag_id asc`,
+        member
+      );
+      const memberTags = await pool.query(memberQuery);
+      response.member = memberTags.rows.map((tag) => tag.tag_id);
+    }
+
+    if (applied && applied.length !== 0) {
+      const appliedQuery = format(
+        `select distinct tag_id from project_tag 
+    where project_id in (%L)
+    order by tag_id asc`,
+        applied
+      );
+      const appliedTags = await pool.query(appliedQuery);
+
+      response.applied = appliedTags.rows.map((tag) => tag.tag_id);
+    }
+
+    if (opened && opened.length !== 0) {
+      const openedQuery = format(
+        `select distinct tag_id from task_tag 
+    where task_id in (%L)
+    order by tag_id asc`,
+        opened
+      );
+      const openedTags = await pool.query(openedQuery);
+      response.opened = openedTags.rows.map((tag) => tag.tag_id);
+    }
+
+    if (answered && answered.length !== 0) {
+      const answeredQuery = format(
+        `select distinct tag_id from task_tag 
+    where task_id in (%L)
+    order by tag_id asc`,
+        answered
+      );
+
+      console.log("answeredQuery", answeredQuery);
+      const answeredTags = await pool.query(answeredQuery);
+
+      response.answered = answeredTags.rows.map((tag) => tag.tag_id);
+    }
+
+    if (committed && committed.length !== 0) {
+      const committedQuery = format(
+        `select distinct tag_id from task_tag 
+    where task_id in (%L)
+    order by tag_id asc`,
+        committed
+      );
+      const committedTags = await pool.query(committedQuery);
+      response.committed = committedTags.rows.map((tag) => tag.tag_id);
+    }
+
+    //  {
+    //     created: createdTags.rows.map((tag) => tag.tag_id),
+    //     member: memberTags.rows.map((tag) => tag.tag_id),
+    //     applied: appliedTags.rows.map((tag) => tag.tag_id),
+    //     opened: openedTags.rows.map((tag) => tag.tag_id),
+    //     committed: committedTags.rows.map((tag) => tag.tag_id),
+    //     answered: answeredTags.rows.map((tag) => tag.tag_id),
+    //   };
+    console.log("response from service", response);
 
     res.json(response);
   } catch (err) {

@@ -44,7 +44,7 @@ export default function MatchProjects() {
 
   useEffect(() => {
     getTagIds();
-  }, []);
+  }, [projects, tasks, user]);
 
   async function getTagIds() {
     const body = {
@@ -56,6 +56,8 @@ export default function MatchProjects() {
       answered: tasks?.answered,
     };
     try {
+      console.log('tag id aliniyor');
+      console.log('body', body);
       const response = await fetch(`http://localhost:5000/user/tags`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -64,6 +66,8 @@ export default function MatchProjects() {
       const res = await response.json();
       setTagIds(res);
       setIsTagIdsFetched(true);
+      console.log('tag id alindi');
+      console.log('tag ids', res);
     } catch (err) {
       console.error(err.message);
     }
@@ -71,6 +75,7 @@ export default function MatchProjects() {
 
   async function getProjectMatches(method) {
     if (isTagIdsFetched) {
+      console.log('match aliniyor');
       setIsPending(true);
       const body = {
         userId: user.user_id,
