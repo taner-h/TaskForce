@@ -35,6 +35,7 @@ import Footer from '../components/FooterSmall';
 import AddFieldModal from '../components/AddFieldModal';
 import AddTagModal from '../components/AddTagModal';
 import AddSkillModal from '../components/AddSkillModal';
+import baseUrl from '../data/baseUrl';
 
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
@@ -57,6 +58,8 @@ export default function CreateProject() {
 
   const toast = useToast();
 
+  console.log('baseUrl', baseUrl);
+
   const handleSubmit = async event => {
     event.preventDefault();
 
@@ -75,7 +78,7 @@ export default function CreateProject() {
       resources: resources.map(resource => ({ link: resource })),
     };
     try {
-      const response = await fetch('http://localhost:5000/project', {
+      const response = await fetch(baseUrl + '/project', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

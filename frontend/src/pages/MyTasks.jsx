@@ -28,6 +28,7 @@ import Footer from '../components/FooterSmall';
 import TaskCard from '../components/TaskCard';
 import { useSelector, useDispatch } from 'react-redux';
 import { getIsLogged, getUser, getTasks } from '../reducers/authSlice';
+import baseUrl from '../data/baseUrl';
 
 export default function MyTasks() {
   const [page, setPage] = useState(1);
@@ -56,7 +57,8 @@ export default function MyTasks() {
     setIsPending(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/task/user?type=${type}&page=${page}&sortBy=${sortBy}&order=${order}`,
+        baseUrl +
+          `/task/user?type=${type}&page=${page}&sortBy=${sortBy}&order=${order}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

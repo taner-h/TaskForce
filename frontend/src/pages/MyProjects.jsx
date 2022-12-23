@@ -28,6 +28,7 @@ import Footer from '../components/FooterSmall';
 import ProjectCard from '../components/ProjectCard';
 import { useSelector } from 'react-redux';
 import { getIsLogged, getUser, getProjects } from '../reducers/authSlice';
+import baseUrl from '../data/baseUrl';
 
 export default function MyProjects() {
   const [page, setPage] = useState(1);
@@ -56,7 +57,8 @@ export default function MyProjects() {
     setIsPending(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/project/user?role=${role}&page=${page}&sortBy=${sortBy}&order=${order}`,
+        baseUrl +
+          `/project/user?role=${role}&page=${page}&sortBy=${sortBy}&order=${order}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

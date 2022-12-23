@@ -19,6 +19,7 @@
 import { USER_BADGE_COLORS } from '../data/options';
 import React from 'react';
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import baseUrl from '../data/baseUrl';
 
 export default function MemberCard({
   member,
@@ -33,7 +34,7 @@ export default function MemberCard({
   const handleMemberRemove = async () => {
     try {
       await fetch(
-        `http://localhost:5000/member/project/${member.project_id}/user/${member.user_id}`,
+        baseUrl + `/member/project/${member.project_id}/user/${member.user_id}`,
         { method: 'DELETE', headers: { 'Content-Type': 'application/json' } }
       );
 

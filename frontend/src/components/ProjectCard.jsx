@@ -38,6 +38,7 @@ import {
 import { USER_BADGE_COLORS } from '../data/options';
 import DetailModal from './DetailModal';
 import React, { useState } from 'react';
+import baseUrl from '../data/baseUrl';
 
 export default function ProjectCard({ project, isLogged, user, pageName }) {
   const toast = useToast();
@@ -53,7 +54,7 @@ export default function ProjectCard({ project, isLogged, user, pageName }) {
     };
 
     try {
-      await fetch('http://localhost:5000/application', {
+      await fetch(baseUrl + '/application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

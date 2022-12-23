@@ -31,6 +31,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { setTasks } from '../reducers/authSlice';
 import TaskDetail from './TaskDetail';
+import baseUrl from '../data/baseUrl';
 
 export default function TaskCard({
   task,
@@ -56,7 +57,7 @@ export default function TaskCard({
       answer,
     };
     try {
-      const response = await fetch('http://localhost:5000/answer', {
+      const response = await fetch(baseUrl + '/answer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -102,7 +103,7 @@ export default function TaskCard({
       setCommitCount(commit_count => commit_count - 1);
 
       try {
-        await fetch(`http://localhost:5000/commit`, {
+        await fetch(baseUrl + `/commit`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -124,7 +125,7 @@ export default function TaskCard({
       setCommitCount(commit_count => commit_count + 1);
 
       try {
-        await fetch(`http://localhost:5000/commit`, {
+        await fetch(baseUrl + `/commit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

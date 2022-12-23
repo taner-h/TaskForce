@@ -26,6 +26,7 @@ import {
   getUser,
   setUser,
 } from '../reducers/authSlice';
+import baseUrl from '../data/baseUrl';
 
 export default function MatchProjects() {
   const [tagIds, setTagIds] = useState({});
@@ -58,7 +59,7 @@ export default function MatchProjects() {
     try {
       console.log('tag id aliniyor');
       console.log('body', body);
-      const response = await fetch(`http://localhost:5000/user/tags`, {
+      const response = await fetch(baseUrl + `/user/tags`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -90,7 +91,7 @@ export default function MatchProjects() {
         method: method,
       };
       try {
-        const response = await fetch(`http://localhost:5000/project/match`, {
+        const response = await fetch(baseUrl + `/project/match`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
@@ -143,9 +144,7 @@ export default function MatchProjects() {
   async function getPreviousProjectMatches() {
     try {
       setIsPending(true);
-      const response = await fetch(
-        `http://localhost:5000/project/match/${user.user_id}`
-      );
+      const response = await fetch(baseUrl + `/project/match/${user.user_id}`);
       const res = await response.json();
       setPrevMatchedProjects(res);
       setView('all');

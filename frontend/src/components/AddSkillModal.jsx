@@ -17,6 +17,7 @@ import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { useDisclosure } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
+import baseUrl from '../data/baseUrl';
 
 const ControlledSelect = ({
   control,
@@ -69,7 +70,7 @@ export default function AddSkillModal({
 
   const getSkills = async () => {
     try {
-      await fetch('http://localhost:5000/skill', {
+      await fetch(baseUrl + '/skill', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       })

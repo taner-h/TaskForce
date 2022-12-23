@@ -17,6 +17,7 @@ import { Button } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { useForm, useController } from 'react-hook-form';
+import baseUrl from '../data/baseUrl';
 
 const ControlledSelect = ({
   control,
@@ -69,7 +70,7 @@ export default function AddFieldModal({
 
   const getFields = async () => {
     try {
-      await fetch('http://localhost:5000/field', {
+      await fetch(baseUrl + '/field', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       })

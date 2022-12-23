@@ -1,4 +1,5 @@
-export default function getProxy() {
+export function getProxy() {
+  console.log('base url hesaplaniyor');
   switch (process.env.NODE_ENV) {
     case 'development':
       return 'http://localhost:5000';
@@ -9,3 +10,7 @@ export default function getProxy() {
       return 'http://localhost:5000';
   }
 }
+
+const baseUrl = Object.freeze(getProxy());
+
+export default baseUrl;

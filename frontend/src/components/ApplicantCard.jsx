@@ -16,7 +16,7 @@
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
-
+import baseUrl from '../data/baseUrl';
 import { USER_BADGE_COLORS } from '../data/options';
 import React from 'react';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
@@ -35,7 +35,8 @@ export default function ApplicantCard({
   const handleApplicantRemove = async () => {
     try {
       await fetch(
-        `http://localhost:5000/application/project/${applicant.project_id}/user/${applicant.user_id}`,
+        baseUrl +
+          `/application/project/${applicant.project_id}/user/${applicant.user_id}`,
         { method: 'DELETE', headers: { 'Content-Type': 'application/json' } }
       );
       const newApplicants = applicants.applicants.filter(
@@ -53,7 +54,7 @@ export default function ApplicantCard({
       projectId: applicant.project_id,
     };
     try {
-      const response = await fetch(`http://localhost:5000/member`, {
+      const response = await fetch(baseUrl + `/member`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

@@ -34,6 +34,8 @@ import AddSkillModal from '../components/AddSkillModal';
 import AddTagModal from '../components/AddTagModal';
 import Footer from '../components/FooterSmall';
 import { getUser } from '../reducers/authSlice';
+import baseUrl from '../data/baseUrl';
+
 export default function CreateTask() {
   const user = useSelector(getUser);
 
@@ -64,7 +66,7 @@ export default function CreateTask() {
       newTags: tags.filter(tag => tag.__isNew__ === true).map(tag => tag.label),
     };
     try {
-      const response = await fetch('http://localhost:5000/task', {
+      const response = await fetch(baseUrl + '/task', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

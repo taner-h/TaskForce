@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
+import baseUrl from '../data/baseUrl';
 
 import { useDisclosure } from '@chakra-ui/react';
 import { CreatableSelect } from 'chakra-react-select';
@@ -69,7 +70,7 @@ export default function AddTagModal({ setSelectedTags, selectedTags }) {
 
   const getTags = async () => {
     try {
-      await fetch('http://localhost:5000/tag', {
+      await fetch(baseUrl + '/tag', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       })

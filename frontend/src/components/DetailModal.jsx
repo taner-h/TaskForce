@@ -31,6 +31,7 @@ import { getUser } from '../reducers/authSlice';
 import { useEffect, useState } from 'react';
 import MemberCard from './MemberCard';
 import ApplicantCard from './ApplicantCard';
+import baseUrl from '../data/baseUrl';
 
 export default function DetailModal({
   project,
@@ -52,13 +53,10 @@ export default function DetailModal({
 
   const getMembersInfo = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/member/project/${projectId}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      const response = await fetch(baseUrl + `/member/project/${projectId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
       const res = await response.json();
       setMembers(res);
@@ -69,7 +67,7 @@ export default function DetailModal({
   const getApplicantsInfo = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/application/project/${projectId}?page=${page}`,
+        baseUrl + `/application/project/${projectId}?page=${page}`,
         {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },

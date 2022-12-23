@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import baseUrl from '../data/baseUrl';
 
 const initialState = {
   isLogged: false,
@@ -11,7 +12,7 @@ const initialState = {
 
 export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
   try {
-    const response = await fetch('http://localhost:5000/auth/verify', {
+    const response = await fetch(baseUrl + '/auth/verify', {
       method: 'GET',
       headers: { token: localStorage.token },
     });
@@ -24,7 +25,7 @@ export const verifyToken = createAsyncThunk('auth/verifyToken', async () => {
 
 export const fetchUser = createAsyncThunk('user/getUser', async userId => {
   try {
-    const response = await fetch(`http://localhost:5000/user/${userId}`, {
+    const response = await fetch(baseUrl + `/user/${userId}`, {
       method: 'GET',
     });
 
@@ -38,12 +39,9 @@ export const fetchProjects = createAsyncThunk(
   'user/getProjects',
   async userId => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/project/user/${userId}`,
-        {
-          method: 'GET',
-        }
-      );
+      const response = await fetch(baseUrl + `/project/user/${userId}`, {
+        method: 'GET',
+      });
 
       return await response.json();
     } catch (err) {
@@ -53,7 +51,7 @@ export const fetchProjects = createAsyncThunk(
 );
 export const fetchTasks = createAsyncThunk('user/getTasks', async userId => {
   try {
-    const response = await fetch(`http://localhost:5000/task/user/${userId}`, {
+    const response = await fetch(baseUrl + `/task/user/${userId}`, {
       method: 'GET',
     });
 
@@ -67,12 +65,9 @@ export const fetchNotifications = createAsyncThunk(
   'user/getNotifications',
   async userId => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/notification/new/${userId}`,
-        {
-          method: 'GET',
-        }
-      );
+      const response = await fetch(baseUrl + `/notification/new/${userId}`, {
+        method: 'GET',
+      });
 
       return await response.json();
     } catch (err) {

@@ -30,6 +30,7 @@ import { USER_BADGE_COLORS } from '../data/options';
 import { useSelector } from 'react-redux';
 import { getUser } from '../reducers/authSlice';
 import { useEffect, useState } from 'react';
+import baseUrl from '../data/baseUrl';
 
 export default function TaskDetail({
   task,
@@ -48,10 +49,9 @@ export default function TaskDetail({
   const answerTextColor = useColorModeValue('gray.600', 'gray.400');
 
   const getAnswers = async () => {
-    if (isDetailOpen == true) {
+    if (isDetailOpen === true) {
       try {
-        console.log('aloalo');
-        await fetch(`http://localhost:5000/answer/${task.task_id}`, {
+        await fetch(baseUrl + `/answer/${task.task_id}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         })

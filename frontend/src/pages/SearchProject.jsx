@@ -37,6 +37,7 @@ import ProjectCard from '../components/ProjectCard';
 import { Select } from 'chakra-react-select';
 import { useSelector } from 'react-redux';
 import { getIsLogged, getUser } from '../reducers/authSlice';
+import baseUrl from '../data/baseUrl';
 
 export default function SearchProject() {
   const [page, setPage] = useState(1);
@@ -81,7 +82,8 @@ export default function SearchProject() {
     setIsPending(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/project/search?page=${page}&sortBy=${sortBy}&order=${order}`,
+        baseUrl +
+          `/project/search?page=${page}&sortBy=${sortBy}&order=${order}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -99,7 +101,7 @@ export default function SearchProject() {
 
   const getFilterOptions = async () => {
     try {
-      const responseFields = await fetch('http://localhost:5000/field');
+      const responseFields = await fetch(baseUrl + '/field');
       const fields = await responseFields.json();
 
       setAllFields(
@@ -109,7 +111,7 @@ export default function SearchProject() {
         }))
       );
 
-      const responseSkills = await fetch('http://localhost:5000/skill');
+      const responseSkills = await fetch(baseUrl + '/skill');
       const skills = await responseSkills.json();
 
       setAllSkills(
@@ -119,7 +121,7 @@ export default function SearchProject() {
         }))
       );
 
-      const responseTags = await fetch('http://localhost:5000/tag');
+      const responseTags = await fetch(baseUrl + '/tag');
       const tags = await responseTags.json();
 
       setAllTags(

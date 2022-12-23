@@ -31,6 +31,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/FooterSmall';
+import baseUrl from '../data/baseUrl';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -45,7 +46,7 @@ export default function Login() {
     const body = { email, password };
 
     try {
-      const response = await fetch('http://localhost:5000/auth/login', {
+      const response = await fetch(baseUrl + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

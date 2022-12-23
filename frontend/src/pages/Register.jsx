@@ -40,7 +40,7 @@ import {
 } from '../reducers/authSlice';
 import { useDispatch } from 'react-redux';
 import { Select } from 'chakra-react-select';
-
+import baseUrl from '../data/baseUrl';
 import Footer from '../components/FooterSmall';
 
 export default function Register() {
@@ -78,7 +78,7 @@ export default function Register() {
 
   const getOptions = async () => {
     try {
-      const responseFields = await fetch('http://localhost:5000/field');
+      const responseFields = await fetch(baseUrl + '/field');
       const fields = await responseFields.json();
 
       setAllFields(
@@ -88,7 +88,7 @@ export default function Register() {
         }))
       );
 
-      const responseSkills = await fetch('http://localhost:5000/skill');
+      const responseSkills = await fetch(baseUrl + 'skill');
       const skills = await responseSkills.json();
 
       setAllSkills(
@@ -118,7 +118,7 @@ export default function Register() {
       skills: selectedSkills.map(skill => skill.value),
     };
     try {
-      const response = await fetch('http://localhost:5000/auth/register', {
+      const response = await fetch(baseUrl + '/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
