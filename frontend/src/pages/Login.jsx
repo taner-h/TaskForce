@@ -11,12 +11,14 @@ import {
   InputGroup,
   Button,
   Heading,
+  Spinner,
   Text,
   useColorModeValue,
-  useToast,
+  useToast, Center,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
+import React, {  useState } from 'react';
+
 import {
   setAuth,
   fetchUser,
@@ -32,16 +34,19 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/FooterSmall';
 import baseUrl from '../data/baseUrl';
+// import React from "@types/react";
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
+  const [isPending, setIsPending] = useState(false);
   const toast = useToast();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async event => {
+    setIsPending(true);
     event.preventDefault();
     const body = { email, password };
 
@@ -54,6 +59,7 @@ export default function Login() {
       const parseRes = await response.json();
 
       if (parseRes.token) {
+        setIsPending(false);
         dispatch(
           setAuth({
             token: parseRes.token,
@@ -188,6 +194,17 @@ export default function Login() {
                 >
                   Log in
                 </Button>
+                <Center>
+                  {isPending && (
+                      <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          mt="10"
+                          color="blue.500"
+                          size="xl"
+                      />
+                  )}
+                </Center>
               </Stack>
               <Stack pt={6}>
                 <Text align={'center'}>
