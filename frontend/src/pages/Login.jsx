@@ -14,7 +14,8 @@ import {
   Spinner,
   Text,
   useColorModeValue,
-  useToast, Center,
+  useToast, 
+  Center,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import React, {  useState } from 'react';
@@ -34,7 +35,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/FooterSmall';
 import baseUrl from '../data/baseUrl';
-// import React from "@types/react";
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -112,6 +113,7 @@ export default function Login() {
           })
         );
       } else {
+        setIsPending(false);
         toast({
           title: 'Log in failed.',
           description: 'Incorrect email or password.',
