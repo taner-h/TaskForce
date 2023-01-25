@@ -28,9 +28,6 @@ export default function MemberCard({
   setMembers,
   members,
 }) {
-  const projectId = project.project_id;
-  const userId = user.user_id;
-
   const handleMemberRemove = async () => {
     try {
       await fetch(

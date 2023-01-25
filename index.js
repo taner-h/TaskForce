@@ -29,3 +29,9 @@ app.use("/task", require("./routes/task"));
 app.use("/commit", require("./routes/commit"));
 app.use("/answer", require("./routes/answer"));
 app.use("/notification", require("./routes/notification"));
+
+if (process.env.NODE_ENV === "production") {
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+  });
+}
