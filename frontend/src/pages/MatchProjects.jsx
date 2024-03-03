@@ -15,8 +15,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import dark from '../asset/dark.gif';
-import light from '../asset/light.gif';
+import match from '../asset/match.svg';
 import Footer from '../components/FooterSmall';
 import ProjectCard from '../components/ProjectCard';
 import {
@@ -210,7 +209,7 @@ export default function MatchProjects() {
                   align={'center'}
                   w={'100%'}
                   h={'100%'}
-                  src={useColorModeValue(light, dark)}
+                  src={match}
                 />
               </Box>
             </Flex>

@@ -31,7 +31,7 @@ export default function FooterSmall() {
           <Link href={'#'}>Blog</Link>
           <Link href={'#'}>Contact</Link>
         </Stack>
-        <Text>© 2022 TaskForce. All rights reserved</Text>
+        <Text>© {new Date().getFullYear()} TaskForce. All rights reserved</Text>
       </Container>
     </Box>
   );
