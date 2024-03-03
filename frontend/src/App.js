@@ -123,6 +123,7 @@ function App() {
             path="/tasks/create"
             element={isLogged ? <CreateTask /> : <Register />}
           />
+          <Route path="/test" element={<Home />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
