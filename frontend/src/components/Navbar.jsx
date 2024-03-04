@@ -48,6 +48,7 @@ import {
 } from '../reducers/authSlice';
 import { USER_BADGE_COLORS } from '../data/options';
 import getNotificationText from '../utils/getNotificationText';
+import logo from '../asset/logo.svg';
 
 export default function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -113,7 +114,9 @@ export default function Navbar() {
               bgGradient="linear(to-r, blue.300, blue.600)"
               bgClip="text"
               ml={'5'}
+              style={{ display: 'flex', gap: '6px' }}
             >
+              <img src={logo} alt="logo" width="32px" />
               TaskForce
             </Text>
           </Link>
