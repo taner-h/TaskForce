@@ -12,7 +12,7 @@ If you wish to try TaskForce, you can do so from the following address:
 
 - https://taskforce.onrender.com
 
-If you want to try the features yourself without creating a group or multiple accounts, you can use the test user from the following address:
+If you want to try the features yourself without creating a project or multiple accounts, you can use the test user from the following address:
 
 - https://taskforce.onrender.com/test
 
@@ -22,15 +22,23 @@ If you want to try the features yourself without creating a group or multiple ac
 
 Users can create projects by providing details about the field, required skills, and other relevant tags.
 
+<img alt="create" src="https://github.com/taner-h/TaskForce/blob/master/frontend/src/asset/create.svg" width="100%"/>
+
 ### Project Search
 
 Find projects by filtering fields, skills, and tags to discover the perfect match for your interests and expertise.
+
+<img alt="search" src="https://github.com/taner-h/TaskForce/blob/master/frontend/src/asset/search.svg" width="100%"/>
 
 ### Project Collaboration
 
 Apply to join projects and become a part of the team. Project owners can manage users within the project by accepting or rejecting requests.
 
+<img alt="dashboard" src="https://github.com/taner-h/TaskForce/blob/master/frontend/src/asset/dashboard.svg" width="100%"/>
+
 ### Task Exploration
+
+<img alt="explore" src="https://github.com/taner-h/TaskForce/blob/master/frontend/src/asset/explore.svg" width="100%"/>
 
 Explore available tasks and submit your own tasks to seek help from the community.
 
