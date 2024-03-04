@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img alt="logo" src="https://github.com/taner-h/TaskForce/blob/master/frontend/public/logo.svg" width="200px"/><br/>
+  <img alt="logo" src="https://github.com/taner-h/TaskForce/blob/master/frontend/src/asset/logo.svg" width="200px"/><br/>
   TaskForce
 </h1>
 <p align="center"><b>TaskForce</b> is an Online Collaboration Platform for Developers</p>
